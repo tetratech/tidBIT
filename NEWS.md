@@ -4,7 +4,12 @@ NEWS
 
 <!-- NEWS.md is generated from NEWS.Rmd. Please edit that file -->
 
-    #> Last Update: 2024-05-22 15:57:45.415675
+    #> Last Update: 2024-05-22 18:11:19.663045
+
+# baytrends 0.1.0.9006
+
+- refactor: Corrected beta logit transformation, Issue \#2
+  - fun_beta_logit.R
 
 # baytrends 0.1.0.9005
 

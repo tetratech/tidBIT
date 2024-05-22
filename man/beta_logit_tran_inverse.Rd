@@ -44,14 +44,15 @@ back to the practical, bounded domain of the original data, facilitating
 interpretation and decision-making.
 }
 \examples{
-\dontrun{
-z <- seq(-5, 5, length.out = 100)
-bl4 <- c(0, 1, 2, 2)  # Lower and upper bounds with beta distribution parameters
-original_x <- beta_logit_tran_inverse(z, bl4)
-}
+x <- seq(0, 1, length.out = 101)
+bl4 <- c(0, 1, 2, 2)  # beta logit transformation parameters
+transformed_x <- beta_logit_tran(x, bl4, TRUE)
+back_transformed_x <- beta_logit_tran_inverse(transformed_x, bl4, TRUE)
 
 }
 \seealso{
-\code{\link[stats]{qbeta}}, for details on the inverse beta distribution function.
-\code{\link{expit}}, for information on the inverse logit function.
+\code{\link[stats]{qbeta}} for details on beta distribution
+  functions. \code{\link{beta_logit_tran}},
+  \code{\link{transform_data}},
+  \code{\link{transform_data_inverse}}
 }

@@ -42,20 +42,24 @@ It's important to ensure that `y_obs` and `trans_parms` are compatible with the 
 transformation to avoid errors or unexpected behavior.
 }
 \examples{
-\dontrun{
 y_obs <- c(1, 2, 3, 4, 5)
 # No transformation
-transform_data(y_obs, "none", NULL)
+y <- transform_data(y_obs, "none", NULL)
+transform_data_inverse(y, "none", NULL)
 
 # Logarithmic transformation
-transform_data(y_obs, "log", NULL)
+y <- transform_data(y_obs, "log", NULL)
+transform_data_inverse(y, "log", NULL)
 
 # Beta logit transformation (example parameters)
-trans_parms <- c(0.1, 0.9, 2, 2)
-transform_data(y_obs, "BL_example", trans_parms)
-}
+trans_parms <- c(0.1, 6, 2, 2)
+y <- transform_data(y_obs, "BL_example", trans_parms)
+transform_data_inverse(y, "BL_example", trans_parms)
+
 }
 \seealso{
-\code{\link{beta_logit_tran}}, for the beta logit transformation details.
-\code{\link{log}}, for information on the logarithm function used.
+\code{\link[stats]{qbeta}} for details on beta distribution
+  functions. \code{\link{beta_logit_tran}},
+  \code{\link{beta_logit_tran_inverse}},
+  \code{\link{transform_data_inverse}}
 }
