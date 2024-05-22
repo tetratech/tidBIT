@@ -34,11 +34,11 @@ logit transformations specified by `trans_name`.
 \details{
 When `trans_name` is:
 \itemize{
-  \item{"none"}{No transformation is reversed, and `y` is returned as-is, implying the data
+  \item{"none": No transformation is reversed, and `y` is returned as-is, implying the data
      remains on its original scale.}
-  \item{"log"}{An exponential transformation is applied to each element of `y`, reversing the
+  \item{"log": An exponential transformation is applied to each element of `y`, reversing the
      logarithmic transformation.}
-  \item{startsWith("BL_")}{An inverse beta logit transformation, as defined by the
+  \item{starts with "BL_": An inverse beta logit transformation, as defined by the
      `beta_logit_tran_inverse` function, is applied using the parameters specified in `trans_parms`,
      returning the data to its original bounded domain.}
 }
@@ -46,21 +46,23 @@ It's crucial to match the transformation name and parameters with those used
  in the initial transformation to ensure accurate reversal.
 }
 \examples{
-\dontrun{
-# Assuming y has been transformed using a log transformation
-y <- log(c(1, 2, 3, 4, 5))
-# Reverse log transformation
+y_obs <- c(1, 2, 3, 4, 5)
+# No transformation
+y <- transform_data(y_obs, "none", NULL)
+transform_data_inverse(y, "none", NULL)
+
+# Logarithmic transformation
+y <- transform_data(y_obs, "log", NULL)
 transform_data_inverse(y, "log", NULL)
 
-# Assuming y has been transformed using a beta logit transformation
-trans_parms <- c(0.1, 0.9, 2, 2)
-y <- beta_logit_tran(c(1, 2, 3, 4, 5), trans_parms)
-# Reverse beta logit transformation
+# Beta logit transformation (example parameters)
+trans_parms <- c(0.1, 6, 2, 2)
+y <- transform_data(y_obs, "BL_example", trans_parms)
 transform_data_inverse(y, "BL_example", trans_parms)
-}
 
 }
 \seealso{
-\code{\link{beta_logit_tran_inverse}}, for details on the inverse beta logit transformation.
-\code{\link{exp}}, for information on the exponential function used to reverse logarithmic transformations.
+\code{\link[stats]{qbeta}} for details on beta distribution
+  functions. \code{\link{beta_logit_tran}},
+  \code{\link{beta_logit_tran_inverse}}, \code{\link{transform_data}}
 }

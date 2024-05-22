@@ -41,14 +41,14 @@ regression models where normality or linearity assumptions on the original
 scale are problematic.
 }
 \examples{
-\dontrun{
-x <- seq(0, 1, length.out = 100)
-bl4 <- c(0, 1, 2, 2)  # Lower and upper bounds with beta distribution parameters
+x <- seq(0, 1, length.out = 101)
+bl4 <- c(0, 1, 2, 2)  # beta logit transformation parameters
 transformed_x <- beta_logit_tran(x, bl4, TRUE)
-}
+back_transformed_x <- beta_logit_tran_inverse(transformed_x, bl4, TRUE)
 
 }
 \seealso{
-\code{\link[stats]{pbeta}}, for details on the beta distribution function.
-\code{\link{logit}}, for information on the logit function.
+\code{\link[stats]{qbeta}} for details on beta distribution
+  functions. \code{\link{beta_logit_tran_inverse}},
+  \code{\link{transform_data}}, \code{\link{transform_data_inverse}}
 }

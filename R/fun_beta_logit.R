@@ -12,9 +12,9 @@
 #'
 #' @details When `trans_name` is:
 #' \itemize{
-#'   \item{"none"}{No transformation is applied, and `y_obs` is returned as-is.}
-#'   \item{"log"}{A natural logarithm transformation is applied to each element of `y_obs`.}
-#'   \item{startsWith("BL_")}{A beta logit transformation, as defined by the `beta_logit_tran` function, is applied using the parameters specified in `trans_parms`.}
+#'   \item {"none": No transformation is applied, and `y_obs` is returned as-is.}
+#'   \item {"log": A natural logarithm transformation is applied to each element of `y_obs`.}
+#'   \item {starts with "BL_": A beta logit transformation, as defined by the `beta_logit_tran` function, is applied using the parameters specified in `trans_parms`.}
 #' }
 #' It's important to ensure that `y_obs` and `trans_parms` are compatible with the chosen
 #' transformation to avoid errors or unexpected behavior.
@@ -31,22 +31,26 @@
 #' @return A numeric vector containing the transformed data.
 #'
 #' @examples
-#' \dontrun{
 #' y_obs <- c(1, 2, 3, 4, 5)
 #' # No transformation
-#' transform_data(y_obs, "none", NULL)
+#' y <- transform_data(y_obs, "none", NULL)
+#' transform_data_inverse(y, "none", NULL)
 #'
 #' # Logarithmic transformation
-#' transform_data(y_obs, "log", NULL)
+#' y <- transform_data(y_obs, "log", NULL)
+#' transform_data_inverse(y, "log", NULL)
 #'
 #' # Beta logit transformation (example parameters)
-#' trans_parms <- c(0.1, 0.9, 2, 2)
-#' transform_data(y_obs, "BL_example", trans_parms)
-#' }
+#' trans_parms <- c(0.1, 6, 2, 2)
+#' y <- transform_data(y_obs, "BL_example", trans_parms)
+#' transform_data_inverse(y, "BL_example", trans_parms)
+#'
 #' @export
 #'
-#' @seealso \code{\link{beta_logit_tran}}, for the beta logit transformation details.
-#' \code{\link{log}}, for information on the logarithm function used.
+#' @seealso \code{\link[stats]{qbeta}} for details on beta distribution
+#'   functions. \code{\link{beta_logit_tran}},
+#'   \code{\link{beta_logit_tran_inverse}},
+#'   \code{\link{transform_data_inverse}}
 #'
 #'
 transform_data <- function(y_obs, trans_name, trans_parms, show_msgs = FALSE) {
@@ -77,11 +81,11 @@ transform_data <- function(y_obs, trans_name, trans_parms, show_msgs = FALSE) {
 #'
 #' @details When `trans_name` is:
 #' \itemize{
-#'   \item{"none"}{No transformation is reversed, and `y` is returned as-is, implying the data
+#'   \item{"none": No transformation is reversed, and `y` is returned as-is, implying the data
 #'      remains on its original scale.}
-#'   \item{"log"}{An exponential transformation is applied to each element of `y`, reversing the
+#'   \item{"log": An exponential transformation is applied to each element of `y`, reversing the
 #'      logarithmic transformation.}
-#'   \item{startsWith("BL_")}{An inverse beta logit transformation, as defined by the
+#'   \item{starts with "BL_": An inverse beta logit transformation, as defined by the
 #'      `beta_logit_tran_inverse` function, is applied using the parameters specified in `trans_parms`,
 #'      returning the data to its original bounded domain.}
 #' }
@@ -101,23 +105,26 @@ transform_data <- function(y_obs, trans_name, trans_parms, show_msgs = FALSE) {
 #' reflect the original observations before any transformation was applied.
 #'
 #' @examples
-#' \dontrun{
-#' # Assuming y has been transformed using a log transformation
-#' y <- log(c(1, 2, 3, 4, 5))
-#' # Reverse log transformation
+#' y_obs <- c(1, 2, 3, 4, 5)
+#' # No transformation
+#' y <- transform_data(y_obs, "none", NULL)
+#' transform_data_inverse(y, "none", NULL)
+#'
+#' # Logarithmic transformation
+#' y <- transform_data(y_obs, "log", NULL)
 #' transform_data_inverse(y, "log", NULL)
 #'
-#' # Assuming y has been transformed using a beta logit transformation
-#' trans_parms <- c(0.1, 0.9, 2, 2)
-#' y <- beta_logit_tran(c(1, 2, 3, 4, 5), trans_parms)
-#' # Reverse beta logit transformation
+#' # Beta logit transformation (example parameters)
+#' trans_parms <- c(0.1, 6, 2, 2)
+#' y <- transform_data(y_obs, "BL_example", trans_parms)
 #' transform_data_inverse(y, "BL_example", trans_parms)
-#' }
 #'
 #' @export
 #'
-#' @seealso \code{\link{beta_logit_tran_inverse}}, for details on the inverse beta logit transformation.
-#' \code{\link{exp}}, for information on the exponential function used to reverse logarithmic transformations.
+#' @seealso \code{\link[stats]{qbeta}} for details on beta distribution
+#'   functions. \code{\link{beta_logit_tran}},
+#'   \code{\link{beta_logit_tran_inverse}}, \code{\link{transform_data}}
+#'
 transform_data_inverse <- function(y
                                    , trans_name
                                    , trans_parms
@@ -169,11 +176,10 @@ transform_data_inverse <- function(y
 #' transformed values.
 #'
 #' @examples
-#' \dontrun{
-#' x <- seq(0, 1, length.out = 100)
-#' bl4 <- c(0, 1, 2, 2)  # Lower and upper bounds with beta distribution parameters
+#' x <- seq(0, 1, length.out = 101)
+#' bl4 <- c(0, 1, 2, 2)  # beta logit transformation parameters
 #' transformed_x <- beta_logit_tran(x, bl4, TRUE)
-#' }
+#' back_transformed_x <- beta_logit_tran_inverse(transformed_x, bl4, TRUE)
 #'
 #' @importFrom zeallot %<-%
 #' @importFrom magrittr %>%
@@ -181,8 +187,9 @@ transform_data_inverse <- function(y
 #'
 #' @export
 #'
-#' @seealso \code{\link[stats]{pbeta}}, for details on the beta distribution function.
-#' \code{\link{logit}}, for information on the logit function.
+#' @seealso \code{\link[stats]{qbeta}} for details on beta distribution
+#'   functions. \code{\link{beta_logit_tran_inverse}},
+#'   \code{\link{transform_data}}, \code{\link{transform_data_inverse}}
 #'
 #'
 beta_logit_tran <- function(x, bl4, show_msgs = FALSE) {
@@ -227,18 +234,20 @@ beta_logit_tran <- function(x, bl4, show_msgs = FALSE) {
     # Determine a max parameter value that will transform a non +Inf value
     max_x   <- max(x)
     max_z   <- blt(max_x, bl4)
+    max_x_del <- ifelse(max(x) == 0, 0.0001, abs(0.0001 * max(x)))
 
     while (is.infinite(max_z)) {
-      max_x <- max_x - abs(0.0001 * max(x))
+      max_x <- max_x - max_x_del
       max_z <- blt(max_x, bl4)
     }
 
     # Determine a max parameter value that will transform a non -Inf value
     min_x   <- min(x)
     min_z   <- blt(min_x, bl4)
+    min_x_del <- ifelse(min(x) == 0, 0.0001, abs(0.0001 * min(x)))
 
     while (is.infinite(min_z)) {
-      min_x <- min_x + abs(0.0001 * min(x))
+      min_x <- min_x + min_x_del
       min_z <- blt(min_x, bl4)
     }
 
@@ -293,11 +302,10 @@ beta_logit_tran <- function(x, bl4, show_msgs = FALSE) {
 #' back-transformed values, aiming to reflect the original observations.
 #'
 #' @examples
-#' \dontrun{
-#' z <- seq(-5, 5, length.out = 100)
-#' bl4 <- c(0, 1, 2, 2)  # Lower and upper bounds with beta distribution parameters
-#' original_x <- beta_logit_tran_inverse(z, bl4)
-#' }
+#' x <- seq(0, 1, length.out = 101)
+#' bl4 <- c(0, 1, 2, 2)  # beta logit transformation parameters
+#' transformed_x <- beta_logit_tran(x, bl4, TRUE)
+#' back_transformed_x <- beta_logit_tran_inverse(transformed_x, bl4, TRUE)
 #'
 #' @importFrom zeallot %<-%
 #' @importFrom magrittr %>%
@@ -305,9 +313,10 @@ beta_logit_tran <- function(x, bl4, show_msgs = FALSE) {
 #'
 #' @export
 #'
-#' @seealso \code{\link[stats]{qbeta}}, for details on the inverse beta distribution function.
-#' \code{\link{expit}}, for information on the inverse logit function.
-#'
+#' @seealso \code{\link[stats]{qbeta}} for details on beta distribution
+#'   functions. \code{\link{beta_logit_tran}},
+#'   \code{\link{transform_data}},
+#'   \code{\link{transform_data_inverse}}
 #'
 beta_logit_tran_inverse <- function(z, bl4, show_msgs=FALSE) {
 
