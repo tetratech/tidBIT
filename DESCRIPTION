@@ -1,0 +1,37 @@
+Package: tidBIT
+Type: Package
+Title: Chesapeake Bay 4D Model Functions
+Version: 0.1.0.9003
+Authors@R: c(
+  person("Jon", "Harcum", email="Jon.Harcum@tetratech.com", role="aut"), 
+  person("Erik W.", "Leppo", email="Erik.Leppo@tetratech.com", role=c("aut","cre")))
+Maintainer: Erik W Leppo <Erik.Leppo@tetratech.com>
+Description: Collection of helper functions for Chesapeake Bay 4d model.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Depends: 
+    R (>= 3.5.0)
+Imports:
+    dplyr,
+    flextable,
+    officer,
+    leaflet,
+    magrittr,
+    rlang,
+    rstudioapi,
+    scales,
+    zeallot,
+    tibble,
+    jsonlite,
+    lubridate,
+    readxl,
+    tidyr,
+    mgcv
+Suggests: 
+    devtools,
+    knitr
+URL: https://github.com/tetratech/tidBIT
+BugReports: https://github.com/tetratech/tidBIT/issues
+Config/testthat/edition: 3
+RoxygenNote: 7.3.1
