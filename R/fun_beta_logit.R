@@ -12,9 +12,9 @@
 #'
 #' @details When `trans_name` is:
 #' \itemize{
-#'   \item{"none"}{No transformation is applied, and `y_obs` is returned as-is.}
-#'   \item{"log"}{A natural logarithm transformation is applied to each element of `y_obs`.}
-#'   \item{startsWith("BL_")}{A beta logit transformation, as defined by the `beta_logit_tran` function, is applied using the parameters specified in `trans_parms`.}
+#'   \item {"none": No transformation is applied, and `y_obs` is returned as-is.}
+#'   \item {"log": A natural logarithm transformation is applied to each element of `y_obs`.}
+#'   \item {starts with "BL_": A beta logit transformation, as defined by the `beta_logit_tran` function, is applied using the parameters specified in `trans_parms`.}
 #' }
 #' It's important to ensure that `y_obs` and `trans_parms` are compatible with the chosen
 #' transformation to avoid errors or unexpected behavior.
@@ -81,11 +81,11 @@ transform_data <- function(y_obs, trans_name, trans_parms, show_msgs = FALSE) {
 #'
 #' @details When `trans_name` is:
 #' \itemize{
-#'   \item{"none"}{No transformation is reversed, and `y` is returned as-is, implying the data
+#'   \item{"none": No transformation is reversed, and `y` is returned as-is, implying the data
 #'      remains on its original scale.}
-#'   \item{"log"}{An exponential transformation is applied to each element of `y`, reversing the
+#'   \item{"log": An exponential transformation is applied to each element of `y`, reversing the
 #'      logarithmic transformation.}
-#'   \item{startsWith("BL_")}{An inverse beta logit transformation, as defined by the
+#'   \item{starts with "BL_": An inverse beta logit transformation, as defined by the
 #'      `beta_logit_tran_inverse` function, is applied using the parameters specified in `trans_parms`,
 #'      returning the data to its original bounded domain.}
 #' }

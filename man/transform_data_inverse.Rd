@@ -34,11 +34,11 @@ logit transformations specified by `trans_name`.
 \details{
 When `trans_name` is:
 \itemize{
-  \item{"none"}{No transformation is reversed, and `y` is returned as-is, implying the data
+  \item{"none": No transformation is reversed, and `y` is returned as-is, implying the data
      remains on its original scale.}
-  \item{"log"}{An exponential transformation is applied to each element of `y`, reversing the
+  \item{"log": An exponential transformation is applied to each element of `y`, reversing the
      logarithmic transformation.}
-  \item{startsWith("BL_")}{An inverse beta logit transformation, as defined by the
+  \item{starts with "BL_": An inverse beta logit transformation, as defined by the
      `beta_logit_tran_inverse` function, is applied using the parameters specified in `trans_parms`,
      returning the data to its original bounded domain.}
 }
