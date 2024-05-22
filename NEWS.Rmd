@@ -18,6 +18,10 @@ knitr::opts_chunk$set(
 cat(paste0("Last Update: ",Sys.time()))
 ```
 
+# baytrends 0.1.0.9004
+
+* refactor: Update NEWS install section and format, Issue #1
+
 # baytrends 0.1.0.9003
 
 * docs: Update package documentation

@@ -4,7 +4,11 @@ NEWS
 
 <!-- NEWS.md is generated from NEWS.Rmd. Please edit that file -->
 
-    #> Last Update: 2024-05-21 22:20:59.00776
+    #> Last Update: 2024-05-22 13:49:00.476843
+
+# baytrends 0.1.0.9004
+
+- refactor: Update NEWS install section and format, Issue \#1
 
 # baytrends 0.1.0.9003
 

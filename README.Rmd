@@ -29,8 +29,10 @@ You can install the development version of tidBIT from
 [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("tetratech/tidBIT")
+# install "remotes" if needed
+if("remotes" %in% installed.packages()) {install.packages("remotes")}
+# install "tidBIT"
+remotes::install_github("tetratech/tidBIT")
 ```
 
 
