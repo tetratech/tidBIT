@@ -36,8 +36,7 @@ When `trans_name` is:
 \itemize{
   \item{"none"}{No transformation is applied, and `y_obs` is returned as-is.}
   \item{"log"}{A natural logarithm transformation is applied to each element of `y_obs`.}
-  \item{startsWith("BL_")}{A beta logit transformation, as defined by the `beta_logit_tran`
-     function, is applied using the parameters specified in `trans_parms`.}
+  \item{startsWith("BL_")}{A beta logit transformation, as defined by the `beta_logit_tran` function, is applied using the parameters specified in `trans_parms`.}
 }
 It's important to ensure that `y_obs` and `trans_parms` are compatible with the chosen
 transformation to avoid errors or unexpected behavior.

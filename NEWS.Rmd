@@ -18,6 +18,11 @@ knitr::opts_chunk$set(
 cat(paste0("Last Update: ",Sys.time()))
 ```
 
+# baytrends 0.1.0.9005
+
+* feature: Add new functions and checked with Check Package
+    + fun_cb4d_buildout_01.R
+
 # baytrends 0.1.0.9004
 
 * refactor: Update NEWS install section and format, Issue #1

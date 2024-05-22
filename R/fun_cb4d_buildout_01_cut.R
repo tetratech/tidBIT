@@ -30,6 +30,7 @@
 #' variables, GAM formulas, transformation parameters, and more.
 #'
 #' @examples
+#' \dontrun{
 #' subestuary_data <- data.frame(cb4d_subestuary = c("CB1"
 #'                                                   , "CB2"
 #'                                                   , "CB3"
@@ -37,15 +38,21 @@
 #'                                                   , "CB5"))
 #' modeling_vars <- init_model_config("path/to/config_file.json"
 #'                                    , subestuary_data)
+#' }
 #'
 #' @importFrom jsonlite fromJSON
 #' @importFrom dplyr distinct pull mutate rowwise ungroup
 #' @importFrom lubridate with_tz
 #' @importFrom magrittr %>%
 #' @importFrom flextable flextable compose autofit theme_box as_paragraph
+#' @importFrom tibble as_tibble
+#' @importFrom stats end start
 #'
 #' @export
 init_model_config <- function(config_file, subestuary, show_msgs=FALSE) {
+
+  # global variable bindings
+  time_zone <- cb4d_subestuary <- date_range <- Settings <- NULL
 
   # config_file <- "cb4d_data/config_file_model_settings.json"; subestuary= model_data[["subestuary"]]; show_msgs=TRUE
 
@@ -57,16 +64,16 @@ init_model_config <- function(config_file, subestuary, show_msgs=FALSE) {
   }
 
   # Load configuration from JSON
-  config <- fromJSON(config_file)
+  config <- jsonlite::fromJSON(config_file)
 
   # Initialize variables from configuration
   cfg_gam_formula <- config$cfg_gam_formula
 
   cfg_date_range <-
-    as_tibble(config$cfg_date_range) %>%
-    rowwise() %>%
-    mutate(start = with_tz(start, tzone = time_zone)) %>%
-    mutate(end =   with_tz(end, tzone = time_zone)) %>%
+    tibble::as_tibble(config$cfg_date_range) %>%
+    dplyr::rowwise() %>%
+    dplyr::mutate(start = lubridate::with_tz(start, tzone = time_zone)) %>%
+    dplyr::mutate(end =   lubridate::with_tz(end, tzone = time_zone)) %>%
     ungroup()
 
   cfg_data_source <- config$cfg_data_source
@@ -136,7 +143,7 @@ init_model_config <- function(config_file, subestuary, show_msgs=FALSE) {
     # Generate the flextable, ensuring line breaks are respected
     ft <- flextable(df) %>%
       flextable::compose(j = "Settings", value = as_paragraph(Settings)) %>%
-      autofit()
+      flextable::autofit()
 
     ft <- theme_box(ft)
 
@@ -193,6 +200,12 @@ init_model_config <- function(config_file, subestuary, show_msgs=FALSE) {
 #'
 #' @export
 load_and_prep_input_data <- function(config_file, show_msgs=FALSE) {
+
+  # global variable bindings
+  cb4d_subestuary <- cb_303d_segment <- cb_cbseg92_sf <- cbpseg <- cbseg_92 <-
+    dc <- depth_b <- dw <- in_subestuary <- latitude <- longitude <- ow <-
+    state <- station <- wb_lat_km <- wb_lon_km <- wq_segs <- add_data <-
+    fixed <- NULL
 
   message("Loading and processing input data files ...")
 
@@ -262,6 +275,8 @@ load_and_prep_input_data <- function(config_file, show_msgs=FALSE) {
 #'
 #' @param cntrl_subestuary Numeric or NA; control for selecting subestuaries for
 #' modeling.
+#' @param cntrl_wq_var xyz
+#' @param cntrl_trans_names zyx
 #' @param cntrl_gam_formula Numeric or NA; control for selecting GAM formulas.
 #' @param cntrl_by_term Numeric or NA; control for selecting terms to model by.
 #' @param cntrl_date Numeric or NA; control for selecting date ranges.
@@ -294,6 +309,9 @@ create_job_que <- function(cntrl_subestuary = NA
                            , model_config = NA
                            , show_msgs = FALSE) {
 
+  # global variable bindings
+  gam_id <- date_id <- formula_name <- NULL
+
   # Validate inputs
   if (!is.list(model_config)) {
     stop("model_config must be a list.")
@@ -314,7 +332,7 @@ create_job_que <- function(cntrl_subestuary = NA
   validate_control_input(cntrl_data_source, "cntrl_data_source")
 
 
-  job_que <- expand_grid(
+  job_que <- tidyr::expand_grid(
     subestuary  = model_config$cfg_subestuary[cntrl_subestuary],
     wq_var      = model_config$cfg_wq_var[cntrl_wq_var],
     trans_name  = model_config$cfg_trans_names[cntrl_trans_names],
@@ -322,11 +340,11 @@ create_job_que <- function(cntrl_subestuary = NA
     gam_by_term = model_config$cfg_by_term[cntrl_by_term],
     data_source = model_config$cfg_data_source[cntrl_data_source],
     date_id     = cntrl_date) %>%
-    mutate(
+    dplyr::mutate(
       formula_name = model_config$cfg_gam_formula_name[gam_id],
       date_begin   = model_config$cfg_date_range$start[date_id],
       date_end     = model_config$cfg_date_range$end[date_id]) %>%
-    relocate(formula_name, .after = gam_id) %>%
+    dplyr::relocate(formula_name, .after = gam_id) %>%
     ungroup()
 
   if (show_msgs) {
@@ -367,13 +385,19 @@ create_job_que <- function(cntrl_subestuary = NA
 #' refined_data <- down_select_data(job=job_config, model_data=loaded_data)
 #' }
 #'
-#' @importFrom dplyr filter mutate select arrange left_join case_when
+#' @importFrom dplyr filter mutate select arrange left_join case_when between
 #' @importFrom rlang sym
 #' @importFrom lubridate hour minute
 #' @importFrom magrittr %>%
+#' @importFrom tidyselect all_of starts_with
+#' @importFrom sf st_as_sf st_drop_geometry
 #'
 #' @export
 down_select_data <- function(job = NULL, model_data = NULL, show_msgs = FALSE) {
+
+  # global variable bindings
+  cb4d_subestuary <- in_subestuary <- cbseg_92 <- latitude <- longitude <-
+    geometry <- reg <- add_data <- fixed <- station <- date_time <- NULL
 
   # QC - check that each variable is not NULL
   stopifnot(all(sapply(list(job, model_data), function(x) !is.null(x))))
@@ -599,6 +623,7 @@ initialize_model_summary_table <- function() {
 #' @importFrom tidyr as_tibble
 #' @importFrom dplyr mutate
 #' @importFrom lubridate year
+#' @importFrom tidyselect any_of
 #'
 #' @export
 rg_model_specs <- function(job, run_time_start, run_time_stop) {
@@ -692,7 +717,7 @@ rg_model_statistics <- function(gs, df) {
 
   df_stats <- tibble(rmse    = sqrt(sse/num_rec),                     # RMSE
                      r_sq    = 1 - (sse / sst),                       # R^2
-                     aic     = AIC(gs))
+                     aic     = stats::AIC(gs))
 
 }## FUN ~ rg_model_statistics
 
@@ -723,10 +748,12 @@ rg_model_statistics <- function(gs, df) {
 #' fitted_model <- run_gam(job_config, data_frame, model_config_settings)
 #' }
 #'
-#' @importFrom dplyr filter mutate
+#' @importFrom dplyr filter mutate bind_rows bind_cols
 #' @importFrom magrittr %>%
 #' @importFrom mgcv gam
 #' @importFrom lubridate year month
+#' @importFrom rlang is_empty
+#' @importFrom stats as.formula predict
 #'
 #' @export
 run_gam <- function(job = NULL
@@ -734,6 +761,9 @@ run_gam <- function(job = NULL
                     , model_config = NULL
                     , post_process = TRUE
                     , show_msgs = TRUE) {
+
+  # global variable bindings
+  y_obs <- y_pred <- NULL
 
   # set up data (wq_var & transformations); run gam
   {

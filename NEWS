@@ -4,7 +4,12 @@ NEWS
 
 <!-- NEWS.md is generated from NEWS.Rmd. Please edit that file -->
 
-    #> Last Update: 2024-05-22 13:49:00.476843
+    #> Last Update: 2024-05-22 15:57:45.415675
+
+# baytrends 0.1.0.9005
+
+- feature: Add new functions and checked with Check Package
+  - fun_cb4d_buildout_01.R
 
 # baytrends 0.1.0.9004
 
