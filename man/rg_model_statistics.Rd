@@ -28,3 +28,4 @@ stats <- rg_model_statistics(fitted_model, model_data_frame)
 }
 
 }
+\keyword{internal}

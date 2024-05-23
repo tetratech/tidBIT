@@ -20,7 +20,7 @@
 #'   or controls.
 #'
 #' @importFrom leaflet leaflet addProviderTiles addScaleBar providerTileOptions
-#' @importFrom magrittr %>%
+#' @importFrom dplyr %>% filter select
 #'
 #' @examples
 #' # Create a basic leaflet map with a base layer and a scale bar

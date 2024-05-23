@@ -185,12 +185,12 @@ transform_data_inverse <- function(y
 #' @importFrom magrittr %>%
 #' @importFrom stats pbeta
 #'
-#' @export
-#'
 #' @seealso \code{\link[stats]{qbeta}} for details on beta distribution
 #'   functions. \code{\link{beta_logit_tran_inverse}},
 #'   \code{\link{transform_data}}, \code{\link{transform_data_inverse}}
 #'
+#' @export
+#' @keywords internal
 #'
 beta_logit_tran <- function(x, bl4, show_msgs = FALSE) {
 
@@ -311,12 +311,13 @@ beta_logit_tran <- function(x, bl4, show_msgs = FALSE) {
 #' @importFrom magrittr %>%
 #' @importFrom stats qbeta
 #'
-#' @export
-#'
 #' @seealso \code{\link[stats]{qbeta}} for details on beta distribution
 #'   functions. \code{\link{beta_logit_tran}},
 #'   \code{\link{transform_data}},
 #'   \code{\link{transform_data_inverse}}
+#'
+#' @export
+#' @keywords internal
 #'
 beta_logit_tran_inverse <- function(z, bl4, show_msgs=FALSE) {
 
@@ -338,7 +339,7 @@ beta_logit_tran_inverse <- function(z, bl4, show_msgs=FALSE) {
 
   # Inverse transformation process
   z %>%
-    exp() %>%
+    exp(.) %>%
     {./ (1 + .)} %>%                       # Reverse logit transformation
     qbeta(shape1 = b1, shape2 = b2,
           ncp = 0, log.p = FALSE) %>%      # Find beta quantile
