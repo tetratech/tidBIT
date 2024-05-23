@@ -625,7 +625,6 @@ initialize_model_summary_table <- function() {
 #' @importFrom lubridate year
 #' @importFrom tidyselect any_of
 #'
-#' @export
 rg_model_specs <- function(job, run_time_start, run_time_stop) {
 
   rg_mod_specs <- as_tibble(job) %>%
@@ -665,7 +664,6 @@ rg_model_specs <- function(job, run_time_start, run_time_stop) {
 #'
 #' @importFrom tibble tibble
 #'
-#' @export
 rg_observation_count <- function(df) {
 
   # QC - check contents of job
@@ -707,7 +705,6 @@ rg_observation_count <- function(df) {
 #' @importFrom tibble tibble
 #' @importFrom stats AIC
 #'
-#' @export
 rg_model_statistics <- function(gs, df) {
 
   # model statistics
