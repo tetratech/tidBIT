@@ -176,10 +176,12 @@ transform_data_inverse <- function(y
 #' transformed values.
 #'
 #' @examples
+#' \dontrun{
 #' x <- seq(0, 1, length.out = 101)
 #' bl4 <- c(0, 1, 2, 2)  # beta logit transformation parameters
 #' transformed_x <- beta_logit_tran(x, bl4, TRUE)
 #' back_transformed_x <- beta_logit_tran_inverse(transformed_x, bl4, TRUE)
+#' }
 #'
 #' @importFrom zeallot %<-%
 #' @importFrom magrittr %>%
@@ -302,10 +304,12 @@ beta_logit_tran <- function(x, bl4, show_msgs = FALSE) {
 #' back-transformed values, aiming to reflect the original observations.
 #'
 #' @examples
+#' \dontrun{
 #' x <- seq(0, 1, length.out = 101)
 #' bl4 <- c(0, 1, 2, 2)  # beta logit transformation parameters
 #' transformed_x <- beta_logit_tran(x, bl4, TRUE)
 #' back_transformed_x <- beta_logit_tran_inverse(transformed_x, bl4, TRUE)
+#' }
 #'
 #' @importFrom zeallot %<-%
 #' @importFrom magrittr %>%
