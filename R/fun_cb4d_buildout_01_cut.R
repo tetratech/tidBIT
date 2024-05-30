@@ -518,25 +518,6 @@ leap_yday <- function(date_chk) {
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Jon Harcum, 2024-04-11
-create_rda_file_name <- function(job) {
-
-  x<-with(job, paste(wq_var,
-                     subestuary,
-                     data_source,
-              paste(format(date_begin, "%Y"), format(date_end, "%Y"),sep = "-"),
-                     formula_name,
-                     gam_by_term,
-                     trans_name,
-                     sep = "~")
-  )
-  x<-paste0(x,".rda")
-  return(x)
-
-}## FUN ~ create_rda_file_name
-
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Jon Harcum, 2024-04-11
 #' @title Initialize Model Summary Table
 #'
 #' @description Creates an empty tibble (data frame) structured to hold summary
@@ -626,6 +607,8 @@ initialize_model_summary_table <- function() {
 #' @importFrom tidyselect any_of
 #'
 #' @export
+#' @keywords internal
+#'
 rg_model_specs <- function(job, run_time_start, run_time_stop) {
 
   rg_mod_specs <- as_tibble(job) %>%
@@ -666,6 +649,8 @@ rg_model_specs <- function(job, run_time_start, run_time_stop) {
 #' @importFrom tibble tibble
 #'
 #' @export
+#' @keywords internal
+#'
 rg_observation_count <- function(df) {
 
   # QC - check contents of job
@@ -708,6 +693,8 @@ rg_observation_count <- function(df) {
 #' @importFrom stats AIC
 #'
 #' @export
+#' @keywords internal
+#'
 rg_model_statistics <- function(gs, df) {
 
   # model statistics

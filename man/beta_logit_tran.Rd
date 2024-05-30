@@ -52,3 +52,4 @@ back_transformed_x <- beta_logit_tran_inverse(transformed_x, bl4, TRUE)
   functions. \code{\link{beta_logit_tran_inverse}},
   \code{\link{transform_data}}, \code{\link{transform_data_inverse}}
 }
+\keyword{internal}

@@ -30,3 +30,4 @@ observation_summary <- rg_observation_count(data_frame)
 }
 
 }
+\keyword{internal}
