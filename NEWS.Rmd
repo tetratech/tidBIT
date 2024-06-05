@@ -18,6 +18,10 @@ knitr::opts_chunk$set(
 cat(paste0("Last Update: ",Sys.time()))
 ```
 
+# tidBIT 0.1.0.9010
+
+* functions plot_obs_pred_res, plot_bivariate_data, and plot_4_panel_distr added
+    
 # tidBIT 0.1.0.9008
 
 * refactor: reduced exported functions

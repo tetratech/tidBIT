@@ -4,14 +4,16 @@ NEWS
 
 <!-- NEWS.md is generated from NEWS.Rmd. Please edit that file -->
 
+    #> Last Update: 2024-06-05 10:08:06.548569
 
-# tidBIT 0.1.0.9009
+# tidBIT 0.1.0.9010
 
-- refactor: reduced exported functions
+- functions plot_obs_pred_res, plot_bivariate_data, and
+  plot_4_panel_distr added
 
 # tidBIT 0.1.0.9008
 
-- refactor: removed export from helper functions
+- refactor: reduced exported functions
 
 # tidBIT 0.1.0.9007
 

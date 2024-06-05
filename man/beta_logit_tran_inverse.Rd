@@ -44,10 +44,12 @@ back to the practical, bounded domain of the original data, facilitating
 interpretation and decision-making.
 }
 \examples{
+\dontrun{
 x <- seq(0, 1, length.out = 101)
 bl4 <- c(0, 1, 2, 2)  # beta logit transformation parameters
 transformed_x <- beta_logit_tran(x, bl4, TRUE)
 back_transformed_x <- beta_logit_tran_inverse(transformed_x, bl4, TRUE)
+}
 
 }
 \seealso{
