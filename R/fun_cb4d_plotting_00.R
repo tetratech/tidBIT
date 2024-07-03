@@ -3,7 +3,7 @@
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Jon Harcum, 2024-06-05
+#
 #' @title Create and Combine Bivariate Plots for Diagnostics
 #'
 #' @description This function creates and combines bivariate plots for observed versus predicted values
@@ -70,7 +70,7 @@ plot_obs_pred_res <- function(df, vars = c("y_obs", "y_pred", "y_resid"), vlab =
 }## FUN ~ plot_obs_pred_res
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Jon Harcum, 2024-06-05
+#
 #' @title Create a Bivariate Plot
 #'
 #' @description This function creates a bivariate plot for two specified variables from a data frame.
@@ -200,7 +200,7 @@ plot_bivariate_data <- function(df, x_var, y_var, xlab, ylab, ref_line = NA, smo
 }## FUN ~ plot_bivariate_data
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Jon Harcum, 2024-06-05
+#
 #' @title Create a 4-Panel Distribution Plot
 #'
 #' @description This function creates a 4-panel distribution plot displaying the normal probability plot,

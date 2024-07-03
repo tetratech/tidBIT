@@ -1,5 +1,5 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Jon Harcum, 2024-04-11
+#
 #' @title Clear the Viewer Pane in RStudio
 #'
 #' @description Clears the Viewer pane in RStudio by creating and opening a
@@ -45,7 +45,7 @@ cv <- function() {
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Jon Harcum, 2024-04-11
+#
 #' @title Output Formatted Table Using Flextable
 #'
 #' @description Outputs a formatted table based on the provided dataset.
@@ -163,7 +163,7 @@ tblFT1 <- function(data
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Jon Harcum, 2024-04-11
+#
 #' @title Append Variables to a List
 #'
 #' @description Dynamically appends variables to an existing list based on the
@@ -216,7 +216,7 @@ stow <- function(listvar=list(), v=NA) {
 } # end ~ function: stow
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Jon Harcum, 2024-04-11
+#
 #' @title Extract and Assign List Components to the Parent Environment
 #'
 #' @description Extracts specified components from a list or table and assigns
@@ -273,7 +273,7 @@ pry <- function(listvar, v=NA) {
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Jon Harcum, 2024-04-11
+#
 #' @title Grab All Function Arguments
 #'
 #' @description This function captures all arguments passed to the calling

@@ -1,5 +1,5 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Jon Harcum, 2024-04-11
+#
 #' @title Initialize Modeling Configuration Options
 #'
 #' @description Initializes modeling configuration variables from a JSON
@@ -166,7 +166,7 @@ init_model_config <- function(config_file, subestuary, show_msgs=FALSE) {
 }## FUN ~ init_model_config
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Jon Harcum, 2024-04-11
+#
 #' @title Load and Prepare Input Data Files
 #'
 #' @description Loads and processes various datasets as specified in a JSON
@@ -263,7 +263,7 @@ load_and_prep_input_data <- function(config_file, show_msgs=FALSE) {
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Jon Harcum, 2024-04-11
+#
 #' @title Create Job Queue for Modeling
 #'
 #' @description Generates a comprehensive job queue based on various control
@@ -356,7 +356,7 @@ create_job_que <- function(cntrl_subestuary = NA
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Jon Harcum, 2024-04-11
+#
 #' @title Down Select Data Based on Job Configuration
 #'
 #' @description Refines and filters the input datasets according to the
@@ -485,7 +485,7 @@ down_select_data <- function(job = NULL, model_data = NULL, show_msgs = FALSE) {
 }## FUN ~ down_select_data
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Jon Harcum, 2024-04-11
+#
 #' @title Compute Day of Year Adjusted for Leap Year
 #'
 #' @description Calculates the day of the year (DOY) for a given date, adjusting
@@ -517,7 +517,7 @@ leap_yday <- function(date_chk) {
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Jon Harcum, 2024-04-11
+#
 #' @title Initialize Model Summary Table
 #'
 #' @description Creates an empty tibble (data frame) structured to hold summary
@@ -572,7 +572,7 @@ initialize_model_summary_table <- function() {
 }## FUN ~ initialize_model_summary_table
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Jon Harcum, 2024-04-11
+#
 #' @title Generate Model Specifications Table
 #'
 #' @description Constructs a tibble containing detailed specifications of a
@@ -623,7 +623,7 @@ rg_model_specs <- function(job, run_time_start, run_time_stop) {
 }## FUN ~ rg_model_specs
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Jon Harcum, 2024-04-11
+#
 #' @title Count Observations by Source in Data Frame
 #'
 #' @description Aggregates and counts observations within a given data frame,
@@ -669,7 +669,7 @@ rg_observation_count <- function(df) {
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Jon Harcum, 2024-04-11
+#
 #' @title Calculate Model Statistics
 #'
 #' @description Computes key statistical metrics for a model based on residuals
@@ -709,7 +709,7 @@ rg_model_statistics <- function(gs, df) {
 }## FUN ~ rg_model_statistics
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Jon Harcum, 2024-04-11
+#
 #' @title Execute GAM Modeling Job
 #'
 #' @description Facilitates the execution of a Generalized Additive Model (GAM)
