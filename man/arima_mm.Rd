@@ -49,7 +49,7 @@ calculate the autocovariance parameters.
 set.seed(123)
 y    <- arima.sim(n = 40, list(ar = 0.40))
 y[8] <- NA
-arima_def(y)
+arima_mm(y)
 
 
 }

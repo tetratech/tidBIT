@@ -45,7 +45,8 @@ arima_def <- function(y, order = c(1, 0, 0)) {
     white_noise_sd = unname(white_noise_sd),
     t_value = unname(t_value),
     p_value = unname(p_value),
-    approach = "default"
+    approach = "default",
+    arima_results = arima_results
   ))
 }
 
@@ -97,7 +98,8 @@ arima_alt <- function(y, order = c(1, 0, 0)) {
     white_noise_sd = unname(white_noise_sd),
     t_value = unname(t_value),
     p_value = unname(p_value),
-    approach = "alternative"
+    approach = "alternative",
+    arima_results = arima_results
   ))
 }
 
@@ -142,7 +144,7 @@ arima_alt <- function(y, order = c(1, 0, 0)) {
 #' set.seed(123)
 #' y    <- arima.sim(n = 40, list(ar = 0.40))
 #' y[8] <- NA
-#' arima_def(y)
+#' arima_mm(y)
 #'
 #'
 #' @importFrom stats arima pt sd
@@ -246,7 +248,8 @@ arima_mm <- function(y) {
       white_noise_sd = white_noise_sd,
       t_value = t_value,
       p_value = p_value,
-      approach = "moments"
+      approach = "moments",
+      arima_results = ""
     ))
   }
 
@@ -292,7 +295,11 @@ estimate_ar1 <- function(y, order = c(1, 0, 0)) {
 
   # Function to check if a value is neither NA nor NaN
   is_not_na_and_not_nan <- function(x) {
-    !is.na(x) & !is.nan(x)
+    if (!is.list(x)) {
+      !is.na(x) & !is.nan(x)
+    } else if (is.list(x)) {
+      TRUE
+    }
   }
 
   # Initialize result list with NA values and empty message
@@ -303,6 +310,7 @@ estimate_ar1 <- function(y, order = c(1, 0, 0)) {
     t_value = NA,
     p_value = NA,
     approach = NA,
+    arima_results = "",
     message = ""
   )
 
@@ -432,7 +440,11 @@ plot_acf_pacf <- function(y) {
 
   # Function to check if a value is neither NA nor NaN
   is_not_na_and_not_nan <- function(x) {
-    !is.na(x) & !is.nan(x)
+    if (!is.list(x)) {
+      !is.na(x) & !is.nan(x)
+    } else if (is.list(x)) {
+      TRUE
+    }
   }
 
   # Set up the plotting layout to have the time series on the top row
