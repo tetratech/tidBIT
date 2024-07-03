@@ -31,11 +31,11 @@ the next method is attempted. The function returns a list containing
 the estimated parameters and any warning or error messages encountered.
 }
 \examples{
-y <- c(0.5, 0.4, 0.6, 0.7, NA, 0.8, 0.5, 0.4, 0.6, 0.7, 0.8,
-       0.5, 0.4, 0.6, 0.7, 0.8, 0.5, 0.4, 0.6, 0.7, 0.8)
+set.seed(123)
+y    <- arima.sim(n = 40, list(ar = 0.40))
+y[8] <- NA
 plot_acf_pacf(y)
-result <- estimate_ar1(y)
-print(result)
+estimate_ar1(y)
 
 
 }

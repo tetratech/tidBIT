@@ -13,8 +13,9 @@
 #'   error, white noise standard deviation, t-value, p-value, and the approach
 #'   used.
 #' @examples
-#' y <- c(0.5, 0.4, 0.6, 0.7, NA, 0.8, 0.5, 0.4, 0.6, 0.7, 0.8,
-#'        0.5, 0.4, 0.6, 0.7, 0.8, 0.5, 0.4, 0.6, 0.7, 0.8)
+#' set.seed(123)
+#' y    <- arima.sim(n = 40, list(ar = 0.40))
+#' y[8] <- NA
 #' arima_def(y)
 #'
 #' @importFrom stats arima pt sd
@@ -61,8 +62,9 @@ arima_def <- function(y, order = c(1, 0, 0)) {
 #'   error, white noise standard deviation, t-value, p-value, and the approach
 #'   used.
 #' @examples
-#' y <- c(0.5, 0.4, 0.6, 0.7, NA, 0.8, 0.5, 0.4, 0.6, 0.7, 0.8,
-#'        0.5, 0.4, 0.6, 0.7, 0.8, 0.5, 0.4, 0.6, 0.7, 0.8)
+#' set.seed(123)
+#' y    <- arima.sim(n = 40, list(ar = 0.40))
+#' y[8] <- NA
 #' arima_alt(y)
 #'
 #' @importFrom stats arima pt sd
@@ -137,9 +139,10 @@ arima_alt <- function(y, order = c(1, 0, 0)) {
 #' @param y A numeric vector representing the time series data.
 #' @return A list containing the estimated AR(1) parameter (phi_1), standard error, white noise standard deviation, t-value, p-value, and the approach used.
 #' @examples
-#' y <- c(0.5, 0.4, 0.6, 0.7, NA, 0.8, 0.5, 0.4, 0.6, 0.7, 0.8,
-#'        0.5, 0.4, 0.6, 0.7, 0.8, 0.5, 0.4, 0.6, 0.7, 0.8)
-#' arima_mm(y)
+#' set.seed(123)
+#' y    <- arima.sim(n = 40, list(ar = 0.40))
+#' y[8] <- NA
+#' arima_def(y)
 #'
 #'
 #' @importFrom stats arima pt sd
@@ -269,11 +272,11 @@ arima_mm <- function(y) {
 #'   \item{message}{Any warning or error messages encountered during the estimation process.}
 #' }
 #' @examples
-#' y <- c(0.5, 0.4, 0.6, 0.7, NA, 0.8, 0.5, 0.4, 0.6, 0.7, 0.8,
-#'        0.5, 0.4, 0.6, 0.7, 0.8, 0.5, 0.4, 0.6, 0.7, 0.8)
+#' set.seed(123)
+#' y    <- arima.sim(n = 40, list(ar = 0.40))
+#' y[8] <- NA
 #' plot_acf_pacf(y)
-#' result <- estimate_ar1(y)
-#' print(result)
+#' estimate_ar1(y)
 #'
 #'
 #' @importFrom stats arima pt sd
@@ -413,9 +416,11 @@ estimate_ar1 <- function(y, order = c(1, 0, 0)) {
 #' @importFrom tibble tibble
 #'
 #' @examples
-#' y <- c(0.5, 0.4, 0.6, 0.7, NA, 0.8, 0.5, 0.4, 0.6, 0.7, 0.8,
-#'        0.5, 0.4, 0.6, 0.7, 0.8, 0.5, 0.4, 0.6, 0.7, 0.8)
+#' set.seed(123)
+#' y    <- arima.sim(n = 40, list(ar = 0.40))
+#' y[8] <- NA
 #' plot_acf_pacf(y)
+#' estimate_ar1(y)
 #'
 #' @seealso \code{\link{estimate_ar1}},
 #'   \code{\link{arima_def}},

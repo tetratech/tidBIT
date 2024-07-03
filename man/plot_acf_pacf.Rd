@@ -25,9 +25,11 @@ The function first estimates the AR(1) parameters using the `estimate_ar1` funct
 If the AR(1) estimation fails, the phi and p-value are set to NA and displayed accordingly.
 }
 \examples{
-y <- c(0.5, 0.4, 0.6, 0.7, NA, 0.8, 0.5, 0.4, 0.6, 0.7, 0.8,
-       0.5, 0.4, 0.6, 0.7, 0.8, 0.5, 0.4, 0.6, 0.7, 0.8)
+set.seed(123)
+y    <- arima.sim(n = 40, list(ar = 0.40))
+y[8] <- NA
 plot_acf_pacf(y)
+estimate_ar1(y)
 
 }
 \seealso{

@@ -46,9 +46,10 @@ obtained from the t-distribution with \eqn{n - 4} degrees of freedom. \eqn{n
 calculate the autocovariance parameters.
 }
 \examples{
-y <- c(0.5, 0.4, 0.6, 0.7, NA, 0.8, 0.5, 0.4, 0.6, 0.7, 0.8,
-       0.5, 0.4, 0.6, 0.7, 0.8, 0.5, 0.4, 0.6, 0.7, 0.8)
-arima_mm(y)
+set.seed(123)
+y    <- arima.sim(n = 40, list(ar = 0.40))
+y[8] <- NA
+arima_def(y)
 
 
 }
