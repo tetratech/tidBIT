@@ -1,5 +1,5 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Jon Harcum, 2024-04-11
+#
 #' @title Transform Data Based on a Given Transformation Name
 #'
 #' @description Applies a specified transformation to a numeric vector `y_obs`
@@ -69,7 +69,7 @@ transform_data <- function(y_obs, trans_name, trans_parms, show_msgs = FALSE) {
 }## FUN ~ transform_data
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Jon Harcum, 2024-04-11
+#
 #' @title Inverse Transformation of Data
 #'
 #' @description Applies the inverse of a specified transformation to a numeric
@@ -144,7 +144,7 @@ transform_data_inverse <- function(y
 }## FUN ~ transform_data_inverse
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Jon Harcum, 2024-04-11
+#
 #' @title Beta Logit Transformation
 #'
 #' @description Applies a beta logit transformation to a numeric vector `x`,
@@ -269,7 +269,7 @@ beta_logit_tran <- function(x, bl4, show_msgs = FALSE) {
 }## FUN ~ beta_logit_tran
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Jon Harcum, 2024-04-11
+#
 #' @title Inverse Beta Logit Transformation
 #'
 #' @description Reverses the beta logit transformation applied by

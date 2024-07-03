@@ -1,5 +1,5 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Jon Harcum, 2024-04-11
+#
 #' @title Map Base Layer
 #'
 #' @description Initializes a Leaflet map with CartoDB Positron tiles (no
@@ -47,7 +47,7 @@ map_base <- function() {
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Jon Harcum, 2024-04-11
+#
 #' @title Add Colored Polygons to a Leaflet Map
 #'
 #' @description Adds colored polygons to a Leaflet map based on a given `sf`
