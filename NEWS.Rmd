@@ -18,6 +18,10 @@ knitr::opts_chunk$set(
 cat(paste0("Last Update: ",Sys.time()))
 ```
 
+# tidBIT 0.1.0.9012
+
+* functions arima_def, arima_alt, arima_mm, estimate_ar1, plot_acf_pacf refactored to improve documentation and remove options for user to try and use order != c(1,0,0)
+
 # tidBIT 0.1.0.9011
 
 * functions arima_def, arima_alt, arima_mm, estimate_ar1, plot_acf_pacf added

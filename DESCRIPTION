@@ -1,7 +1,7 @@
 Package: tidBIT
 Type: Package
 Title: Chesapeake Bay 4D Model Functions
-Version: 0.1.0.9011
+Version: 0.1.0.9012
 Authors@R: c(
   person("Jon", "Harcum", email="Jon.Harcum@tetratech.com", role="aut"), 
   person("Erik W.", "Leppo", email="Erik.Leppo@tetratech.com", role=c("aut","cre")))
@@ -39,4 +39,4 @@ Suggests:
 URL: https://github.com/tetratech/tidBIT
 BugReports: https://github.com/tetratech/tidBIT/issues
 Config/testthat/edition: 3
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2

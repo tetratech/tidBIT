@@ -34,7 +34,7 @@ estimate_ar1(y)
 }
 \seealso{
 \code{\link{estimate_ar1}},
-  \code{\link{arima_def}},
-  \code{\link{arima_alt}},
-  \code{\link{arima_mm}}
+  \code{\link{ar1_default}},
+  \code{\link{ar1_alter}},
+  \code{\link{ar1_moment}}
 }

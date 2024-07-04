@@ -1,14 +1,18 @@
 
+
+
+
 #' Default ARIMA Application for AR(1) Model
 #'
-#' Fits an AR(1) model to the time series data using the default settings of
-#' the `arima` function in R. The model specification is given by order = c(1,
-#' 0, 0), indicating an AR(1) model with no differencing and no moving average
-#' component.
+#' Fit an AR(1) model to the time series data using the default settings of the
+#' `arima` function. The `arima` function call uses order = c(1, 0, 0)
+#' indicating an AR(1) model with no differencing and no moving average
+#' component. Default methods "CSS-ML" (Conditional Sum of Squares followed by
+#' Maximum Likelihood), default optimization "BFGS"
+#' (Broyden-Fletcher-Goldfarb-Shanno algorithm), and default iterations are
+#' used.
 #'
 #' @param y A numeric vector representing the time series data.
-#' @param order A numeric vector of length 3 specifying the order of the ARIMA
-#'   model.
 #' @return A list containing the estimated AR(1) parameter (phi_1), standard
 #'   error, white noise standard deviation, t-value, p-value, and the approach
 #'   used.
@@ -16,20 +20,21 @@
 #' set.seed(123)
 #' y    <- arima.sim(n = 40, list(ar = 0.40))
 #' y[8] <- NA
-#' arima_def(y)
+#' ar1_default(y)
 #'
 #' @importFrom stats arima pt sd
 #'
 #' @seealso \code{\link{estimate_ar1}},
 #'   \code{\link{plot_acf_pacf}},
-#'   \code{\link{arima_alt}},
-#'   \code{\link{arima_mm}}
+#'   \code{\link{ar1_alter}},
+#'   \code{\link{ar1_moment}}
 #'
 #' @export
 #' @keywords internal
 #'
-arima_def <- function(y, order = c(1, 0, 0)) {
-  arima_results  <- arima(y, order = order)
+ar1_default <- function(y) {
+
+  arima_results  <- arima(y, order = c(1, 0, 0))
 
   phi_1          <- arima_results$coef[1]
   standard_error <- sqrt(arima_results$var.coef[1, 1])
@@ -53,12 +58,15 @@ arima_def <- function(y, order = c(1, 0, 0)) {
 
 #' Alternative ARIMA Application for AR(1) Model
 #'
-#' Fits an AR(1) model to the time series data using modified settings of the
-#' `arima` function in R. This includes using method "ML" and optimization
-#' method "CG".
+#' Fit an AR(1) model to the time series data using the `arima` function with
+#' alternative parameters. The `arima` function call uses order = c(1, 0, 0)
+#' indicating an AR(1) model with no differencing and no moving average
+#' component. Alternative methods " ML" (Maximum Likelihood) and alternative
+#' optimization "CG" (Conjugate Gradient algorithm) are used. The maximum number
+#' of iterations is increased to 200 (i.e., `optim.control = list(maxit =
+#' 200)`).
 #'
 #' @param y A numeric vector representing the time series data.
-#' @param order A numeric vector of length 3 specifying the order of the ARIMA model.
 #' @return A list containing the estimated AR(1) parameter (phi_1), standard
 #'   error, white noise standard deviation, t-value, p-value, and the approach
 #'   used.
@@ -66,20 +74,20 @@ arima_def <- function(y, order = c(1, 0, 0)) {
 #' set.seed(123)
 #' y    <- arima.sim(n = 40, list(ar = 0.40))
 #' y[8] <- NA
-#' arima_alt(y)
+#' ar1_alter(y)
 #'
 #' @importFrom stats arima pt sd
 #'
 #' @seealso \code{\link{estimate_ar1}},
 #'   \code{\link{plot_acf_pacf}},
-#'   \code{\link{arima_def}},
-#'   \code{\link{arima_mm}}
+#'   \code{\link{ar1_default}},
+#'   \code{\link{ar1_moment}}
 #'
 #' @export
 #' @keywords internal
 #'
-arima_alt <- function(y, order = c(1, 0, 0)) {
-  arima_results <- arima(y, order = order,
+ar1_alter <- function(y) {
+  arima_results <- arima(y, order = c(1, 0, 0),
                          method = "ML",
                          optim.method = "CG",
                          optim.control = list(maxit = 200))
@@ -104,13 +112,10 @@ arima_alt <- function(y, order = c(1, 0, 0)) {
 }
 
 
-
 #' Method of Moments for AR(1) Parameters
 #'
-#' In some data sets, the Maximum Likelihood (ML) method in the `arima` function
-#' fails to provide a valid estimate for the standard error, suggesting issues
-#' with convergence or model fit. When this happens, the method of moments (MM)
-#' can be used. The MM approach avoids computing initial values and does not
+#' Estimate AR(1) parameters using the method of moments (MM) approach.
+#' The MM approach avoids computing initial values and does not
 #' rely on numerical optimization, making it less prone to convergence issues.
 #'
 #' The MM approach is used for estimating the parameters of an autoregressive
@@ -144,20 +149,20 @@ arima_alt <- function(y, order = c(1, 0, 0)) {
 #' set.seed(123)
 #' y    <- arima.sim(n = 40, list(ar = 0.40))
 #' y[8] <- NA
-#' arima_mm(y)
+#' ar1_moment(y)
 #'
 #'
 #' @importFrom stats arima pt sd
 #'
 #' @seealso \code{\link{estimate_ar1}},
 #'   \code{\link{plot_acf_pacf}},
-#'   \code{\link{arima_def}},
-#'   \code{\link{arima_alt}}
+#'   \code{\link{ar1_default}},
+#'   \code{\link{ar1_alter}}
 #'
 #' @export
 #' @keywords internal
 #'
-arima_mm <- function(y) {
+ar1_moment <- function(y) {
 
   # Function to remove NA pairs
   remove_na_pairs <- function(y) {
@@ -256,14 +261,15 @@ arima_mm <- function(y) {
 
 #' Estimate AR(1) Model Parameter
 #'
-#' This function attempts to estimate the parameters of an AR(1) model using
-#' three different methods sequentially: default ARIMA, alternative ARIMA,
-#' and method of moments. If a method fails (produces an error or warning),
-#' the next method is attempted. The function returns a list containing
-#' the estimated parameters and any warning or error messages encountered.
+#' This function estimates the parameters of an AR(1) model using three
+#' different approaches sequentially. If an approach fails (produces an error or
+#' warning), the next approach is attempted. Approach 1 use the `arima` function
+#' with default parameters. Approach 2 uses the `arima` function with
+#' alternative method, optimization, and iteration settings. Approach 3 uses the
+#' method of moments. The function returns a list containing the estimated
+#' parameters and any warning or error messages encountered.
 #'
 #' @param y A numeric vector representing the time series data.
-#' @param order A numeric vector of length 3 specifying the order of the ARIMA model.
 #' @return A list containing the following elements:
 #' \describe{
 #'   \item{phi_1}{The estimated AR(1) parameter.}
@@ -285,13 +291,13 @@ arima_mm <- function(y) {
 #' @importFrom stats arima pt sd
 #'
 #' @seealso \code{\link{plot_acf_pacf}},
-#'   \code{\link{arima_def}},
-#'   \code{\link{arima_alt}},
-#'   \code{\link{arima_mm}}
+#'   \code{\link{ar1_default}},
+#'   \code{\link{ar1_alter}},
+#'   \code{\link{ar1_moment}}
 #'
 #' @export
 #'
-estimate_ar1 <- function(y, order = c(1, 0, 0)) {
+estimate_ar1 <- function(y) {
 
   # Function to check if a value is neither NA nor NaN
   is_not_na_and_not_nan <- function(x) {
@@ -317,17 +323,18 @@ estimate_ar1 <- function(y, order = c(1, 0, 0)) {
   # Try default ARIMA method
   {
     try_default <- tryCatch({
-      result <- arima_def(y, order)
+      result <- ar1_default(y)
+      result$message = ""
       result
     }, warning = function(w) {
       # Capture warning message
       result$approach <- "default"
-      result$message  <- paste("arima_def msg:", conditionMessage(w))
+      result$message  <- paste("ar1_default msg:", conditionMessage(w))
       result
     }, error = function(e) {
       # Capture error message
       result$approach <- "default"
-      result$message  <- paste("arima_def msg:", conditionMessage(e))
+      result$message  <- paste("ar1_default msg:", conditionMessage(e))
       result
     })
   }
@@ -343,18 +350,18 @@ estimate_ar1 <- function(y, order = c(1, 0, 0)) {
   # Try alternative ARIMA method
   {
     try_alternative <- tryCatch({
-      result <- arima_alt(y, order)
+      result <- ar1_alter(y)
       result$message <- message
       result
     }, warning = function(w) {
       # Append warning message
       result$approach <- "alternative"
-      result$message <- paste(message, "|", "arima_alt msg:", conditionMessage(w))
+      result$message <- paste(message, "|", "ar1_alter msg:", conditionMessage(w))
       result
     }, error = function(e) {
       # Append error message
       result$approach <- "alternative"
-      result$message <- paste(message, "|", "arima_alt msg:", conditionMessage(e))
+      result$message <- paste(message, "|", "ar1_alter msg:", conditionMessage(e))
       result
     })
   }
@@ -370,18 +377,18 @@ estimate_ar1 <- function(y, order = c(1, 0, 0)) {
   # Try method of moments
   {
     try_moments <- tryCatch({
-      result <- arima_mm(y)
+      result <- ar1_moment(y)
       result$message <- message
       result
     }, warning = function(w) {
       # Append warning message
       result$approach <- "moments"
-      result$message <- paste(message, "|", "arima_mm msg:", conditionMessage(w))
+      result$message <- paste(message, "|", "ar1_moment msg:", conditionMessage(w))
       result
     }, error = function(e) {
       # Append error message
       result$approach <- "moments"
-      result$message <- paste(message, "|", "arima_mm msg:", conditionMessage(e))
+      result$message <- paste(message, "|", "ar1_moment msg:", conditionMessage(e))
       result
     })
   }
@@ -431,9 +438,9 @@ estimate_ar1 <- function(y, order = c(1, 0, 0)) {
 #' estimate_ar1(y)
 #'
 #' @seealso \code{\link{estimate_ar1}},
-#'   \code{\link{arima_def}},
-#'   \code{\link{arima_alt}},
-#'   \code{\link{arima_mm}}
+#'   \code{\link{ar1_default}},
+#'   \code{\link{ar1_alter}},
+#'   \code{\link{ar1_moment}}
 #'
 #' @export
 plot_acf_pacf <- function(y) {

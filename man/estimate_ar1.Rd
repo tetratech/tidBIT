@@ -4,12 +4,10 @@
 \alias{estimate_ar1}
 \title{Estimate AR(1) Model Parameter}
 \usage{
-estimate_ar1(y, order = c(1, 0, 0))
+estimate_ar1(y)
 }
 \arguments{
 \item{y}{A numeric vector representing the time series data.}
-
-\item{order}{A numeric vector of length 3 specifying the order of the ARIMA model.}
 }
 \value{
 A list containing the following elements:
@@ -24,11 +22,13 @@ A list containing the following elements:
 }
 }
 \description{
-This function attempts to estimate the parameters of an AR(1) model using
-three different methods sequentially: default ARIMA, alternative ARIMA,
-and method of moments. If a method fails (produces an error or warning),
-the next method is attempted. The function returns a list containing
-the estimated parameters and any warning or error messages encountered.
+This function estimates the parameters of an AR(1) model using three
+different approaches sequentially. If an approach fails (produces an error or
+warning), the next approach is attempted. Approach 1 use the `arima` function
+with default parameters. Approach 2 uses the `arima` function with
+alternative method, optimization, and iteration settings. Approach 3 uses the
+method of moments. The function returns a list containing the estimated
+parameters and any warning or error messages encountered.
 }
 \examples{
 set.seed(123)
@@ -41,7 +41,7 @@ estimate_ar1(y)
 }
 \seealso{
 \code{\link{plot_acf_pacf}},
-  \code{\link{arima_def}},
-  \code{\link{arima_alt}},
-  \code{\link{arima_mm}}
+  \code{\link{ar1_default}},
+  \code{\link{ar1_alter}},
+  \code{\link{ar1_moment}}
 }

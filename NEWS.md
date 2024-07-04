@@ -4,7 +4,18 @@ NEWS
 
 <!-- NEWS.md is generated from NEWS.Rmd. Please edit that file -->
 
-    #> Last Update: 2024-06-05 10:08:06.548569
+    #> Last Update: 2024-07-04 07:45:12.821297
+
+# tidBIT 0.1.0.9012
+
+- functions arima_def, arima_alt, arima_mm, estimate_ar1, plot_acf_pacf
+  refactored to improve documentation and remove options for user to try
+  and use order != c(1,0,0)
+
+# tidBIT 0.1.0.9011
+
+- functions arima_def, arima_alt, arima_mm, estimate_ar1, plot_acf_pacf
+  added
 
 # tidBIT 0.1.0.9010
 
