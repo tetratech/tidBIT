@@ -22,13 +22,16 @@ A list containing the following elements:
 }
 }
 \description{
-This function estimates the parameters of an AR(1) model using three
-different approaches sequentially. If an approach fails (produces an error or
-warning), the next approach is attempted. Approach 1 use the `arima` function
-with default parameters. Approach 2 uses the `arima` function with
-alternative method, optimization, and iteration settings. Approach 3 uses the
-method of moments. The function returns a list containing the estimated
-parameters and any warning or error messages encountered.
+An AR(1) model is fit using up to three different approaches sequentially. If
+an approach fails (produces an error or warning), the next approach is
+attempted. Approach 1 uses the `arima` function with default parameters and
+is computationally faster than Approach 2 but sometimes fails to converge.
+Approach 2 uses the `arima` function with alternative method, optimization,
+and iteration settings and based on testing found to be
+less prone to convergence issues. Approach 3 uses the method of moments but
+is considered less accurate than the other two approaches but does not rely
+on computing initial values. See \code{\link{ar1_default}}, \code{\link{ar1_alter}},
+and \code{\link{ar1_moment}} for further details.
 }
 \examples{
 set.seed(123)

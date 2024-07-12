@@ -17,7 +17,8 @@ This function plots a time series along with its ACF (Autocorrelation Function) 
 It also performs AR(1) parameter estimation and displays the estimated phi and its p-value in the time series plot.
 }
 \details{
-The function first estimates the AR(1) parameters using the `estimate_ar1` function. It then sets up a layout for plotting:
+The function first estimates the AR(1) parameters using the
+  \code{\link{estimate_ar1}} function. It then sets up a layout for plotting:
 \itemize{
   \item The first row contains the time series plot and lag-1 plot
   \item The second row contains the ACF and PACF plots

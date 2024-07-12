@@ -58,13 +58,13 @@ ar1_default <- function(y) {
 
 #' Alternative ARIMA Application for AR(1) Model
 #'
-#' Fit an AR(1) model to the time series data using the `arima` function with
-#' alternative parameters. The `arima` function call uses order = c(1, 0, 0)
-#' indicating an AR(1) model with no differencing and no moving average
-#' component. Alternative methods " ML" (Maximum Likelihood) and alternative
-#' optimization "CG" (Conjugate Gradient algorithm) are used. The maximum number
-#' of iterations is increased to 200 (i.e., `optim.control = list(maxit =
-#' 200)`).
+# Fit an AR(1) model to the time series data using the `arima` function with
+# alternative parameters. The `arima` function call uses order = c(1, 0, 0)
+# indicating an AR(1) model with no differencing and no moving average
+# component. An alternative method “ML" (Maximum Likelihood) and alternative
+# optimization "CG" (Conjugate Gradient algorithm) arguments are used. The
+# maximum number of iterations is increased to 200 (i.e., `optim.control =
+# list(maxit = 200)`).
 #'
 #' @param y A numeric vector representing the time series data.
 #' @return A list containing the estimated AR(1) parameter (phi_1), standard
@@ -261,13 +261,16 @@ ar1_moment <- function(y) {
 
 #' Estimate AR(1) Model Parameter
 #'
-#' This function estimates the parameters of an AR(1) model using three
-#' different approaches sequentially. If an approach fails (produces an error or
-#' warning), the next approach is attempted. Approach 1 use the `arima` function
-#' with default parameters. Approach 2 uses the `arima` function with
-#' alternative method, optimization, and iteration settings. Approach 3 uses the
-#' method of moments. The function returns a list containing the estimated
-#' parameters and any warning or error messages encountered.
+#' An AR(1) model is fit using up to three different approaches sequentially. If
+#' an approach fails (produces an error or warning), the next approach is
+#' attempted. Approach 1 uses the `arima` function with default parameters and
+#' is computationally faster than Approach 2 but sometimes fails to converge.
+#' Approach 2 uses the `arima` function with alternative method, optimization,
+#' and iteration settings and based on testing found to be
+#' less prone to convergence issues. Approach 3 uses the method of moments but
+#' is considered less accurate than the other two approaches but does not rely
+#' on computing initial values. See \code{\link{ar1_default}}, \code{\link{ar1_alter}},
+#' and \code{\link{ar1_moment}} for further details.
 #'
 #' @param y A numeric vector representing the time series data.
 #' @return A list containing the following elements:
@@ -418,7 +421,8 @@ estimate_ar1 <- function(y) {
 #'
 #' @return This function does not return a value. It generates a series of plots.
 #'
-#' @details The function first estimates the AR(1) parameters using the `estimate_ar1` function. It then sets up a layout for plotting:
+#' @details The function first estimates the AR(1) parameters using the
+#'   \code{\link{estimate_ar1}} function. It then sets up a layout for plotting:
 #' \itemize{
 #'   \item The first row contains the time series plot and lag-1 plot
 #'   \item The second row contains the ACF and PACF plots
