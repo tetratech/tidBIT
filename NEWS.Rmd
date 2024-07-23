@@ -18,6 +18,11 @@ knitr::opts_chunk$set(
 cat(paste0("Last Update: ",Sys.time()))
 ```
 
+
+# tidBIT 0.1.0.9014
+
+* refactored leap_yday to allow for 'water'- or 'climate'- based year
+
 # tidBIT 0.1.0.9013
 
 * ar(1) function documentation improved

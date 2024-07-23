@@ -486,7 +486,7 @@ down_select_data <- function(job = NULL, model_data = NULL, show_msgs = FALSE) {
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
-#' @title Compute Day of Year Adjusted for Leap Year
+#' @title Compute Day of Year Adjusted for Leap Year (TARGET DEPRECATION)
 #'
 #' @description Calculates the day of the year (DOY) for a given date, adjusting
 #'  as if every year is a leap year. This adjustment ensures consistency in day
@@ -509,7 +509,7 @@ down_select_data <- function(job = NULL, model_data = NULL, show_msgs = FALSE) {
 #'
 #' @export
 # ----< Function which computes doy as though every year is leap year >---
-leap_yday <- function(date_chk) {
+leap_yday_01 <- function(date_chk) {
   is_leap_year <- leap_year(year(date_chk))
   yday(date_chk) + ifelse(month(date_chk) > 2 & !is_leap_year, 1, 0)
 }## FUN ~ leap_yday
@@ -844,3 +844,88 @@ run_gam <- function(job = NULL
 
 }## FUN ~ run_gam
 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#' @title Compute Day of Year Adjusted for Leap Year and Start Year Type
+#'
+#' @description Calculates the day of the year (DOY) for a given date, adjusting
+#'  as if every year is a leap year. This adjustment ensures consistency in day
+#'  numbering across years, particularly useful for analyses where maintaining a
+#'  consistent temporal scale is important, such as in time series modeling or
+#'  seasonal studies. The function also allows adjusting for different start year
+#'  types: calendar year (Jan 1), water year (Oct 1), and climate year (Apr 1).
+#'
+#' @param date_chk A date or datetime object, or a vector of dates, for which the adjusted day of the
+#' year is calculated.
+#' @param start_year_type A character string specifying the type of start year.
+#' One of "calendar" (default, starting Jan 1), "water" (starting Oct 1), or "climate" (starting Apr 1).
+#'
+#' @return An integer vector representing the day of the year, adjusted for leap years
+#' and the specified start year type.
+#'
+#' @examples
+#' \dontrun{
+#' date_example <- as.Date(
+#'   c("1999-01-01",    "1999-01-02",    "1999-02-28",    NA,
+#'     "1999-03-01",    "1999-03-30",    "1999-03-31",    "1999-04-01",
+#'     "1999-04-02",    "1999-09-29",    "1999-09-30",    "1999-10-01",
+#'     "1999-10-02",    "1999-12-30",    "1999-12-31",
+#'     "2000-01-01",    "2000-01-02",    "2000-02-28",    "2000-02-29",
+#'     "2000-03-01",    "2000-03-30",    "2000-03-31",    "2000-04-01",
+#'     "2000-04-02",    "2000-09-29",    "2000-09-30",    "2000-10-01",
+#'     "2000-10-02",    "2000-12-30",    "2000-12-31",
+#'     "2001-01-01",    "2001-01-02",    "2001-02-28",    NA,
+#'     "2001-03-01",    "2001-03-30",    "2001-03-31",    "2001-04-01",
+#'     "2001-04-02",    "2001-09-29",    "2001-09-30",    "2001-10-01",
+#'     "2001-10-02",    "2001-12-30",    "2001-12-31"  ))
+#'
+#' x<-leap_yday(date_example)
+#' matrix(x, ncol=3)
+#'
+#' x<-leap_yday(date_example, start_year_type = "water")
+#' matrix(x, ncol=3)
+#'
+#' x<-leap_yday(date_example, start_year_type = "climate")
+#' matrix(x, ncol=3)
+#' }
+#'
+#' @importFrom lubridate year yday month day leap_year years
+#'
+#' @export
+leap_yday <- function(date_chk, start_year_type = "calendar") {
+
+  # Validate the start_year_type argument
+  stopifnot(start_year_type %in% c("calendar", "water", "climate"))
+
+  # Calculate the "initial" start date based on the given type of start year
+  start_day <- if (start_year_type == "water") {
+    as.Date(paste0(year(date_chk), "-10-01"))
+  } else if (start_year_type == "climate") {
+    as.Date(paste0(year(date_chk), "-04-01"))
+  } else {
+    as.Date(paste0(year(date_chk), "-01-01"))
+  }
+
+  # Adjust "initial" start date to one year earlier if the initially calculated
+  # start date occurs after the date being checked
+  start_day <- ifelse(date_chk < start_day, start_day - years(1), start_day)
+  start_day <- as.Date(start_day, origin = "1970-01-01") # Convert back to Date class
+
+  # Calculate the number of days since the start date
+  year_day <- as.integer(date_chk - start_day + 1)
+
+  # Determine if the date being checked and the start date fall in leap years
+  is_leap_year <- leap_year(year(date_chk))
+
+  # Determine leap year adjustments based on the type of start year
+  leap_adjustment <- ifelse(
+    (start_year_type == "calendar" & month(date_chk) > 2 & !is_leap_year) |
+      (start_year_type == "water" & month(date_chk) > 2 & month(date_chk) < 10 & !is_leap_year) |
+      (start_year_type == "climate" & month(date_chk) > 2 & month(date_chk) < 4 & !is_leap_year),
+    1, 0)
+
+  # Apply leap year adjustment
+  year_day_adjusted <- year_day + leap_adjustment
+
+  return(year_day_adjusted)
+}## FUN ~ leap_yday
