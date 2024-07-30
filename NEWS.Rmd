@@ -18,6 +18,18 @@ knitr::opts_chunk$set(
 cat(paste0("Last Update: ",Sys.time()))
 ```
 
+# tidBIT 0.1.0.9016
+
+* refactored to add helper functions decimal_date and decimal_hours
+
+# tidBIT 0.1.0.9015
+
+* refactored leap_yday to allow for arbritrary start day
+
+# tidBIT 0.1.0.9014
+
+* refactored leap_yday to allow for 'water'- or 'climate'- based year
+
 # tidBIT 0.1.0.9013
 
 * ar(1) function documentation improved

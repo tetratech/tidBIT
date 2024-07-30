@@ -484,37 +484,6 @@ down_select_data <- function(job = NULL, model_data = NULL, show_msgs = FALSE) {
               segments = segments))
 }## FUN ~ down_select_data
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#
-#' @title Compute Day of Year Adjusted for Leap Year
-#'
-#' @description Calculates the day of the year (DOY) for a given date, adjusting
-#'  as if every year is a leap year. This adjustment ensures consistency in day
-#' numbering across years, particularly useful for analyses where maintaining a
-#' consistent temporal scale is important, such as in time series modeling or
-#' seasonal studies.
-#'
-#' @param date_chk A date or datetime object for which the adjusted day of the
-#' year is calculated.
-#'
-#' @return An integer representing the day of the year, adjusted for leap years.
-#'
-#' @examples
-#' \dontrun{
-#' date_example <- as.Date("2023-03-01")
-#' leap_yday(date_example)  # Outputs: 61
-#' }
-#'
-#' @importFrom lubridate year yday month leap_year
-#'
-#' @export
-# ----< Function which computes doy as though every year is leap year >---
-leap_yday <- function(date_chk) {
-  is_leap_year <- leap_year(year(date_chk))
-  yday(date_chk) + ifelse(month(date_chk) > 2 & !is_leap_year, 1, 0)
-}## FUN ~ leap_yday
-
-
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
@@ -843,4 +812,3 @@ run_gam <- function(job = NULL
   return(gs)
 
 }## FUN ~ run_gam
-
