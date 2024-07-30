@@ -27,8 +27,11 @@
 #' @importFrom rstudioapi viewer
 #'
 #' @export
+#' @keywords internal
 #'
 #' @seealso \code{\link[rstudioapi]{viewer}}, for details on how to display local web content in the Viewer pane.
+#'
+#'
 #'
 #' @importFrom rstudioapi viewer
 #'
@@ -200,6 +203,7 @@ tblFT1 <- function(data
 #' print(my_list)
 #'
 #' @export
+#' @keywords internal
 #'
 #' @seealso \code{\link{list}}, for creating lists.
 #' \code{\link{eval}}, \code{\link{parse}}, for details on evaluating and parsing expressions.
@@ -252,6 +256,7 @@ stow <- function(listvar=list(), v=NA) {
 #' print(c)
 #'
 #' @export
+#' @keywords internal
 #'
 #' @seealso \code{\link{list}}, for creating and manipulating list objects.
 #' \code{\link{list2env}}, for converting lists into environments.

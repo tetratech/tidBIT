@@ -4,7 +4,19 @@ NEWS
 
 <!-- NEWS.md is generated from NEWS.Rmd. Please edit that file -->
 
-    #> Last Update: 2024-07-04 07:45:12.821297
+    #> Last Update: 2024-07-26 13:26:54.02744
+
+# tidBIT 0.1.0.9015
+
+- refactored leap_yday to allow for arbritrary start day
+
+# tidBIT 0.1.0.9014
+
+- refactored leap_yday to allow for ‘water’- or ‘climate’- based year
+
+# tidBIT 0.1.0.9013
+
+- ar(1) function documentation improved
 
 # tidBIT 0.1.0.9012
 
