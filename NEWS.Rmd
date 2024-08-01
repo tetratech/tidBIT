@@ -18,6 +18,11 @@ knitr::opts_chunk$set(
 cat(paste0("Last Update: ",Sys.time()))
 ```
 
+
+# tidBIT 0.1.0.9017
+
+* leap_yday added to package help page; supporting leap_yday functions refactored 
+
 # tidBIT 0.1.0.9016
 
 * refactored to add helper functions decimal_date and decimal_hours

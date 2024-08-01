@@ -1,34 +1,83 @@
 
 
+#' Check and Validate MM-DD Date Format
+#'
+#' This function checks if a given date string is in the "MM-DD" format and
+#' stops execution with an error message if the format is invalid.
+#'
+#' The function first validates whether the date string matches the "MM-DD"
+#' format using a regular expression. It then checks if the date can be
+#' successfully parsed with a dummy year ("2000") using the `ymd` function from
+#' the `lubridate` package. If the date is invalid, an error message is displayed.
+#'
+#' @param start_MM_DD A character string representing a date in "MM-DD" format.
+#'
+#' @return The function returns `NULL` invisibly if the date format is valid.
+#' It stops execution with an error message if the date format is invalid.
+#'
+#' @importFrom lubridate ymd
+#'
+#' @examples
+#' check_mm_dd_format("12-31")  # Valid date format
+#' # check_mm_dd_format("02-30")  # Invalid date format
+#' # scheck_mm_dd_format("2020-12-31")  # Invalid date format
+#'
+#' @seealso \code{\link{date_time_to_years_decimal}},
+#'   \code{\link{date_time_to_hours_decimal}},
+#'   \code{\link{leap_yday}}
+#'
+#' @export
+#' @keywords internal
+check_mm_dd_format <- function(start_MM_DD) {
+  if (!grepl("^\\d{2}-\\d{2}$", start_MM_DD) || is.na(ymd(paste("2000", start_MM_DD, sep = "-")))) {
+    stop(paste("Invalid 'MM-DD' date format:", start_MM_DD, "- Please provide a date in 'MM-DD' format."))
+  }
+}
+
+
 #' Compute decimal date
 #'
 #' This function computes the decimal representation of a date-time object.
 #' The decimal date is calculated as the year plus the day of the year divided by 366.
 #' This function can handle both `POSIXct`/`POSIXlt` and `Date` types.
 #'
-#' @param date_time A `POSIXct`, `POSIXlt`, or `Date` object representing the date-time.
+#' @param date_chk A `POSIXct`, `POSIXlt`, or `Date` object representing the date-time.
+#'
 #' @return A numeric value representing the decimal date.
+#'
 #' @importFrom lubridate year yday
+#'
 #' @examples
 #' # For POSIXct date-time
-#' date_time <- lubridate::ymd_hms("2024-07-30 11:15:30")
-#' decimal_date(date_time)
+#' date_chk <- lubridate::ymd_hms("2024-07-30 11:15:30")
+#' date_time_to_years_decimal(date_chk)
 #'
 #' # For Date
 #' date <- as.Date("2024-07-30")
-#' decimal_date(date)
+#' date_time_to_years_decimal(date)
 #'
-#' @seealso \code{\link{decimal_hours}},
+#' @seealso \code{\link{date_time_to_hours_decimal}},
+#'   \code{\link{check_mm_dd_format}},
 #'   \code{\link{leap_yday}}
 #'
 #' @export
 #' @keywords internal
-decimal_date <- function(date_time) {
-  if (inherits(date_time, "Date")) {
-    year(date_time) + yday(date_time) / 366
+date_time_to_years_decimal <- function(date_chk, start_MM_DD = "01-01") {
+
+  check_mm_dd_format(start_MM_DD) # Validate start_MM_DD format
+
+  if (inherits(date_chk, "Date") || inherits(date_chk, "POSIXt")) {
+    year_dec <- year(date_chk) + leap_yday(date_chk, start_MM_DD) / 366
   } else {
-    year(date_time) + leap_yday(date_time) / 366
+    stop("date_time_to_years_decimal function requires a Date field")
   }
+
+  year_adj <- as.Date(date_chk) < ymd(paste(year(date_chk), start_MM_DD, sep = "-"))
+
+  year_dec <- year_dec - as.numeric(year_adj)
+
+  return(year_dec)
+
 }
 
 #' Compute decimal time
@@ -37,23 +86,28 @@ decimal_date <- function(date_time) {
 #' The decimal time is calculated as the hour plus the minute divided by 60 and the second divided by 3600.
 #' This function requires the input to be of type `POSIXct` or `POSIXlt`.
 #'
-#' @param date_time A `POSIXct` or `POSIXlt` object representing the date-time.
-#' @return A numeric value representing the decimal time.
-#' @importFrom lubridate hour minute second
-#' @examples
-#' date_time <- lubridate::ymd_hms("2024-07-30 11:15:30")
-#' decimal_hours(date_time)
+#' @param date_chk A `POSIXct` or `POSIXlt` object representing the date-time.
 #'
-#' @seealso \code{\link{decimal_date}},
+#' @return A numeric value representing the decimal time.
+#'
+#' @importFrom lubridate hour minute second
+#'
+#' @examples
+#' date_chk <- lubridate::ymd_hms("2024-07-30 11:15:30")
+#' date_time_to_hours_decimal(date_chk)
+#'
+#' @seealso \code{\link{date_time_to_years_decimal}},
+#'   \code{\link{check_mm_dd_format}},
 #'   \code{\link{leap_yday}}
 #'
 #' @export
 #' @keywords internal
-decimal_hours <- function(date_time) {
-  if (inherits(date_time, c("POSIXct", "POSIXlt"))) {
-    hour(date_time) + minute(date_time) / 60 + second(date_time) / 3600
+date_time_to_hours_decimal <- function(date_chk) {
+
+  if (inherits(date_chk, c("POSIXct", "POSIXlt"))) {
+    hour(date_chk) + minute(date_chk) / 60 + second(date_chk) / 3600
   } else {
-    stop("decimal_hours function requires a POSIXct or POSIXlt datetime field")
+    stop("date_time_to_hours_decimal function requires a POSIXct or POSIXlt datetime field")
   }
 }
 
@@ -103,25 +157,13 @@ decimal_hours <- function(date_time) {
 #' @importFrom dplyr tibble left_join mutate select slice row_number n
 #' @importFrom magrittr %>%
 #'
-#' @seealso \code{\link{decimal_date}},
-#'   \code{\link{decimal_hours}}
+#' @seealso \code{\link{date_time_to_years_decimal}},
+#'   \code{\link{date_time_to_hours_decimal}},
+#'   \code{\link{check_mm_dd_format}}
 #'
 #' @export
-#' @keywords internal
 #'
 leap_yday <- function(date_chk, start_MM_DD = "01-01") {
-
-  # Function to validate "MM-DD" format
-  validate_mm_dd <- function(start_MM_DD) {
-    grepl("^\\d{2}-\\d{2}$", start_MM_DD) && !is.na(ymd(paste("2000", start_MM_DD, sep = "-")))
-  }
-
-  # Function to check if the "MM-DD" format is valid and stop if not
-  check_mm_dd_format <- function(start_MM_DD) {
-    if (!validate_mm_dd(start_MM_DD)) {
-      stop(paste("Invalid 'MM-DD' date format:", start_MM_DD, "- Please provide a date in 'MM-DD' format."))
-    }
-  }
 
   check_mm_dd_format(start_MM_DD) # Validate start_MM_DD format
 
