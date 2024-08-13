@@ -26,7 +26,7 @@ the `lubridate` package. If the date is invalid, an error message is displayed.
 \examples{
 check_mm_dd_format("12-31")  # Valid date format
 # check_mm_dd_format("02-30")  # Invalid date format
-# scheck_mm_dd_format("2020-12-31")  # Invalid date format
+# check_mm_dd_format("2020-12-31")  # Invalid date format
 
 }
 \seealso{

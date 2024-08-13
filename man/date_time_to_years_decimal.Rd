@@ -19,12 +19,16 @@ This function can handle both `POSIXct`/`POSIXlt` and `Date` types.
 }
 \examples{
 # For POSIXct date-time
-date_chk <- lubridate::ymd_hms("2024-07-30 11:15:30")
+date_chk <- lubridate::ymd_hms("2019-07-30 11:15:30", "2020-07-30 11:15:30", "2021-07-30 11:15:30")
 date_time_to_years_decimal(date_chk)
+date_time_to_years_decimal(date_chk, start_MM_DD = "07-01")
+date_time_to_years_decimal(date_chk, start_MM_DD = "10-01")
 
 # For Date
-date <- as.Date("2024-07-30")
-date_time_to_years_decimal(date)
+date_chk <- lubridate::ymd("2019-07-30", "2020-07-30", "2021-07-30")
+date_time_to_years_decimal(date_chk)
+date_time_to_years_decimal(date_chk, start_MM_DD = "07-01")
+date_time_to_years_decimal(date_chk, start_MM_DD = "10-01")
 
 }
 \seealso{

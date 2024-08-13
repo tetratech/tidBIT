@@ -20,7 +20,7 @@
 #' @examples
 #' check_mm_dd_format("12-31")  # Valid date format
 #' # check_mm_dd_format("02-30")  # Invalid date format
-#' # scheck_mm_dd_format("2020-12-31")  # Invalid date format
+#' # check_mm_dd_format("2020-12-31")  # Invalid date format
 #'
 #' @seealso \code{\link{date_time_to_years_decimal}},
 #'   \code{\link{date_time_to_hours_decimal}},
@@ -45,16 +45,20 @@ check_mm_dd_format <- function(start_MM_DD) {
 #'
 #' @return A numeric value representing the decimal date.
 #'
-#' @importFrom lubridate year yday
+#' @importFrom lubridate year yday date
 #'
 #' @examples
 #' # For POSIXct date-time
-#' date_chk <- lubridate::ymd_hms("2024-07-30 11:15:30")
+#' date_chk <- lubridate::ymd_hms("2019-07-30 11:15:30", "2020-07-30 11:15:30", "2021-07-30 11:15:30")
 #' date_time_to_years_decimal(date_chk)
+#' date_time_to_years_decimal(date_chk, start_MM_DD = "07-01")
+#' date_time_to_years_decimal(date_chk, start_MM_DD = "10-01")
 #'
 #' # For Date
-#' date <- as.Date("2024-07-30")
-#' date_time_to_years_decimal(date)
+#' date_chk <- lubridate::ymd("2019-07-30", "2020-07-30", "2021-07-30")
+#' date_time_to_years_decimal(date_chk)
+#' date_time_to_years_decimal(date_chk, start_MM_DD = "07-01")
+#' date_time_to_years_decimal(date_chk, start_MM_DD = "10-01")
 #'
 #' @seealso \code{\link{date_time_to_hours_decimal}},
 #'   \code{\link{check_mm_dd_format}},
@@ -72,7 +76,7 @@ date_time_to_years_decimal <- function(date_chk, start_MM_DD = "01-01") {
     stop("date_time_to_years_decimal function requires a Date field")
   }
 
-  year_adj <- as.Date(date_chk) < ymd(paste(year(date_chk), start_MM_DD, sep = "-"))
+  year_adj <- date(date_chk) < ymd(paste(year(date_chk), start_MM_DD, sep = "-"))
 
   year_dec <- year_dec - as.numeric(year_adj)
 
@@ -93,7 +97,7 @@ date_time_to_years_decimal <- function(date_chk, start_MM_DD = "01-01") {
 #' @importFrom lubridate hour minute second
 #'
 #' @examples
-#' date_chk <- lubridate::ymd_hms("2024-07-30 11:15:30")
+#' date_chk <- lubridate::ymd_hms("2019-07-30 11:15:00", "2020-07-30 11:15:00", "2021-07-30 11:15:00")
 #' date_time_to_hours_decimal(date_chk)
 #'
 #' @seealso \code{\link{date_time_to_years_decimal}},
@@ -153,7 +157,7 @@ date_time_to_hours_decimal <- function(date_chk) {
 #' x <- leap_yday(date_example, start_MM_DD = "04-01")
 #' matrix(x, ncol = 3)
 #'
-#' @importFrom lubridate ymd
+#' @importFrom lubridate ymd date
 #' @importFrom dplyr tibble left_join mutate select slice row_number n
 #' @importFrom magrittr %>%
 #'
@@ -168,7 +172,7 @@ leap_yday <- function(date_chk, start_MM_DD = "01-01") {
   check_mm_dd_format(start_MM_DD) # Validate start_MM_DD format
 
   # Create a sequence of dates from 1/1/2000 to 12/31/2000
-  date_sequence <- tibble(base_date = seq(from = as.Date("2000-01-01"), to = as.Date("2000-12-31"), by = "day")) %>%
+  date_sequence <- tibble(base_date = seq(from = date("2000-01-01"), to = date("2000-12-31"), by = "day")) %>%
     mutate(mm_dd = format(.data$base_date, "%m-%d"))
 
   # Find the index corresponding to start_MM_DD

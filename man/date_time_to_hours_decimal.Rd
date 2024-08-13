@@ -18,7 +18,7 @@ The decimal time is calculated as the hour plus the minute divided by 60 and the
 This function requires the input to be of type `POSIXct` or `POSIXlt`.
 }
 \examples{
-date_chk <- lubridate::ymd_hms("2024-07-30 11:15:30")
+date_chk <- lubridate::ymd_hms("2019-07-30 11:15:00", "2020-07-30 11:15:00", "2021-07-30 11:15:00")
 date_time_to_hours_decimal(date_chk)
 
 }

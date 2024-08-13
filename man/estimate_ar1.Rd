@@ -18,6 +18,7 @@ A list containing the following elements:
   \item{t_value}{The t-value of the estimated AR(1) parameter.}
   \item{p_value}{The p-value of the estimated AR(1) parameter.}
   \item{approach}{The method used to estimate the AR(1) parameter ("default", "alternative", "moments", or "No method worked").}
+  \item{arima_results}{Results from arima function call when either the "default" or "alternative" method were.}
   \item{message}{Any warning or error messages encountered during the estimation process.}
 }
 }
