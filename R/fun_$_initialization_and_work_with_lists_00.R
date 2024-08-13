@@ -1,3 +1,5 @@
+
+
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #' @title Clear the Viewer Pane in RStudio
@@ -5,16 +7,13 @@
 #' @description Clears the Viewer pane in RStudio by creating and opening a
 #'   blank HTML file. This function is useful for resetting the Viewer pane to a
 #'   clean state, especially after displaying multiple visualizations or HTML
-#'   outputs in sequence. It leverages the `rstudioapi` package to interact with
-#'   the RStudio environment, making it specifically tailored for use within
-#'   RStudio IDE.
+#'   outputs in sequence. It is specifically tailored for use within the RStudio IDE.
 #'
 #' @details The function generates a temporary directory, creates a blank HTML
 #'   file within this directory, and then uses the RStudio Viewer to open this
 #'   blank file, effectively clearing any previous content displayed in the
-#'   Viewer pane. This is particularly handy in interactive R sessions and
-#'   RMarkdown documents when an empty Viewer pane is desired for either
-#'   aesthetic or functional reasons.
+#'   Viewer pane. If the `rstudioapi` package is not available, the function will
+#'   display a message indicating that it is intended for use in RStudio.
 #'
 #' @return Invisible `NULL`. The primary effect is the side effect of clearing
 #'   the Viewer pane.
@@ -29,12 +28,7 @@
 #' @export
 #' @keywords internal
 #'
-#' @seealso \code{\link[rstudioapi]{viewer}}, for details on how to display local web content in the Viewer pane.
-#'
-#'
-#'
-#' @importFrom rstudioapi viewer
-#'
+#' @seealso \code{\link[rstudioapi]{viewer}} for details on how to display local web content in the Viewer pane.
 #'
 cv <- function() {
 
@@ -45,6 +39,7 @@ cv <- function() {
   rstudioapi::viewer(TextFile)
 
 } # end ~ function: cv
+
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #

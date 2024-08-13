@@ -4,7 +4,25 @@ NEWS
 
 <!-- NEWS.md is generated from NEWS.Rmd. Please edit that file -->
 
-    #> Last Update: 2024-07-26 13:26:54.02744
+    #> Last Update: 2024-08-13 13:47:27.041409
+
+# tidBIT 0.1.0.9019
+
+- added plot_matrix_correlation (Matrix-Based Correlation Plot Wrapper
+  Function)
+
+# tidBIT 0.1.0.9018
+
+- ar1 modeling refactored, migrate from as.Date to lubridate::date
+
+# tidBIT 0.1.0.9017
+
+- leap_yday added to package help page; supporting leap_yday functions
+  refactored
+
+# tidBIT 0.1.0.9016
+
+- refactored to add helper functions decimal_date and decimal_hours
 
 # tidBIT 0.1.0.9015
 

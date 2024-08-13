@@ -1,7 +1,7 @@
 Package: tidBIT
 Type: Package
 Title: Chesapeake Bay 4D Model Functions
-Version: 0.1.0.9018
+Version: 0.1.0.9019
 Authors@R: c(
   person("Jon", "Harcum", email="Jon.Harcum@tetratech.com", role="aut"), 
   person("Erik W.", "Leppo", email="Erik.Leppo@tetratech.com", role=c("aut","cre")))
@@ -13,7 +13,10 @@ LazyData: true
 Depends: 
     R (>= 3.5.0)
 Imports:
+    corrplot,
+    dplyr,
     flextable,
+    GGally,
     ggplot2,
     jsonlite,
     leaflet,
@@ -21,6 +24,7 @@ Imports:
     magrittr,
     mgcv,
     officer,
+    patchwork,
     readxl,
     rlang,
     rstudioapi,
@@ -30,9 +34,7 @@ Imports:
     tibble,
     tidyr,
     tidyselect,
-    zeallot,
-    patchwork,
-    dplyr
+    zeallot
 Suggests: 
     devtools,
     knitr
