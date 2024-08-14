@@ -4,7 +4,11 @@ NEWS
 
 <!-- NEWS.md is generated from NEWS.Rmd. Please edit that file -->
 
-    #> Last Update: 2024-08-13 20:19:54.255098
+    #> Last Update: 2024-08-14 14:16:22.052719
+
+# tidBIT 0.1.0.9021
+
+- added fivenum_char, fivenum_charp, …
 
 # tidBIT 0.1.0.9020
 

@@ -25,7 +25,7 @@
 #'
 #' @export
 #'
-#' @seealso \code{\link{plot_mat_corr_corrplot}}, \code{\link{plot_mat_corr_ggpairs}}, \code{\link{plot_mat_corr_ggpairs_aux}}
+#' @seealso \code{\link{plot_mat_corr_corrplot}}, \code{\link{plot_mat_corr_ggpairs}}
 #'
 plot_mat_corr <- function(data, method = c("corrplot", "ggpairs"),
                                     sig.level = 0.05, color_scheme = "RdYlBu",
@@ -55,7 +55,7 @@ plot_mat_corr <- function(data, method = c("corrplot", "ggpairs"),
 #' @export
 #' @keywords internal
 #'
-#' @seealso \code{\link{plot_mat_corr}}, \code{\link{plot_mat_corr_ggpairs_aux}}
+#' @seealso \code{\link{plot_mat_corr}}
 #'
 plot_mat_corr_ggpairs <- function(data, sig.level = 0.05, alpha = 0.35) {
 

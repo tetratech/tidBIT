@@ -44,5 +44,5 @@ plot_mat_corr(data, method = "ggpairs", sig.level = 0.01)
 
 }
 \seealso{
-\code{\link{plot_mat_corr_corrplot}}, \code{\link{plot_mat_corr_ggpairs}}, \code{\link{plot_mat_corr_ggpairs_aux}}
+\code{\link{plot_mat_corr_corrplot}}, \code{\link{plot_mat_corr_ggpairs}}
 }

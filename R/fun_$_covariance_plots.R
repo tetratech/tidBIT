@@ -22,7 +22,7 @@
 #'
 #' @export
 #'
-#' @seealso \code{\link{plot_mat_cov}}, \code{\link{plot_mat_cov_aux}}
+#' @seealso \code{\link{plot_mat_cov}}
 #'
 compute_cov_matrix <- function(data) {
 
@@ -148,7 +148,7 @@ plot_mat_cov_aux <- function(data, mapping, calc_results, sig.level, ...) {
 #'
 #' @export
 #'
-#' @seealso \code{\link{compute_cov_matrix}}, \code{\link{plot_mat_cov_aux}}
+#' @seealso \code{\link{compute_cov_matrix}}
 #'
 plot_mat_cov <- function(data, sig.level = 0.05, alpha = 0.35) {
 

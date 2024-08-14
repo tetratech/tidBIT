@@ -1,7 +1,7 @@
 Package: tidBIT
 Type: Package
 Title: Chesapeake Bay 4D Model Functions
-Version: 0.1.0.9020
+Version: 0.1.0.9021
 Authors@R: c(
   person("Jon", "Harcum", email="Jon.Harcum@tetratech.com", role="aut"), 
   person("Erik W.", "Leppo", email="Erik.Leppo@tetratech.com", role=c("aut","cre")))
@@ -10,6 +10,7 @@ Description: Collection of helper functions for Chesapeake Bay 4d model.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+VignetteBuilder: knitr
 Depends: 
     R (>= 3.5.0)
 Imports:
@@ -38,7 +39,8 @@ Imports:
     zeallot
 Suggests: 
     devtools,
-    knitr
+    knitr, 
+    rmarkdown
 URL: https://github.com/tetratech/tidBIT
 BugReports: https://github.com/tetratech/tidBIT/issues
 Config/testthat/edition: 3

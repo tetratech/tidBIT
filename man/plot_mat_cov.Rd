@@ -25,5 +25,5 @@ plot_mat_cov(data, sig.level = 0.02)
 
 }
 \seealso{
-\code{\link{compute_cov_matrix}}, \code{\link{plot_mat_cov_aux}}
+\code{\link{compute_cov_matrix}}
 }

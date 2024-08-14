@@ -24,5 +24,5 @@ results <- compute_cov_matrix(data)
 
 }
 \seealso{
-\code{\link{plot_mat_cov}}, \code{\link{plot_mat_cov_aux}}
+\code{\link{plot_mat_cov}}
 }
