@@ -2,7 +2,7 @@
 % Please edit documentation in R/fun_$_correlation_plots.R
 \name{plot_mat_corr}
 \alias{plot_mat_corr}
-\title{Matrix-Based Correlation Plot Wrapper Function}
+\title{Matrix-Based Correlation Plot}
 \usage{
 plot_mat_corr(
   data,
@@ -36,10 +36,11 @@ customize various parameters for the plots.
 }
 \examples{
 # Create a correlation plot using corrplot
-plot_mat_corr(mtcars, method = "corrplot", sig.level = 0.01)
+data <- mtcars[, c("mpg","disp", "hp", "qsec", "drat", "wt")]
+plot_mat_corr(data, method = "corrplot", sig.level = 0.01)
 
 # Create a correlation plot using ggpairs
-plot_mat_corr(mtcars, method = "ggpairs", sig.level = 0.01)
+plot_mat_corr(data, method = "ggpairs", sig.level = 0.01)
 
 }
 \seealso{

@@ -1,6 +1,8 @@
 
 
-#' @title Matrix-Based Correlation Plot Wrapper Function
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#' @title Matrix-Based Correlation Plot
 #' @description This function allows the user to create a correlation matrix plot using either
 #' the `corrplot` or `ggpairs` approach. The function is flexible and allows the user to
 #' customize various parameters for the plots.
@@ -15,10 +17,11 @@
 #' @return A correlation matrix plot based on the specified method.
 #' @examples
 #' # Create a correlation plot using corrplot
-#' plot_mat_corr(mtcars, method = "corrplot", sig.level = 0.01)
+#' data <- mtcars[, c("mpg","disp", "hp", "qsec", "drat", "wt")]
+#' plot_mat_corr(data, method = "corrplot", sig.level = 0.01)
 #'
 #' # Create a correlation plot using ggpairs
-#' plot_mat_corr(mtcars, method = "ggpairs", sig.level = 0.01)
+#' plot_mat_corr(data, method = "ggpairs", sig.level = 0.01)
 #'
 #' @export
 #'
@@ -37,6 +40,8 @@ plot_mat_corr <- function(data, method = c("corrplot", "ggpairs"),
   }
 }
 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
 #' @title Correlation Plot using ggpairs
 #' @description A helper function to create a correlation plot using `ggpairs`.
 #'
@@ -64,7 +69,10 @@ plot_mat_corr_ggpairs <- function(data, sig.level = 0.05, alpha = 0.35) {
           lower = list(continuous = GGally::wrap("points", alpha = alpha)),
 
           # plot pdf on diagonal
-          diag = list(continuous = GGally::wrap("densityDiag"))) +
+          diag = list(continuous = GGally::wrap("densityDiag")),
+
+          # Suppress the progress bar
+          progress = FALSE) +
 
     theme_minimal() +
     theme(panel.border = element_rect(color = "black", fill = NA, linewidth = 0.25))
@@ -86,7 +94,7 @@ plot_mat_corr_ggpairs <- function(data, sig.level = 0.05, alpha = 0.35) {
 #' @keywords internal
 #'
 #' @seealso \code{\link{plot_mat_corr}}, \code{\link{plot_mat_corr_ggpairs}}
-plot_mat_corr_ggpairs_aux <- function(data, mapping, sig.level = 0.05, ...) {
+plot_mat_corr_ggpairs_aux <- function(data, mapping, sig.level, ...) {
 
   # extract var1 and var2 from data and store as x and y
   x <- eval_data_col(data, mapping$x)
@@ -125,6 +133,8 @@ plot_mat_corr_ggpairs_aux <- function(data, mapping, sig.level = 0.05, ...) {
   return(p)
 }
 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
 #' @title Correlation Plot using corrplot
 #' @description A helper function to create a correlation plot using `corrplot.mixed`.
 #'

@@ -1,7 +1,7 @@
 Package: tidBIT
 Type: Package
 Title: Chesapeake Bay 4D Model Functions
-Version: 0.1.0.9019
+Version: 0.1.0.9020
 Authors@R: c(
   person("Jon", "Harcum", email="Jon.Harcum@tetratech.com", role="aut"), 
   person("Erik W.", "Leppo", email="Erik.Leppo@tetratech.com", role=c("aut","cre")))
@@ -21,6 +21,7 @@ Imports:
     jsonlite,
     leaflet,
     lubridate,
+    MASS,
     magrittr,
     mgcv,
     officer,

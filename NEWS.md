@@ -4,12 +4,15 @@ NEWS
 
 <!-- NEWS.md is generated from NEWS.Rmd. Please edit that file -->
 
-    #> Last Update: 2024-08-13 16:33:52.812595
+    #> Last Update: 2024-08-13 20:19:54.255098
+
+# tidBIT 0.1.0.9020
+
+- added plot_mat_cov (Matrix-Based Covariance Plot)
 
 # tidBIT 0.1.0.9019
 
-- added plot_matrix_correlation (Matrix-Based Correlation Plot Wrapper
-  Function)
+- added plot_matr_corr (Matrix-Based Correlation Plot)
 
 # tidBIT 0.1.0.9018
 

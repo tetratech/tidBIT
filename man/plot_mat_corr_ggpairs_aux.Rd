@@ -4,7 +4,7 @@
 \alias{plot_mat_corr_ggpairs_aux}
 \title{plot_mat_corr_ggpairs Helper Function}
 \usage{
-plot_mat_corr_ggpairs_aux(data, mapping, sig.level = 0.05, ...)
+plot_mat_corr_ggpairs_aux(data, mapping, sig.level, ...)
 }
 \arguments{
 \item{data}{The dataset containing the variables to be analyzed.}
