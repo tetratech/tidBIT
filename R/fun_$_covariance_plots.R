@@ -4,33 +4,31 @@
 #
 #' @title Compute Covariance Matrix and P-Values
 #'
-#' @description This function computes the covariance matrix and the corresponding p-values for a given dataset using a robust method (Minimum Volume Ellipsoid - MVE).
-#' The p-values are calculated based on a t-statistic derived from the covariance matrix.
+#' @description This function computes the covariance matrix and the
+#'   corresponding p-values for a given dataset using standard methods.
 #'
-#' @param data A data frame or matrix containing the numeric variables for which the covariance matrix is to be computed.
+#' @param data A data frame or matrix containing the numeric variables for which
+#'   the covariance matrix is to be computed.
 #'
 #' @return A list containing the following components:
-#' \item{cov_matrix}{The covariance matrix computed using the MVE method.}
-#' \item{p_matrix}{A matrix of p-values corresponding to each element in the covariance matrix.}
+#' \item{cov_matrix}{The covariance matrix computed using standard methods.}
+#' \item{p_matrix}{A matrix of p-values corresponding to each element in the
+#' covariance matrix.}
 #'
 #' @examples
 #' data <- mtcars[, c("mpg", "disp", "hp", "qsec", "drat", "wt")]
-#' results <- compute_cov_matrix(data)
+#' compute_cov_matrix(data)
 #'
-#' @importFrom MASS cov.mve
-#' @importFrom stats pnorm
+#' @importFrom stats pnorm cov
 #'
 #' @export
 #'
-#' @seealso \code{\link{plot_mat_cov}}
+#' @seealso \code{\link{plot_cov_mat}}
 #'
 compute_cov_matrix <- function(data) {
 
-  # Set the seed for reproducibility
-  set.seed(12271963)
-
-  # Compute the covariance matrix using cov.mve
-  cov_matrix <- cov.mve(data)$cov
+  # Compute the covariance matrix
+  cov_matrix <- cov(data)
   colnames(cov_matrix) <- colnames(data)
   rownames(cov_matrix) <- colnames(data)
 
@@ -53,7 +51,63 @@ compute_cov_matrix <- function(data) {
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
-#' @title plot_mat_cov Helper Function
+#' @title Matrix-Based Covariance Plot
+#'
+#' @description This function creates a `ggpairs` plot that displays the
+#'   covariance matrix and p-values in the upper diagonal, bivariate scatter
+#'   plots in the lower diagonal, and density plots on the diagonal.
+#'
+#' @param data A data frame containing the numeric variables to be plotted.
+#' @param sig.level Significance level to determine if an "X" should be added to
+#'   non-significant correlations. Default is 0.05.
+#' @param alpha Transparency level for the scatter plots in the lower diagonal.
+#'   Default is 0.35.
+#'
+#' @return A `ggpairs` plot displaying the covariance matrix, p-values, and
+#'   bivariate relationships.
+#'
+#' @examples
+#' data <- mtcars[, c("mpg", "disp", "hp", "qsec", "drat", "wt")]
+#' plot_cov_mat(data, sig.level = 0.02)
+#'
+#' @importFrom GGally ggpairs wrap
+#' @importFrom ggplot2 theme_minimal element_rect
+#'
+#' @export
+#'
+#' @seealso \code{\link{compute_cov_matrix}}
+#'
+plot_cov_mat <- function(data, sig.level = 0.05, alpha = 0.35) {
+
+  # Compute the full covariance matrix and p-values
+  calc_results <- compute_cov_matrix(data)
+
+  # Use ggpairs to plot
+  GGally::ggpairs(data,
+
+          # Output covariance and significance to figure in the upper diagonal plots
+          upper = list(continuous = function(data, mapping, ...)
+            plot_cov_mat_aux(data, mapping, calc_results, sig.level = sig.level, ...)),
+
+          # Bivariate plot of data in the lower diagonal plots
+          lower = list(continuous = GGally::wrap("points", alpha = alpha)),
+
+          # Plot density functions on the diagonal
+          diag = list(continuous = GGally::wrap("densityDiag")),
+
+          # Suppress the progress bar
+          progress = FALSE) +
+
+    theme_minimal() +
+    theme(panel.border = element_rect(color = "black", fill = NA, linewidth = 0.25))
+}
+
+
+
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#' @title plot_cov_mat Helper Function
 #'
 #' @description This helper function displays the precomputed covariance and p-values on a `ggpairs` plot.
 #'
@@ -71,9 +125,9 @@ compute_cov_matrix <- function(data) {
 #' @export
 #' @keywords internal
 #'
-#' @seealso \code{\link{compute_cov_matrix}}, \code{\link{plot_mat_cov}}
+#' @seealso \code{\link{compute_cov_matrix}}, \code{\link{plot_cov_mat}}
 #'
-plot_mat_cov_aux <- function(data, mapping, calc_results, sig.level, ...) {
+plot_cov_mat_aux <- function(data, mapping, calc_results, sig.level, ...) {
 
   # Extract the covariance and p-value matrices from the results
   full_cov_matrix <- calc_results$cov_matrix
@@ -125,52 +179,4 @@ plot_mat_cov_aux <- function(data, mapping, calc_results, sig.level, ...) {
   }
 
   return(p)
-}
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#
-#' @title Matrix-Based Covariance Plot
-#'
-#' @description This function creates a `ggpairs` plot that displays the covariance matrix and p-values in the upper diagonal, bivariate scatter plots in the lower diagonal, and density plots on the diagonal.
-#'
-#' @param data A data frame containing the numeric variables to be plotted.
-#' @param sig.level Significance level to determine if an "X" should be added to non-significant correlations. Default is 0.05.
-#' @param alpha Transparency level for the scatter plots in the lower diagonal. Default is 0.35.
-#'
-#' @return A `ggpairs` plot displaying the covariance matrix, p-values, and bivariate relationships.
-#'
-#' @examples
-#' data <- mtcars[, c("mpg", "disp", "hp", "qsec", "drat", "wt")]
-#' plot_mat_cov(data, sig.level = 0.02)
-#'
-#' @importFrom GGally ggpairs wrap
-#' @importFrom ggplot2 theme_minimal element_rect
-#'
-#' @export
-#'
-#' @seealso \code{\link{compute_cov_matrix}}
-#'
-plot_mat_cov <- function(data, sig.level = 0.05, alpha = 0.35) {
-
-  # Compute the full covariance matrix and p-values
-  calc_results <- compute_cov_matrix(data)
-
-  # Use ggpairs to plot
-  ggpairs(data,
-
-          # Output covariance and significance to figure in the upper diagonal plots
-          upper = list(continuous = function(data, mapping, ...)
-            plot_mat_cov_aux(data, mapping, calc_results, sig.level = sig.level, ...)),
-
-          # Bivariate plot of data in the lower diagonal plots
-          lower = list(continuous = GGally::wrap("points", alpha = alpha)),
-
-          # Plot density functions on the diagonal
-          diag = list(continuous = GGally::wrap("densityDiag")),
-
-          # Suppress the progress bar
-          progress = FALSE) +
-
-    theme_minimal() +
-    theme(panel.border = element_rect(color = "black", fill = NA, linewidth = 0.25))
 }

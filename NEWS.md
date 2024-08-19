@@ -4,7 +4,11 @@ NEWS
 
 <!-- NEWS.md is generated from NEWS.Rmd. Please edit that file -->
 
-    #> Last Update: 2024-08-14 14:16:22.052719
+    #> Last Update: 2024-08-19 10:34:40.677868
+
+# tidBIT 0.1.0.9022
+
+- refactor correlation and covariance functions
 
 # tidBIT 0.1.0.9021
 
