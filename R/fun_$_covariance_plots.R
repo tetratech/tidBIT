@@ -46,7 +46,7 @@ compute_cov_matrix <- function(data) {
     }
   }
 
-  return(list(cov_matrix = cov_matrix, p_matrix = p_matrix))
+  return(list(cov_matrix = cov_matrix, p_matrix = p_matrix, mean_vector = colMeans(data)))
 }
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #

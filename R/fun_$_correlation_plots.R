@@ -43,6 +43,7 @@ compute_cor_matrix <- function(data) {
   n <- ncol(data)
 
   # Calculate p-values for each covariance value
+  data <- as.matrix(data)
   for (i in 1:(n - 1)) {
     for (j in (i + 1):n) {
       test <- cor.test(data[, i], data[, j])
@@ -50,7 +51,7 @@ compute_cor_matrix <- function(data) {
     }
   }
 
-  return(list(cor_matrix = cor_matrix, p_matrix = p_matrix))
+  return(list(cor_matrix = cor_matrix, p_matrix = p_matrix, mean_vector = colMeans(data)))
 }
 
 
