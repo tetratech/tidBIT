@@ -4,7 +4,11 @@ NEWS
 
 <!-- NEWS.md is generated from NEWS.Rmd. Please edit that file -->
 
-    #> Last Update: 2024-08-19 10:34:40.677868
+    #> Last Update: 2024-08-28 11:11:05.793229
+
+# tidBIT 0.1.0.9023
+
+- docs: Update Vignette name and added to docs folder, Issue \#8
 
 # tidBIT 0.1.0.9022
 
