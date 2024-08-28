@@ -159,7 +159,7 @@ date_time_to_hours_decimal <- function(date_chk) {
 #'
 #' @importFrom lubridate ymd date
 #' @importFrom dplyr tibble left_join mutate select slice row_number n
-#' @importFrom magrittr %>%
+#' @importFrom dplyr %>%
 #'
 #' @seealso \code{\link{date_time_to_years_decimal}},
 #'   \code{\link{date_time_to_hours_decimal}},
