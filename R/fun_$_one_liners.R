@@ -33,7 +33,7 @@ fivenum_char <- function(x, sig.fig = 4) {
   }
 
   # Compute and return the five-number summary
-  return(paste(signif(fivenum(x), sig.fig), collapse = ", "))
+  return(paste(signif(stats::fivenum(x), sig.fig), collapse = ", "))
 }
 
 

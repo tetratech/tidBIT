@@ -184,7 +184,7 @@ transform_data_inverse <- function(y
 #' }
 #'
 #' @importFrom zeallot %<-%
-#' @importFrom magrittr %>%
+#' @importFrom dplyr %>%
 #' @importFrom stats pbeta
 #'
 #' @seealso \code{\link[stats]{qbeta}} for details on beta distribution
@@ -312,7 +312,7 @@ beta_logit_tran <- function(x, bl4, show_msgs = FALSE) {
 #' }
 #'
 #' @importFrom zeallot %<-%
-#' @importFrom magrittr %>%
+#' @importFrom dplyr %>%
 #' @importFrom stats qbeta
 #'
 #' @seealso \code{\link[stats]{qbeta}} for details on beta distribution

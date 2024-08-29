@@ -4,11 +4,21 @@ NEWS
 
 <!-- NEWS.md is generated from NEWS.Rmd. Please edit that file -->
 
-    #> Last Update: 2024-08-20 14:07:08.207255
+    #> Last Update: 2024-08-28 14:20:48.964563
+
+# tidBIT 0.1.0.9024
+
+- refactor: Added package name for functions
+  - stats::fivenum
+- docs: Remove unused packages from DESCRIPTION
+  - MASS
+- docs: Modify list of package imported, Issue \#9
+  - Change importfrom %\>% from magrittr to dplyr
+  - Remove magrittr from Imports
 
 # tidBIT 0.1.0.9023
 
-- refactor correlation and covariance functions
+- docs: Update Vignette name and added to docs folder, Issue \#8
 
 # tidBIT 0.1.0.9022
 

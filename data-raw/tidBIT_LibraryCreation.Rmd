@@ -33,7 +33,7 @@ is properly displayed.  This can take 2 to 5 min.
 
 ```{r Vignette_Build, eval=FALSE}
 # generate Vignette
-library(BCGcalc)
+library(tidBIT)
 library(devtools)
 devtools::build_vignettes()
 
@@ -83,7 +83,7 @@ library(devtools)
 devtools::document()
 ## Install New Package (locally)
 setwd("..") # return to root directory first
-devtools::install(myPkg, quick=FALSE, reload=TRUE, build_vignettes = FALSE)
+devtools::install(myPkg, quick=FALSE, reload=TRUE, build_vignettes = TRUE)
 
 ## Reload library
 library(myPkg, character.only = TRUE)

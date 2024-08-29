@@ -173,7 +173,7 @@ plot_cor_mat_ggpairs_aux <- function(data, mapping, sig.level, ...) {
   label <- paste0("r = ", r, "\np = ", p)
 
   # put label on figure
-  p <- ggally_text(
+  p <- GGally::ggally_text(
     label = label,
     mapping = mapping,
     xP = 0.5, yP = 0.5,
@@ -184,7 +184,10 @@ plot_cor_mat_ggpairs_aux <- function(data, mapping, sig.level, ...) {
 
   # add "X" to figure if correlation is not significant
   if (corr$p.value > sig.level) {
-    p <- p + geom_text(aes(x = 0.5, y = 0.5, label = "X"), color = "black", size = 8, fontface = "bold")
+    p <- p + geom_text(aes(x = 0.5, y = 0.5, label = "X")
+                       , color = "black"
+                       , size = 8
+                       , fontface = "bold")
   }
 
   return(p)

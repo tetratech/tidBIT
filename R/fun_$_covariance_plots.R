@@ -164,7 +164,7 @@ plot_cov_mat_aux <- function(data, mapping, calc_results, sig.level, ...) {
   label <- paste0("Cov = ",cov_value, "\np = ", p_label)
 
   # Plot the label in the panel
-  p <- ggally_text(
+  p <- GGally::ggally_text(
     label = label,
     mapping = mapping,
     xP = 0.5, yP = 0.5,
@@ -175,7 +175,10 @@ plot_cov_mat_aux <- function(data, mapping, calc_results, sig.level, ...) {
 
   # Add "X" to figure if correlation is not significant
   if (p_value > sig.level) {
-    p <- p + geom_text(aes(x = 0.5, y = 0.5, label = "X"), color = "black", size = 8, fontface = "bold")
+    p <- p + geom_text(aes(x = 0.5, y = 0.5, label = "X")
+                       , color = "black"
+                       , size = 8
+                       , fontface = "bold")
   }
 
   return(p)

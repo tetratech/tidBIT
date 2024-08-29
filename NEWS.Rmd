@@ -18,9 +18,19 @@ knitr::opts_chunk$set(
 cat(paste0("Last Update: ",Sys.time()))
 ```
 
+# tidBIT 0.1.0.9024
+
+* refactor: Added package name for functions
+    + stats::fivenum
+* docs: Remove unused packages from DESCRIPTION
+    + MASS
+* docs: Modify list of package imported, Issue #9
+    + Change importfrom %>% from magrittr to dplyr
+    + Remove magrittr from Imports
+
 # tidBIT 0.1.0.9023
 
-* refactor correlation and covariance functions
+* docs: Update Vignette name and added to docs folder, Issue #8
 
 # tidBIT 0.1.0.9022
 

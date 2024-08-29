@@ -43,7 +43,7 @@
 #' @importFrom jsonlite fromJSON
 #' @importFrom dplyr distinct pull mutate rowwise ungroup
 #' @importFrom lubridate with_tz
-#' @importFrom magrittr %>%
+#' @importFrom dplyr %>%
 #' @importFrom flextable flextable compose autofit theme_box as_paragraph
 #' @importFrom tibble as_tibble
 #' @importFrom stats end start
@@ -196,7 +196,7 @@ init_model_config <- function(config_file, subestuary, show_msgs=FALSE) {
 #' @importFrom jsonlite fromJSON
 #' @importFrom dplyr select mutate relocate case_when if_else
 #' @importFrom readxl read_xlsx
-#' @importFrom magrittr %>%
+#' @importFrom dplyr %>%
 #'
 #' @export
 load_and_prep_input_data <- function(config_file, show_msgs=FALSE) {
@@ -296,7 +296,7 @@ load_and_prep_input_data <- function(config_file, show_msgs=FALSE) {
 #'
 #' @importFrom tidyr expand_grid
 #' @importFrom dplyr mutate relocate ungroup
-#' @importFrom magrittr %>%
+#' @importFrom dplyr %>%
 #'
 #' @export
 create_job_que <- function(cntrl_subestuary = NA
@@ -388,7 +388,7 @@ create_job_que <- function(cntrl_subestuary = NA
 #' @importFrom dplyr filter mutate select arrange left_join case_when between
 #' @importFrom rlang sym
 #' @importFrom lubridate hour minute
-#' @importFrom magrittr %>%
+#' @importFrom dplyr %>%
 #' @importFrom tidyselect all_of starts_with
 #' @importFrom sf st_as_sf st_drop_geometry
 #'
@@ -705,7 +705,7 @@ rg_model_statistics <- function(gs, df) {
 #' }
 #'
 #' @importFrom dplyr filter mutate bind_rows bind_cols
-#' @importFrom magrittr %>%
+#' @importFrom dplyr %>%
 #' @importFrom mgcv gam
 #' @importFrom lubridate year month
 #' @importFrom rlang is_empty
