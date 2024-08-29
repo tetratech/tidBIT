@@ -5,3 +5,5 @@
 ^NEWS\.Rmd$
 ^\.github$
 ^data-raw$
+^doc$
+^Meta$

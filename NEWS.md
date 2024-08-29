@@ -4,7 +4,54 @@ NEWS
 
 <!-- NEWS.md is generated from NEWS.Rmd. Please edit that file -->
 
-    #> Last Update: 2024-07-26 13:26:54.02744
+    #> Last Update: 2024-08-29 15:40:59.97907
+
+# tidBIT 0.1.0.9025
+
+- refactor transformations
+
+# tidBIT 0.1.0.9024
+
+- refactor: Added package name for functions
+  - stats::fivenum
+- docs: Remove unused packages from DESCRIPTION
+  - MASS
+- docs: Modify list of package imported, Issue \#9
+  - Change importfrom %\>% from magrittr to dplyr
+  - Remove magrittr from Imports
+
+# tidBIT 0.1.0.9023
+
+- docs: Update Vignette name and added to docs folder, Issue \#8
+
+# tidBIT 0.1.0.9022
+
+- refactor correlation and covariance functions
+
+# tidBIT 0.1.0.9021
+
+- added fivenum_char, fivenum_charp, …
+
+# tidBIT 0.1.0.9020
+
+- added plot_mat_cov (Matrix-Based Covariance Plot)
+
+# tidBIT 0.1.0.9019
+
+- added plot_matr_corr (Matrix-Based Correlation Plot)
+
+# tidBIT 0.1.0.9018
+
+- ar1 modeling refactored, migrate from as.Date to lubridate::date
+
+# tidBIT 0.1.0.9017
+
+- leap_yday added to package help page; supporting leap_yday functions
+  refactored
+
+# tidBIT 0.1.0.9016
+
+- refactored to add helper functions decimal_date and decimal_hours
 
 # tidBIT 0.1.0.9015
 

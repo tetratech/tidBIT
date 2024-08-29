@@ -50,7 +50,7 @@ matrix(x, ncol = 3)
 
 }
 \seealso{
-\code{\link{decimal_date}},
-  \code{\link{decimal_hours}}
+\code{\link{date_time_to_years_decimal}},
+  \code{\link{date_time_to_hours_decimal}},
+  \code{\link{check_mm_dd_format}}
 }
-\keyword{internal}

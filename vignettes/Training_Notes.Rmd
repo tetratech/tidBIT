@@ -1,0 +1,36 @@
+---
+title: "Training Notes"
+author: "Jon.Harcum@tetratech.com and Erik.Leppo@tetratech.com"
+date: "`r Sys.Date()`"
+output: 
+    rmarkdown::html_vignette:
+      toc: TRUE
+      toc_depth: 4
+vignette: >
+  %\VignetteIndexEntry{Training Notes}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+<!-- Data is in vignettes\data folder  -->
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Purpose
+The purpose of this vignette is to cover the basics ...
+
+```{r initialize, echo=TRUE, eval=FALSE}
+library(tidBIT)
+```
+
+## Misc Functions 
+
+### check_mm_dd_format 
+
+#### Description
+This function checks if a given date string is in the "MM-DD" format and stops execution with an error message if the format is invalid.
+
+`check_mm_dd_format("12-31")`  

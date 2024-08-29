@@ -37,7 +37,7 @@
 #'                   smooth_line = TRUE)
 #' }
 #'
-#' @importFrom magrittr %>%
+#' @importFrom dplyr %>%
 #' @importFrom dplyr select
 #'
 #' @seealso \code{\link{plot_bivariate_data}}
@@ -115,7 +115,7 @@ plot_obs_pred_res <- function(df, vars = c("y_obs", "y_pred", "y_resid"), vlab =
 #'
 #' @seealso \code{\link{plot_obs_pred_res}}
 #'
-#' @importFrom magrittr %>%
+#' @importFrom dplyr %>%
 #' @importFrom ggplot2 ggplot aes geom_point theme_minimal element_rect xlab ylab geom_abline geom_smooth annotate ggtitle scale_fill_gradient geom_hex
 #' @importFrom dplyr mutate row_number select .data
 #' @importFrom stats qnorm
@@ -227,7 +227,7 @@ plot_bivariate_data <- function(df, x_var, y_var, xlab, ylab, ref_line = NA, smo
 #' plot_4_panel_distr(y, plot_type = "thin")
 #' }
 #'
-#' @importFrom magrittr %>%
+#' @importFrom dplyr %>%
 #' @importFrom dplyr tibble mutate select filter
 #' @importFrom ggplot2 annotate coord_cartesian geom_boxplot geom_density
 #'   geom_histogram geom_point ggplot ggplot_build ggtitle stat_qq_line theme
