@@ -15,6 +15,7 @@ A list containing the following components:
 \item{cor_matrix}{The correlation matrix computed using standard methods.}
 \item{p_matrix}{A matrix of p-values corresponding to each element in the
 correlation matrix.}
+\item{mean_vector}{A vector of means corresponding to each column of data.}
 }
 \description{
 This function computes the correlation matrix and the

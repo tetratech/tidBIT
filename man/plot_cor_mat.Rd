@@ -45,6 +45,6 @@ plot_cor_mat(data, method = "corrplot", sig.level = 0.01)
 
 }
 \seealso{
-\code{\link{compute_cor_mat}}, \code{\link{plot_cor_mat_ggpairs}},
+\code{\link{compute_cor_matrix}}, \code{\link{plot_cor_mat_ggpairs}},
   \code{\link{plot_cor_mat_corrplot}}
 }

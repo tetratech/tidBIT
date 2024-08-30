@@ -27,6 +27,6 @@ plot_cor_mat_corrplot(
 A helper function to create a correlation plot using `corrplot.mixed`.
 }
 \seealso{
-\code{\link{plot_cor_mat}}, \code{\link{compute_cor_mat}}
+\code{\link{plot_cor_mat}}, \code{\link{compute_cor_matrix}}
 }
 \keyword{internal}

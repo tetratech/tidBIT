@@ -326,88 +326,88 @@ ar1_moment <- function(y) {
     return(mean(y, na.rm = TRUE))
   }
 
-    # Function to compute sample autocovariance
-    compute_autocovariance <- function(y, lag) {
-      y_mean <- compute_mean(y)
-      valid_indices <- remove_na_pairs(y)
-      if (length(valid_indices) == 0) {
-        stop("No valid pairs to compute autocovariance")
-      }
-
-      if (lag == 0) {
-        return(mean((y[valid_indices] - y_mean)^2))
-      } else {
-        return(mean((y[valid_indices] - y_mean) * (y[valid_indices + lag] - y_mean)))
-      }
+  # Function to compute sample autocovariance
+  compute_autocovariance <- function(y, lag) {
+    y_mean <- compute_mean(y)
+    valid_indices <- remove_na_pairs(y)
+    if (length(valid_indices) == 0) {
+      stop("No valid pairs to compute autocovariance")
     }
 
-    # Function to estimate phi_1
-    estimate_phi_1 <- function(y) {
-      gamma_0 <- compute_autocovariance(y, 0)
-      gamma_1 <- compute_autocovariance(y, 1)
-
-      if (gamma_0 == 0) {
-        stop("Variance is zero, cannot compute phi_1")
-      }
-
-      phi_1 <- gamma_1 / gamma_0
-      return(phi_1)
+    if (lag == 0) {
+      return(mean((y[valid_indices] - y_mean)^2))
+    } else {
+      return(mean((y[valid_indices] - y_mean) * (y[valid_indices + lag] - y_mean)))
     }
-
-    # Function to compute the residuals
-    compute_residuals <- function(y, phi_1) {
-      valid_indices <- remove_na_pairs(y)
-      residuals <- y[valid_indices + 1] - phi_1 * y[valid_indices]
-      return(residuals)
-    }
-
-    # Function to compute standard deviation of white noise
-    compute_white_noise_sd <- function(residuals) {
-      return(sd(residuals, na.rm = TRUE))
-    }
-
-    # Function to compute standard error of phi_1
-    compute_standard_error <- function(y, residuals) {
-      valid_indices <- remove_na_pairs(y)
-      n <- length(valid_indices)
-      white_noise_sd <- compute_white_noise_sd(residuals)
-      gamma_0 <- compute_autocovariance(y, 0)
-      standard_error <- white_noise_sd / sqrt(n * gamma_0)
-      return(standard_error)
-    }
-
-    # Function to compute t-value
-    compute_t_value <- function(phi_1, standard_error) {
-      t_value <- phi_1 / standard_error
-      return(t_value)
-    }
-
-    # Function to compute p-value
-    compute_p_value <- function(t_value, df) {
-      p_value <- 2 * (1 - pt(abs(t_value), df))
-      return(p_value)
-    }
-
-    # Calculations
-    phi_1 <- estimate_phi_1(y)
-    residuals      <- compute_residuals(y, phi_1)
-    standard_error <- compute_standard_error(y, residuals)
-    white_noise_sd <- compute_white_noise_sd(residuals)
-    t_value        <- compute_t_value(phi_1, standard_error)
-    valid_indices  <- which(!is.na(y[-length(y)]) & !is.na(y[-1]))
-    n              <- length(valid_indices)
-    p_value        <- compute_p_value(t_value, df = n - 4)
-
-    (list(
-      phi_1 = phi_1,
-      standard_error = standard_error,
-      white_noise_sd = white_noise_sd,
-      t_value = t_value,
-      p_value = p_value,
-      approach = "moments",
-      arima_results = ""
-    ))
   }
+
+  # Function to estimate phi_1
+  estimate_phi_1 <- function(y) {
+    gamma_0 <- compute_autocovariance(y, 0)
+    gamma_1 <- compute_autocovariance(y, 1)
+
+    if (gamma_0 == 0) {
+      stop("Variance is zero, cannot compute phi_1")
+    }
+
+    phi_1 <- gamma_1 / gamma_0
+    return(phi_1)
+  }
+
+  # Function to compute the residuals
+  compute_residuals <- function(y, phi_1) {
+    valid_indices <- remove_na_pairs(y)
+    residuals <- y[valid_indices + 1] - phi_1 * y[valid_indices]
+    return(residuals)
+  }
+
+  # Function to compute standard deviation of white noise
+  compute_white_noise_sd <- function(residuals) {
+    return(sd(residuals, na.rm = TRUE))
+  }
+
+  # Function to compute standard error of phi_1
+  compute_standard_error <- function(y, residuals) {
+    valid_indices <- remove_na_pairs(y)
+    n <- length(valid_indices)
+    white_noise_sd <- compute_white_noise_sd(residuals)
+    gamma_0 <- compute_autocovariance(y, 0)
+    standard_error <- white_noise_sd / sqrt(n * gamma_0)
+    return(standard_error)
+  }
+
+  # Function to compute t-value
+  compute_t_value <- function(phi_1, standard_error) {
+    t_value <- phi_1 / standard_error
+    return(t_value)
+  }
+
+  # Function to compute p-value
+  compute_p_value <- function(t_value, df) {
+    p_value <- 2 * (1 - pt(abs(t_value), df))
+    return(p_value)
+  }
+
+  # > Calculations ####
+  phi_1 <- estimate_phi_1(y)
+  residuals      <- compute_residuals(y, phi_1)
+  standard_error <- compute_standard_error(y, residuals)
+  white_noise_sd <- compute_white_noise_sd(residuals)
+  t_value        <- compute_t_value(phi_1, standard_error)
+  valid_indices  <- which(!is.na(y[-length(y)]) & !is.na(y[-1]))
+  n              <- length(valid_indices)
+  p_value        <- compute_p_value(t_value, df = n - 4)
+
+  (list(
+    phi_1 = phi_1,
+    standard_error = standard_error,
+    white_noise_sd = white_noise_sd,
+    t_value = t_value,
+    p_value = p_value,
+    approach = "moments",
+    arima_results = ""
+  ))
+}
 
 
 
@@ -475,13 +475,13 @@ plot_acf_pacf <- function(y) {
     phi_pvalue1 <- signif(phi_pvalue1, 4)
   }
 
-  # Plot the time series in the top row
+  # > Plot time series ####
   plot(y, type = "p", pch = 21, col = "black", bg = "white", main = paste0("phi = ", phi, " (p-value = ", phi_pvalue1,")"),
        xlab = "Time Index", ylab = "Value")
   grid()
   abline(h = 0, col = "red", lty = 2, lwd = 0.5)
 
-  # Plot lag-1 plot
+  # > Plot lag-1 plot ####
   lagged_data <- tibble::tibble(
     e_t = tail(y, -1),
     e_t_1 = head(y, -1),
@@ -494,10 +494,10 @@ plot_acf_pacf <- function(y) {
   abline(h = 0, col = "red", lty = 2, lwd = 0.5)
   abline(v = 0, col = "red", lty = 2, lwd = 0.5)
 
-  # Plot the ACF in the second column of the second row
+  # > Plot the ACF ####
   acf(y, main = "ACF", na.action = na.pass)
 
-  # Plot the PACF in the second column of the second row
+  # > Plot the PACF ####
   pacf(y, main = "PACF", na.action = na.pass)
 
   # Reset plotting layout

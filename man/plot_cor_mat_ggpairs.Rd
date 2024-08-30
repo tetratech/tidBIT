@@ -17,6 +17,6 @@ plot_cor_mat_ggpairs(data, sig.level = 0.05, alpha = 0.35)
 A helper function to create a correlation plot using `ggpairs`.
 }
 \seealso{
-\code{\link{plot_cor_mat}}, \code{\link{compute_cor_mat}}
+\code{\link{plot_cor_mat}}, \code{\link{compute_cor_matrix}}
 }
 \keyword{internal}

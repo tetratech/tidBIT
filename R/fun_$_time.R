@@ -120,11 +120,12 @@ date_time_to_hours_decimal <- function(date_chk) {
 
 #' @title Compute Day of Year Adjusted for Leap Year and Start Date
 #'
-#' @description Calculates the day of the year (DOY) for a given date, adjusting
-#'  as if every year is a leap year. This adjustment ensures consistency in day
-#'  numbering across years, particularly useful for analyses where maintaining a
-#'  consistent temporal scale is important, such as in time series modeling or
-#'  seasonal studies. The function allows adjusting for different start dates.
+#' @description Calculates the day of the year (doy) for a given date, adjusting
+#'   as if every year is a leap year. The function allows adjusting for
+#'   different start dates. This adjustment ensures consistency in day numbering
+#'   across years, particularly useful for analyses where maintaining a
+#'   consistent temporal scale is important, such as in time series modeling or
+#'   seasonal studies.
 #'
 #' @param date_chk A date or datetime object, or a vector of dates, for which the adjusted day of the
 #' year is calculated.
