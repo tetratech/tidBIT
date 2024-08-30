@@ -1,4 +1,5 @@
 
+# fun_$_covariance.R - functions to compute and plot correlations
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #

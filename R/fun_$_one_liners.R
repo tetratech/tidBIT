@@ -1,5 +1,5 @@
 
-
+# fun_$_one_liners.R - simple helper functions
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #

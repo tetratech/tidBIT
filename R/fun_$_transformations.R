@@ -1,3 +1,6 @@
+
+# fun_$_transformations.R - data transformation functions
+
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #' @title Transform Data Based on a Given Transformation Name

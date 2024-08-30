@@ -1,6 +1,5 @@
 
-# fun_cb4d_diagnostic_00.r
-
+# fun_$_general_plotting_00.r
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #

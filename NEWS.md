@@ -4,7 +4,11 @@ NEWS
 
 <!-- NEWS.md is generated from NEWS.Rmd. Please edit that file -->
 
-    #> Last Update: 2024-08-29 15:40:59.97907
+    #> Last Update: 2024-08-30 08:24:51.518328
+
+# tidBIT 0.1.0.9026
+
+- refactor function files
 
 # tidBIT 0.1.0.9025
 
