@@ -7,9 +7,9 @@
 #'
 #' @description Applies a specified transformation to a numeric vector `y_obs`
 #' based on the transformation name (`trans_name`) and parameters
-#' (`trans_parms`). Supports no transformation, logarithmic, and beta logit
-#' transformations specified by `trans_name`. This function allows for flexible
-#' data manipulation in preprocessing steps, where different types of
+#' (`trans_parms`). Supports no transformation, logarithmic, beta logit,
+#' and Fisher Z transformations specified by `trans_name`. This function allows
+#' for flexible data manipulation in preprocessing steps, where different types of
 #' transformations might be required based on the characteristics of the data or
 #' the analytical requirements.
 #'
@@ -17,7 +17,8 @@
 #' \itemize{
 #'   \item {"none": No transformation is applied, and `y_obs` is returned as-is.}
 #'   \item {"log": A natural logarithm transformation is applied to each element of `y_obs`.}
-#'   \item {starts with "BL_": A beta logit transformation, as defined by the `beta_logit_tran` function, is applied using the parameters specified in `trans_parms`.}
+#'   \item {starts with "BL_": A beta logit transformation, as defined by the `beta_logit_tran` function.}
+#'   \item {"fisherZ": A Fisher Z transformation is applied, as defined by the `fisherZ` function.}
 #' }
 #' It's important to ensure that `y_obs` and `trans_parms` are compatible with the chosen
 #' transformation to avoid errors or unexpected behavior.
@@ -51,8 +52,11 @@
 #' @export
 #'
 #' @seealso \code{\link[stats]{qbeta}} for details on beta distribution
-#'   functions. \code{\link{beta_logit_tran}},
+#'   functions.
+#'   \code{\link{beta_logit_tran}},
 #'   \code{\link{beta_logit_tran_inverse}},
+#'   \code{\link{fisherZ}},
+#'   \code{\link{fisherZ_inverse}},
 #'   \code{\link{transform_data_inverse}}
 #'
 #'
@@ -66,21 +70,28 @@ transform_data <- function(y_obs, trans_name, trans_parms, show_msgs = FALSE) {
     y <- log(y_obs)
   } else if (startsWith(trans_name, "BL_")) {
     y <- beta_logit_tran(y_obs, bl4 = trans_parms, show_msgs)
+  } else if (trans_name == "fisherZ") {
+    y <- fisherZ(y_obs)
+  } else {
+    stop("Unknown transformation")
   }
 
   return(y)
-}## FUN ~ transform_data
+} ## FUN ~ transform_data
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #' @title Inverse Transformation of Data
 #'
 #' @description Applies the inverse of a specified transformation to a numeric
-#' vector `y` based on the transformation name (`trans_name`) and parameters
-#' (`trans_parms`). This function reverses the effects of transformations
-#' applied by `transform_data` or similar functions, returning the data to its
-#' original scale. Supports reversing no transformation, logarithmic, and beta
-#' logit transformations specified by `trans_name`.
+#'   vector `y_obs` based on the transformation name (`trans_name`) and
+#'   parameters (`trans_parms`). Supports no inverse transformation,
+#'   logarithmic, beta logit, and Fisher Z transformations specified by
+#'   `trans_name`. This function allows for flexible data manipulation in
+#'   preprocessing steps, where different types of transformations might be
+#'   required based on the characteristics of the data or the analytical
+#'   requirements.
+
 #'
 #' @details When `trans_name` is:
 #' \itemize{
@@ -91,7 +102,10 @@ transform_data <- function(y_obs, trans_name, trans_parms, show_msgs = FALSE) {
 #'   \item{starts with "BL_": An inverse beta logit transformation, as defined by the
 #'      `beta_logit_tran_inverse` function, is applied using the parameters specified in `trans_parms`,
 #'      returning the data to its original bounded domain.}
+#'   \item {"fisherZ": An inverse Fisher Z transformation is applied, as defined
+#'   by the `fisherZ_inverse` function.}
 #' }
+#'
 #' It's crucial to match the transformation name and parameters with those used
 #'  in the initial transformation to ensure accurate reversal.
 #'
@@ -125,8 +139,12 @@ transform_data <- function(y_obs, trans_name, trans_parms, show_msgs = FALSE) {
 #' @export
 #'
 #' @seealso \code{\link[stats]{qbeta}} for details on beta distribution
-#'   functions. \code{\link{beta_logit_tran}},
-#'   \code{\link{beta_logit_tran_inverse}}, \code{\link{transform_data}}
+#'   functions.
+#'   \code{\link{transform_data}},
+#'   \code{\link{beta_logit_tran}},
+#'   \code{\link{beta_logit_tran_inverse}},
+#'   \code{\link{fisherZ}},
+#'   \code{\link{fisherZ_inverse}}
 #'
 transform_data_inverse <- function(y
                                    , trans_name
@@ -141,6 +159,10 @@ transform_data_inverse <- function(y
     y_obs <- exp(y)
   } else if (startsWith(trans_name, "BL_")) {
     y_obs <- beta_logit_tran_inverse(y, bl4 = trans_parms, show_msgs=FALSE)
+  } else if (trans_name == "fisherZ") {
+    y_obs <- fisherZ_inverse(y_obs)
+  } else {
+    stop("Unknown inverse transformation")
   }
 
   return(y_obs)
@@ -191,8 +213,12 @@ transform_data_inverse <- function(y
 #' @importFrom stats pbeta
 #'
 #' @seealso \code{\link[stats]{qbeta}} for details on beta distribution
-#'   functions. \code{\link{beta_logit_tran_inverse}},
-#'   \code{\link{transform_data}}, \code{\link{transform_data_inverse}}
+#'   functions.
+#'   \code{\link{transform_data}},
+#'   \code{\link{beta_logit_tran_inverse}},
+#'   \code{\link{fisherZ}},
+#'   \code{\link{fisherZ_inverse}},
+#'   \code{\link{transform_data_inverse}}
 #'
 #' @export
 #' @keywords internal
@@ -319,9 +345,13 @@ beta_logit_tran <- function(x, bl4, show_msgs = FALSE) {
 #' @importFrom stats qbeta
 #'
 #' @seealso \code{\link[stats]{qbeta}} for details on beta distribution
-#'   functions. \code{\link{beta_logit_tran}},
+#'   functions.
 #'   \code{\link{transform_data}},
+#'   \code{\link{beta_logit_tran}},
+#'   \code{\link{fisherZ}},
+#'   \code{\link{fisherZ_inverse}},
 #'   \code{\link{transform_data_inverse}}
+#'
 #'
 #' @export
 #' @keywords internal
@@ -357,3 +387,51 @@ beta_logit_tran_inverse <- function(z, bl4, show_msgs=FALSE) {
   return(x)
 }## FUN ~ beta_logit_tran_inverse
 
+
+
+#' @title Fisher Z Transformation
+#'
+#' @description Applies the Fisher Z transformation to a numeric vector `r`.
+#'
+#' @param r A numeric vector representing correlation coefficients.
+#'
+#' @return A numeric vector of transformed values.
+#'
+#' @seealso \code{\link[stats]{qbeta}} for details on beta distribution
+#'   functions.
+#'   \code{\link{transform_data}},
+#'   \code{\link{beta_logit_tran}},
+#'   \code{\link{beta_logit_tran_inverse}},
+#'   \code{\link{fisherZ_inverse}},
+#'   \code{\link{transform_data_inverse}}
+#'
+#' @export
+#' @keywords internal
+#'
+fisherZ <- function(r) {
+  z <- 0.5 * log((1 + r) / (1 - r))
+  return(z)
+}
+
+#' @title Inverse Fisher Z Transformation
+#'
+#' @description Applies the inverse Fisher Z transformation to a numeric vector `z`.
+#'
+#' @param z A numeric vector representing Fisher Z values.
+#'
+#' @return A numeric vector of inverse transformed values (correlation coefficients).
+#'
+#' @seealso \code{\link[stats]{qbeta}} for details on beta distribution functions.
+#'   \code{\link{transform_data}},
+#'   \code{\link{beta_logit_tran}},
+#'   \code{\link{beta_logit_tran_inverse}},
+#'   \code{\link{fisherZ}},
+#'   \code{\link{transform_data_inverse}}
+#'
+#' @export
+#' @keywords internal
+#'
+fisherZ_inverse <- function(z) {
+  r <- (exp(2 * z) - 1) / (exp(2 * z) + 1)
+  return(r)
+}
