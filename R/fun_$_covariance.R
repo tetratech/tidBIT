@@ -15,6 +15,7 @@
 #' \item{cov_matrix}{The covariance matrix computed using standard methods.}
 #' \item{p_matrix}{A matrix of p-values corresponding to each element in the
 #' covariance matrix.}
+#' \item{mean_vector}{A vector of means corresponding to each column of data.}
 #'
 #' @examples
 #' data <- mtcars[, c("mpg", "disp", "hp", "qsec", "drat", "wt")]

@@ -4,7 +4,15 @@ NEWS
 
 <!-- NEWS.md is generated from NEWS.Rmd. Please edit that file -->
 
-    #> Last Update: 2024-08-30 08:24:51.518328
+    #> Last Update: 2024-08-30 15:28:30.715727
+
+# tidBIT 0.1.0.9028
+
+- refactor: transformations: Fisher Z transformation option added.
+
+# tidBIT 0.1.0.9027
+
+- update help files
 
 # tidBIT 0.1.0.9026
 

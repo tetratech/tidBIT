@@ -15,6 +15,7 @@
 #' \item{cor_matrix}{The correlation matrix computed using standard methods.}
 #' \item{p_matrix}{A matrix of p-values corresponding to each element in the
 #' correlation matrix.}
+#' \item{mean_vector}{A vector of means corresponding to each column of data.}
 #'
 #' @examples
 #' data <- mtcars[, c("mpg", "disp", "hp", "qsec", "drat", "wt")]
@@ -83,7 +84,7 @@ compute_cor_matrix <- function(data) {
 #'
 #' @export
 #'
-#' @seealso \code{\link{compute_cor_mat}}, \code{\link{plot_cor_mat_ggpairs}},
+#' @seealso \code{\link{compute_cor_matrix}}, \code{\link{plot_cor_mat_ggpairs}},
 #'   \code{\link{plot_cor_mat_corrplot}}
 #'
 plot_cor_mat <- function(data, method = c("ggpairs", "corrplot"),
@@ -114,7 +115,7 @@ plot_cor_mat <- function(data, method = c("ggpairs", "corrplot"),
 #' @export
 #' @keywords internal
 #'
-#' @seealso \code{\link{plot_cor_mat}}, \code{\link{compute_cor_mat}}
+#' @seealso \code{\link{plot_cor_mat}}, \code{\link{compute_cor_matrix}}
 #'
 plot_cor_mat_ggpairs <- function(data, sig.level = 0.05, alpha = 0.35) {
 
@@ -211,7 +212,7 @@ plot_cor_mat_ggpairs_aux <- function(data, mapping, sig.level, ...) {
 #' @export
 #' @keywords internal
 #'
-#' @seealso \code{\link{plot_cor_mat}}, \code{\link{compute_cor_mat}}
+#' @seealso \code{\link{plot_cor_mat}}, \code{\link{compute_cor_matrix}}
 #'
 plot_cor_mat_corrplot <- function(data, sig.level = 0.05, lower_col = "RdYlBu", upper_col = "RdYlBu", color_n = 10) {
 

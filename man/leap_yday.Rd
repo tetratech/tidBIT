@@ -18,11 +18,12 @@ An integer vector representing the day of the year, adjusted for leap years
 and the specified start date.
 }
 \description{
-Calculates the day of the year (DOY) for a given date, adjusting
- as if every year is a leap year. This adjustment ensures consistency in day
- numbering across years, particularly useful for analyses where maintaining a
- consistent temporal scale is important, such as in time series modeling or
- seasonal studies. The function allows adjusting for different start dates.
+Calculates the day of the year (doy) for a given date, adjusting
+  as if every year is a leap year. The function allows adjusting for
+  different start dates. This adjustment ensures consistency in day numbering
+  across years, particularly useful for analyses where maintaining a
+  consistent temporal scale is important, such as in time series modeling or
+  seasonal studies.
 }
 \examples{
 date_example <- as.Date(
