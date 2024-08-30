@@ -1,4 +1,5 @@
 
+# fun_$_time.R - helper functions to supplement commonly used lubridate functions
 
 #' Check and Validate MM-DD Date Format
 #'

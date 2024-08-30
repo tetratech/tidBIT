@@ -1,6 +1,157 @@
 
+# fun_$_correlation.R - functions to compute AR(1) coefficients and make corresponding plots
 
+#' Estimate AR(1) Model Parameter
+#'
+#' An AR(1) model is fit using up to three different approaches sequentially. If
+#' an approach fails (produces an error or warning), the next approach is
+#' attempted. Approach 1 uses the `arima` function with default parameters and
+#' is computationally faster than Approach 2 but sometimes fails to converge.
+#' Approach 2 uses the `arima` function with alternative method, optimization,
+#' and iteration settings and based on testing found to be
+#' less prone to convergence issues. Approach 3 uses the method of moments but
+#' is considered less accurate than the other two approaches but does not rely
+#' on computing initial values. See \code{\link{ar1_default}}, \code{\link{ar1_alter}},
+#' and \code{\link{ar1_moment}} for further details.
+#'
+#' @param y A numeric vector representing the time series data.
+#' @return A list containing the following elements:
+#' \describe{
+#'   \item{phi_1}{The estimated AR(1) parameter.}
+#'   \item{standard_error}{The standard error of the estimated AR(1) parameter.}
+#'   \item{white_noise_sd}{The standard deviation of the white noise.}
+#'   \item{t_value}{The t-value of the estimated AR(1) parameter.}
+#'   \item{p_value}{The p-value of the estimated AR(1) parameter.}
+#'   \item{approach}{The method used to estimate the AR(1) parameter ("default", "alternative", "moments", or "No method worked").}
+#'   \item{arima_results}{Results from arima function call when either the "default" or "alternative" method were.}
+#'   \item{message}{Any warning or error messages encountered during the estimation process.}
+#' }
+#' @examples
+#' set.seed(123)
+#' y    <- arima.sim(n = 40, list(ar = 0.40))
+#' y[8] <- NA
+#' plot_acf_pacf(y)
+#' estimate_ar1(y)
+#'
+#'
+#' @importFrom stats arima pt sd
+#'
+#' @seealso \code{\link{plot_acf_pacf}},
+#'   \code{\link{ar1_default}},
+#'   \code{\link{ar1_alter}},
+#'   \code{\link{ar1_moment}}
+#'
+#' @export
+#'
+estimate_ar1 <- function(y) {
 
+  # Function to check if a value is neither NA nor NaN
+  is_not_na_and_not_nan <- function(x) {
+    if (!is.list(x)) {
+      !is.na(x) & !is.nan(x)
+    } else if (is.list(x)) {
+      TRUE
+    }
+  }
+
+  # Initialize result list with NA values and empty message
+  result <- list(
+    phi_1 = NA,
+    standard_error = NA,
+    white_noise_sd = NA,
+    t_value = NA,
+    p_value = NA,
+    approach = NA,
+    arima_results = "",
+    message = ""
+  )
+
+  # Try default ARIMA method
+  {
+    try_default <- tryCatch({
+      result <- ar1_default(y)
+      result$message = ""
+      result
+    }, warning = function(w) {
+      # Capture warning message
+      result$approach <- "default"
+      result$message  <- paste("ar1_default msg:", conditionMessage(w))
+      result
+    }, error = function(e) {
+      # Capture error message
+      result$approach <- "default"
+      result$message  <- paste("ar1_default msg:", conditionMessage(e))
+      result
+    })
+  }
+
+  # If the default method succeeds without producing NA or NaN, return the result
+  if (all(sapply(try_default, is_not_na_and_not_nan))) {
+    return(try_default)
+  }
+
+  # Store the message from the default method
+  message <- try_default$message
+
+  # Try alternative ARIMA method
+  {
+    try_alternative <- tryCatch({
+      result <- ar1_alter(y)
+      result$message <- message
+      result
+    }, warning = function(w) {
+      # Append warning message
+      result$approach <- "alternative"
+      result$message <- paste(message, "|", "ar1_alter msg:", conditionMessage(w))
+      result
+    }, error = function(e) {
+      # Append error message
+      result$approach <- "alternative"
+      result$message <- paste(message, "|", "ar1_alter msg:", conditionMessage(e))
+      result
+    })
+  }
+
+  # If the alternative method succeeds without producing NA or NaN, return the result
+  if (all(sapply(try_alternative, is_not_na_and_not_nan))) {
+    return(try_alternative)
+  }
+
+  # Store the message from the alternative method
+  message <- try_alternative$message
+
+  # Try method of moments
+  {
+    try_moments <- tryCatch({
+      result <- ar1_moment(y)
+      result$message <- message
+      result
+    }, warning = function(w) {
+      # Append warning message
+      result$approach <- "moments"
+      result$message <- paste(message, "|", "ar1_moment msg:", conditionMessage(w))
+      result
+    }, error = function(e) {
+      # Append error message
+      result$approach <- "moments"
+      result$message <- paste(message, "|", "ar1_moment msg:", conditionMessage(e))
+      result
+    })
+  }
+
+  # If the method of moments succeeds without producing NA or NaN, return the result
+  if (all(sapply(try_moments, is_not_na_and_not_nan))) {
+    return(try_moments)
+  }
+
+  # Store the message from the method of moments
+  message <- try_moments$message
+
+  # All methods failed, update message and return result
+  try_moments$approach <- "No method worked"
+
+  return(try_moments)
+}
 
 #' Default ARIMA Application for AR(1) Model
 #'
@@ -259,159 +410,6 @@ ar1_moment <- function(y) {
   }
 
 
-#' Estimate AR(1) Model Parameter
-#'
-#' An AR(1) model is fit using up to three different approaches sequentially. If
-#' an approach fails (produces an error or warning), the next approach is
-#' attempted. Approach 1 uses the `arima` function with default parameters and
-#' is computationally faster than Approach 2 but sometimes fails to converge.
-#' Approach 2 uses the `arima` function with alternative method, optimization,
-#' and iteration settings and based on testing found to be
-#' less prone to convergence issues. Approach 3 uses the method of moments but
-#' is considered less accurate than the other two approaches but does not rely
-#' on computing initial values. See \code{\link{ar1_default}}, \code{\link{ar1_alter}},
-#' and \code{\link{ar1_moment}} for further details.
-#'
-#' @param y A numeric vector representing the time series data.
-#' @return A list containing the following elements:
-#' \describe{
-#'   \item{phi_1}{The estimated AR(1) parameter.}
-#'   \item{standard_error}{The standard error of the estimated AR(1) parameter.}
-#'   \item{white_noise_sd}{The standard deviation of the white noise.}
-#'   \item{t_value}{The t-value of the estimated AR(1) parameter.}
-#'   \item{p_value}{The p-value of the estimated AR(1) parameter.}
-#'   \item{approach}{The method used to estimate the AR(1) parameter ("default", "alternative", "moments", or "No method worked").}
-#'   \item{arima_results}{Results from arima function call when either the "default" or "alternative" method were.}
-#'   \item{message}{Any warning or error messages encountered during the estimation process.}
-#' }
-#' @examples
-#' set.seed(123)
-#' y    <- arima.sim(n = 40, list(ar = 0.40))
-#' y[8] <- NA
-#' plot_acf_pacf(y)
-#' estimate_ar1(y)
-#'
-#'
-#' @importFrom stats arima pt sd
-#'
-#' @seealso \code{\link{plot_acf_pacf}},
-#'   \code{\link{ar1_default}},
-#'   \code{\link{ar1_alter}},
-#'   \code{\link{ar1_moment}}
-#'
-#' @export
-#'
-estimate_ar1 <- function(y) {
-
-  # Function to check if a value is neither NA nor NaN
-  is_not_na_and_not_nan <- function(x) {
-    if (!is.list(x)) {
-      !is.na(x) & !is.nan(x)
-    } else if (is.list(x)) {
-      TRUE
-    }
-  }
-
-  # Initialize result list with NA values and empty message
-  result <- list(
-    phi_1 = NA,
-    standard_error = NA,
-    white_noise_sd = NA,
-    t_value = NA,
-    p_value = NA,
-    approach = NA,
-    arima_results = "",
-    message = ""
-  )
-
-  # Try default ARIMA method
-  {
-    try_default <- tryCatch({
-      result <- ar1_default(y)
-      result$message = ""
-      result
-    }, warning = function(w) {
-      # Capture warning message
-      result$approach <- "default"
-      result$message  <- paste("ar1_default msg:", conditionMessage(w))
-      result
-    }, error = function(e) {
-      # Capture error message
-      result$approach <- "default"
-      result$message  <- paste("ar1_default msg:", conditionMessage(e))
-      result
-    })
-  }
-
-  # If the default method succeeds without producing NA or NaN, return the result
-  if (all(sapply(try_default, is_not_na_and_not_nan))) {
-    return(try_default)
-  }
-
-  # Store the message from the default method
-  message <- try_default$message
-
-  # Try alternative ARIMA method
-  {
-    try_alternative <- tryCatch({
-      result <- ar1_alter(y)
-      result$message <- message
-      result
-    }, warning = function(w) {
-      # Append warning message
-      result$approach <- "alternative"
-      result$message <- paste(message, "|", "ar1_alter msg:", conditionMessage(w))
-      result
-    }, error = function(e) {
-      # Append error message
-      result$approach <- "alternative"
-      result$message <- paste(message, "|", "ar1_alter msg:", conditionMessage(e))
-      result
-    })
-  }
-
-  # If the alternative method succeeds without producing NA or NaN, return the result
-  if (all(sapply(try_alternative, is_not_na_and_not_nan))) {
-    return(try_alternative)
-  }
-
-  # Store the message from the alternative method
-  message <- try_alternative$message
-
-  # Try method of moments
-  {
-    try_moments <- tryCatch({
-      result <- ar1_moment(y)
-      result$message <- message
-      result
-    }, warning = function(w) {
-      # Append warning message
-      result$approach <- "moments"
-      result$message <- paste(message, "|", "ar1_moment msg:", conditionMessage(w))
-      result
-    }, error = function(e) {
-      # Append error message
-      result$approach <- "moments"
-      result$message <- paste(message, "|", "ar1_moment msg:", conditionMessage(e))
-      result
-    })
-  }
-
-  # If the method of moments succeeds without producing NA or NaN, return the result
-  if (all(sapply(try_moments, is_not_na_and_not_nan))) {
-    return(try_moments)
-  }
-
-  # Store the message from the method of moments
-  message <- try_moments$message
-
-  # All methods failed, update message and return result
-  try_moments$approach <- "No method worked"
-
-  return(try_moments)
-}
-
-
 
 #' Plot Time Series, ACF, and PACF
 #'
@@ -448,6 +446,7 @@ estimate_ar1 <- function(y) {
 #'   \code{\link{ar1_moment}}
 #'
 #' @export
+#'
 plot_acf_pacf <- function(y) {
 
   # Function to check if a value is neither NA nor NaN
