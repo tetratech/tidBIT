@@ -25,11 +25,13 @@ reflect the original observations before any transformation was applied.
 }
 \description{
 Applies the inverse of a specified transformation to a numeric
-vector `y` based on the transformation name (`trans_name`) and parameters
-(`trans_parms`). This function reverses the effects of transformations
-applied by `transform_data` or similar functions, returning the data to its
-original scale. Supports reversing no transformation, logarithmic, and beta
-logit transformations specified by `trans_name`.
+  vector `y_obs` based on the transformation name (`trans_name`) and
+  parameters (`trans_parms`). Supports no inverse transformation,
+  logarithmic, beta logit, and Fisher Z transformations specified by
+  `trans_name`. This function allows for flexible data manipulation in
+  preprocessing steps, where different types of transformations might be
+  required based on the characteristics of the data or the analytical
+  requirements.
 }
 \details{
 When `trans_name` is:
@@ -41,7 +43,10 @@ When `trans_name` is:
   \item{starts with "BL_": An inverse beta logit transformation, as defined by the
      `beta_logit_tran_inverse` function, is applied using the parameters specified in `trans_parms`,
      returning the data to its original bounded domain.}
+  \item {"fisherZ": An inverse Fisher Z transformation is applied, as defined
+  by the `fisherZ_inverse` function.}
 }
+
 It's crucial to match the transformation name and parameters with those used
  in the initial transformation to ensure accurate reversal.
 }
@@ -63,6 +68,10 @@ transform_data_inverse(y, "BL_example", trans_parms)
 }
 \seealso{
 \code{\link[stats]{qbeta}} for details on beta distribution
-  functions. \code{\link{beta_logit_tran}},
-  \code{\link{beta_logit_tran_inverse}}, \code{\link{transform_data}}
+  functions.
+  \code{\link{transform_data}},
+  \code{\link{beta_logit_tran}},
+  \code{\link{beta_logit_tran_inverse}},
+  \code{\link{fisherZ}},
+  \code{\link{fisherZ_inverse}}
 }

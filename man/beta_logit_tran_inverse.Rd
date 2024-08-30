@@ -54,8 +54,11 @@ back_transformed_x <- beta_logit_tran_inverse(transformed_x, bl4, TRUE)
 }
 \seealso{
 \code{\link[stats]{qbeta}} for details on beta distribution
-  functions. \code{\link{beta_logit_tran}},
+  functions.
   \code{\link{transform_data}},
+  \code{\link{beta_logit_tran}},
+  \code{\link{fisherZ}},
+  \code{\link{fisherZ_inverse}},
   \code{\link{transform_data_inverse}}
 }
 \keyword{internal}
