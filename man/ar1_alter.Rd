@@ -15,7 +15,13 @@ A list containing the estimated AR(1) parameter (phi_1), standard
   used.
 }
 \description{
-Alternative ARIMA Application for AR(1) Model
+Fit an AR(1) model to the time series data using the `arima` function with
+alternative parameters. The `arima` function call uses order = c(1, 0, 0)
+indicating an AR(1) model with no differencing and no moving average
+component. An alternative method “ML" (Maximum Likelihood) and alternative
+optimization "CG" (Conjugate Gradient algorithm) arguments are used. The
+maximum number of iterations is increased to 200 (i.e., `optim.control =
+list(maxit = 200)`).
 }
 \examples{
 set.seed(123)
