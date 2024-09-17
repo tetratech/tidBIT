@@ -8,8 +8,8 @@ plot_bivariate_data(
   df,
   x_var,
   y_var,
-  xlab,
-  ylab,
+  xlab = x_var,
+  ylab = y_var,
   ref_line = NA,
   smooth_line = FALSE,
   plot_title = NA,
@@ -36,9 +36,11 @@ plot_bivariate_data(
 
 \item{y_var}{A character string specifying the column name for the y variable.}
 
-\item{xlab}{A character string specifying the label for the x-axis.}
+\item{xlab}{A character string specifying the label for the x-axis.
+Default = x_var}
 
-\item{ylab}{A character string specifying the label for the y-axis.}
+\item{ylab}{A character string specifying the label for the y-axis.
+Default = y_var}
 
 \item{ref_line}{A numeric vector of length 2 specifying the slope and intercept of a reference line. Defaults to `NA`.}
 
