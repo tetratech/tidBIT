@@ -121,6 +121,7 @@ plot_obs_pred_res <- function(df, vars = c("y_obs", "y_pred", "y_resid"), vlab =
 #' @importFrom dplyr mutate row_number select .data
 #' @importFrom stats qnorm
 #' @importFrom tidyr drop_na
+#' @importFrom rlang sym
 #'
 #' @export
 #'
@@ -155,6 +156,10 @@ plot_bivariate_data <- function(df
 
   max_points_to_plot <- n
 
+  # Convert x_var and y_var to symbols for safe referencing
+  x_sym <- rlang::sym(x_var)
+  y_sym <- rlang::sym(y_var)
+
   # Thinning the data if required
   if (nrow(df) > max_points_to_plot && plot_type == "thin") {
     thin_plot = ceiling(nrow(df) / max_points_to_plot)
@@ -170,7 +175,7 @@ plot_bivariate_data <- function(df
   }
 
   # Create the plot
-  p1 <- ggplot(data_to_plot, aes(x = .data[[x_var]], y = .data[[y_var]])) +
+  p1 <- ggplot(data_to_plot, aes(x = !!x_sym, y = !!y_sym)) +
     theme_minimal() +
     theme(panel.border = element_rect(color = "black", fill = NA, linewidth = 0.25)) +
     xlab(xlab) +
