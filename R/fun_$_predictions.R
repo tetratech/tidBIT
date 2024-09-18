@@ -24,7 +24,7 @@
 #' generate_date_time("2024-01-01 00:00", "2024-01-02 00:00", time_step = 3, time_units = "hours", tz = "EST")
 #'
 #' @export
-generate_date_time <- function(start_date_time,
+generate_date_time_seq <- function(start_date_time,
                                stop_date_time,
                                time_step = 1,
                                time_units = "days",
@@ -68,3 +68,62 @@ generate_date_time <- function(start_date_time,
   return(date_time)
 }
 
+
+
+
+#' Replicate Rows by Sequence
+#'
+#' This function replicates rows of a data frame based on a sequence generated
+#' from a specified column. The function takes a data frame and for each row,
+#' generates a sequence of values and replicates the row accordingly.
+#'
+#' @param data A data frame or tibble containing the data to be replicated.
+#' @param start A numeric value specifying the starting point for the sequence. Default is 1.
+#' @param step A numeric value specifying the increment for the sequence. Default is 1.
+#' @param replicate_col A character string specifying the name of the column
+#'   used to determine the number of replications (sequence end). Default is
+#'   "depth_b".
+#' @param output_col A character string specifying the name of the column where
+#'   the generated sequence will be stored. Default is "depth".
+#'
+#' @return A tibble containing the replicated rows, with a new column for the
+#'   sequence values.
+#' @details For each row in the input data, the function generates a sequence
+#'   starting from `start` to the value found in `replicate_col`, with
+#'   increments of `step`. The row is then replicated for each value in the
+#'   sequence, and a new column is created to store the sequence values.
+#'
+#' @examples
+#' # Example data
+#' data <- tibble::tibble(
+#'   id = 1:2,
+#'   depth_b = c(2, 3)
+#' )
+#'
+#' # Replicate rows based on the 'depth_b' column
+#' replicate_rows_by_sequence(data, start = 0.5, step = 0.5, replicate_col = "depth_b", output_col = "depth")
+#'
+#' @export
+replicate_rows_by_seq <- function(data, start = 1, step = 1, replicate_col = "depth_b", output_col = "depth") {
+
+  # Function to replicate a single row based on the replicate_col column
+  replicate_row <- function(row) {
+
+    stop_value <- row[[replicate_col]]
+    seq_values <- seq(from = start, to = stop_value, by = step)
+
+    # Replicate row element-wise
+    replicated_rows <- as_tibble(lapply(row, rep, times = length(seq_values)))
+    replicated_rows[[output_col]] <- seq_values  # Add sequence column
+
+    return(replicated_rows)
+  }
+
+  # Apply the function to each row of the data frame
+  replicated_list <- Map(replicate_row, split(data, seq(nrow(data))))
+
+  # Combine the replicated rows into one tibble without row names
+  replicated_data <- do.call(rbind, replicated_list)
+
+  return(replicated_data)
+}
