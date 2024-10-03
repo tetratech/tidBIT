@@ -7,6 +7,8 @@
 #' It provides a wrapper around the C-based error generation function for efficient computation,
 #' handling multi-dimensional data.
 #'
+#' @useDynLib tidBIT, .registration = TRUE
+#'
 #' @param dBlks A list of block sizes for each dimension. Each element of the list represents the block size
 #'              for the corresponding dimension (e.g., `list(d1Blk, d2Blk, d3Blk)`).
 #' @param rhos A list of correlation coefficients for each dimension. The first element is the AR(1)
