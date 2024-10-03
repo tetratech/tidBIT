@@ -4,7 +4,11 @@ NEWS
 
 <!-- NEWS.md is generated from NEWS.Rmd. Please edit that file -->
 
-    #> Last Update: 2024-09-03 10:50:45.757264
+    #> Last Update: 2024-10-03 15:06:11.82016
+
+# tidBIT 0.1.0.9030
+
+- added Cholesky decomposition function
 
 # tidBIT 0.1.0.9029
 
