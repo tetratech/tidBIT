@@ -1,13 +1,13 @@
 Package: tidBIT
 Type: Package
 Title: Chesapeake Bay 4D Interpolation Functions
-Version: 0.1.0.9031
+Version: 0.1.0.9032
 Authors@R: c(
   person("Rebecca", "Murphy", email="rmurphy@chesapeakebay.net", role="aut"), 
   person("Elgin", "Perry", email="eperry@chesapeake.net", role="aut"), 
   person("Jon", "Harcum", email="Jon.Harcum@tetratech.com", role="aut"), 
   person("Erik W.", "Leppo", email="Erik.Leppo@tetratech.com", role=c("aut","cre")),
-  person("Breck", "Sullivan", email="bsullivan@chesapeake.net", role="fnd") 
+  person("Breck", "Sullivan", email="bsullivan@chesapeake.net", role=c("aut","fnd")) 
   )
 Maintainer: Erik W Leppo <Erik.Leppo@tetratech.com>
 Description: Collection of helper functions for Chesapeake Bay 4d interpolation.
