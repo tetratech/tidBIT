@@ -18,6 +18,11 @@ knitr::opts_chunk$set(
 cat(paste0("Last Update: ",Sys.time()))
 ```
 
+
+# tidBIT 0.1.0.9033
+
+* refactor help file for replicate_rows_by_seq
+
 # tidBIT 0.1.0.9032
 
 * added matrix multiplication function
