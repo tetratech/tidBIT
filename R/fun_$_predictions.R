@@ -101,7 +101,7 @@ generate_date_time_seq <- function(start_date_time,
 #' )
 #'
 #' # Replicate rows based on the 'depth_b' column
-#' replicate_rows_by_sequence(data, start = 0.5, step = 0.5, replicate_col = "depth_b", output_col = "depth")
+#' replicate_rows_by_seq(data, start = 0.5, step = 0.5, replicate_col = "depth_b", output_col = "depth")
 #'
 #' @export
 replicate_rows_by_seq <- function(data, start = 1, step = 1, replicate_col = "depth_b", output_col = "depth") {
