@@ -3,10 +3,10 @@ name: R package binary build
 on:
   push:
     branches:
-      - main  # Change to the branch where your code resides
+      - main
   pull_request:
     branches:
-      - main  # Build for pull requests too
+      - main
 
 jobs:
   build:
@@ -21,7 +21,7 @@ jobs:
       - name: Set up R
         uses: r-lib/actions/setup-r@v2
 
-      # Step 3: Install Pandoc
+      # Step 3: Install Pandoc (only if you are building vignettes)
       - name: Install Pandoc
         run: |
           choco install pandoc
@@ -33,21 +33,21 @@ jobs:
           Rscript -e 'install.packages("remotes")'
           Rscript -e 'remotes::install_deps(dependencies = TRUE)'
 
-      # Step 5: Build the package
+      # Step 5: Build the package (with or without vignettes)
       - name: Build package
         run: |
-          Rscript -e 'devtools::build(vignettes = TRUE)'
+          Rscript -e 'devtools::build(vignettes = TRUE)'  # Set to FALSE if you don't want vignettes
 
-      # Step 6: Install Rtools and compile C code (important for Windows)
+      # Step 6: Install Rtools (for Windows)
       - name: Install Rtools
         run: |
           Rscript -e 'install.packages("pkgbuild")'
           Rscript -e 'pkgbuild::check_build_tools()'
 
-      # Step 7: Build Windows binary package
+      # Step 7: Build Windows binary package using Rscript
       - name: Build Windows binary
         run: |
-          R CMD INSTALL --build .
+          Rscript -e 'devtools::install(build = TRUE)'  # This replaces the R CMD INSTALL --build . command
 
       # Step 8: Upload the built binary package as an artifact
       - name: Upload Windows binary
