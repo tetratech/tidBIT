@@ -13,9 +13,9 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      # Step 1: Checkout the repository
+      # Step 1: Checkout the repository (use v4 for Node.js 20)
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4  # Update to v4
 
       # Step 2: Set up R on the runner
       - name: Set up R
@@ -44,9 +44,9 @@ jobs:
           Rscript -e 'install.packages("pkgbuild")'
           Rscript -e 'pkgbuild::check_build_tools()'
 
-      # Step 7: Upload the built binary package as an artifact
+      # Step 7: Upload the built binary package as an artifact (use v4)
       - name: Upload Windows binary
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4  # Update to v4
         with:
           name: tidBIT-windows-binary
           path: "D:/a/tidBIT/tidBIT_*.zip"  # Use the correct file path based on the build output
