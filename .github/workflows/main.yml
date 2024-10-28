@@ -21,31 +21,37 @@ jobs:
       - name: Set up R
         uses: r-lib/actions/setup-r@v2
 
-      # Step 3: Install R dependencies
+      # Step 3: Install Pandoc
+      - name: Install Pandoc
+        run: |
+          choco install pandoc
+          pandoc --version
+
+      # Step 4: Install R dependencies
       - name: Install dependencies
         run: |
           Rscript -e 'install.packages("remotes")'
           Rscript -e 'remotes::install_deps(dependencies = TRUE)'
 
-      # Step 4: Build the package using Rscript (NOT PowerShell)
+      # Step 5: Build the package
       - name: Build package
         run: |
-          Rscript -e 'devtools::build()'
+          Rscript -e 'devtools::build(vignettes = TRUE)'
 
-      # Step 5: Install Rtools and compile C code (for Windows)
+      # Step 6: Install Rtools and compile C code (important for Windows)
       - name: Install Rtools
         run: |
           Rscript -e 'install.packages("pkgbuild")'
           Rscript -e 'pkgbuild::check_build_tools()'
 
-      # Step 6: Build Windows binary package
+      # Step 7: Build Windows binary package
       - name: Build Windows binary
         run: |
           R CMD INSTALL --build .
 
-      # Step 7: Upload the built binary package as an artifact
+      # Step 8: Upload the built binary package as an artifact
       - name: Upload Windows binary
-        uses: actions/upload-artifact@v3  # Use v3 here
+        uses: actions/upload-artifact@v3
         with:
           name: tidBIT-windows-binary
           path: "*.zip"  # Upload the binary package
