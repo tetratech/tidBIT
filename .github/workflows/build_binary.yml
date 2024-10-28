@@ -21,7 +21,7 @@ jobs:
       - name: Set up R
         uses: r-lib/actions/setup-r@v2
 
-      # Step 3: Install Pandoc (only if you're building vignettes)
+      # Step 3: Install Pandoc (if you're building vignettes)
       - name: Install Pandoc
         run: |
           choco install pandoc
@@ -33,11 +33,10 @@ jobs:
           Rscript -e 'install.packages("remotes")'
           Rscript -e 'remotes::install_deps(dependencies = TRUE)'
 
-      # Step 5: Build the package and binary, then list files
+      # Step 5: Build the package and binary
       - name: Build package and binary
         run: |
           Rscript -e 'devtools::build(binary = TRUE)'  # Build the binary package
-          ls -lh  # List all files to check if a .zip file was created and where
 
       # Step 6: Install Rtools (for Windows)
       - name: Install Rtools
@@ -50,4 +49,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: tidBIT-windows-binary
-          path: "*.zip"  # Assuming the binary is a .zip file; adjust if needed
+          path: "D:/a/tidBIT/tidBIT_*.zip"  # Use the correct file path based on the build output
