@@ -17,7 +17,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Step 2: Set up R on the runner (this is crucial)
+      # Step 2: Set up R on the runner
       - name: Set up R
         uses: r-lib/actions/setup-r@v2
 
@@ -27,12 +27,12 @@ jobs:
           Rscript -e 'install.packages("remotes")'
           Rscript -e 'remotes::install_deps(dependencies = TRUE)'
 
-      # Step 4: Build the package
+      # Step 4: Build the package using Rscript (NOT PowerShell)
       - name: Build package
         run: |
-          R CMD build .
+          Rscript -e 'devtools::build()'
 
-      # Step 5: Install Rtools and compile C code (important for Windows)
+      # Step 5: Install Rtools and compile C code (for Windows)
       - name: Install Rtools
         run: |
           Rscript -e 'install.packages("pkgbuild")'
@@ -45,7 +45,7 @@ jobs:
 
       # Step 7: Upload the built binary package as an artifact
       - name: Upload Windows binary
-        uses: actions/upload-artifact@v3  # Make sure this is v3
+        uses: actions/upload-artifact@v3  # Use v3 here
         with:
           name: tidBIT-windows-binary
-          path: "*.zip"  # This will upload the binary package
+          path: "*.zip"  # Upload the binary package
