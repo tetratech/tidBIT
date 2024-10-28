@@ -44,22 +44,13 @@ jobs:
         run: |
           Rscript -e 'version <- desc::desc_get_version(); cat(paste0("::set-output name=version::", version, "\n"))'
       
-      # Step 7: Create or Update GitHub Release
+      # Step 7: Create or Update GitHub Release and Upload Binary
       - name: Create or Update GitHub Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: "v${{ steps.get_version.outputs.version }}"  # Dynamically use the version
           name: "v${{ steps.get_version.outputs.version }} Release"
           body: "Release notes for version ${{ steps.get_version.outputs.version }}."
+          files: D:/a/tidBIT/tidBIT_*.zip  # Specify the binary file to upload
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-
-      # Step 8: Upload the binary as a release asset
-      - name: Upload Binary to Release
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}  # Reference output from create_release
-          asset_path: "D:/a/tidBIT/tidBIT_*.zip"  # Adjust the path to match your binary file
-          asset_name: "tidBIT-windows-binary.zip"
-          asset_content_type: application/zip
