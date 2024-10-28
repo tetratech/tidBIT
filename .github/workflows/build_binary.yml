@@ -38,12 +38,12 @@ jobs:
         run: |
           Rscript -e 'devtools::build(binary = TRUE)'  # Build the binary package
 
-      # Step 6: Get the Version from DESCRIPTION
+      # Step 6: Get the Version from DESCRIPTION (using R)
       - name: Get Version from DESCRIPTION
-        id: get_version  # An ID to reference this step's output later
+        id: get_version
         run: |
-          VERSION=$(grep -E '^Version:' DESCRIPTION | awk '{print $2}')
-          echo "::set-output name=version::$VERSION"
+          version=$(Rscript -e "desc::desc_get_version()")  # Extract version from DESCRIPTION
+          echo "::set-output name=version::$version"
       
       # Step 7: Create a Release and upload the binary to GitHub Releases using the version
       - name: Create GitHub Release
