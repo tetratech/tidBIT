@@ -45,7 +45,7 @@ jobs:
 
       # Step 7: Upload the built binary package as an artifact
       - name: Upload Windows binary
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: tidBIT-windows-binary
           path: "*.zip"  # This will upload the binary package
