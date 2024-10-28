@@ -42,8 +42,7 @@ jobs:
       - name: Get Version from DESCRIPTION
         id: get_version
         run: |
-          version=$(Rscript -e "desc::desc_get_version()")  # Extract version from DESCRIPTION
-          echo "::set-output name=version::$version"
+          Rscript -e 'version <- desc::desc_get_version(); cat(paste0("::set-output name=version::", version, "\n"))'
       
       # Step 7: Create a Release and upload the binary to GitHub Releases using the version
       - name: Create GitHub Release
