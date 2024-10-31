@@ -7,11 +7,13 @@
 generate_Cholesky_decomp_C(dBlks, rhos, dimension = NULL)
 }
 \arguments{
-\item{dBlks}{A list of block sizes for each dimension. Each element of the list represents the block size
-for the corresponding dimension (e.g., `list(d1Blk, d2Blk, d3Blk)`).}
+\item{dBlks}{A list of block sizes for each dimension. Each element of the
+list represents the block size for the corresponding dimension (e.g.,
+`list(d1Blk, d2Blk, d3Blk)`). See details for dimension ordering.}
 
-\item{rhos}{A list of correlation coefficients for each dimension. The first element is the AR(1)
-coefficient (phi), while subsequent elements represent correlations across higher dimensions.}
+\item{rhos}{A list of correlation coefficients for each dimension. The first
+element is the AR(1) coefficient (phi), while subsequent elements represent
+correlations across higher dimensions. See details for dimension ordering.}
 
 \item{dimension}{An integer representing the number of dimensions to process. If `NULL`, it is
 automatically determined from the length of `dBlks`.}
@@ -28,6 +30,9 @@ handling multi-dimensional data.
 This function uses pre-generated random numbers from R, which are passed to the recursive
 C function (`Derr_recursive_C`) for multi-dimensional AR error generation. The function can handle
 any number of dimensions and is optimized for speed.
+
+Be **PURPOSEFUL** when ordering `dBlks` and `rhos`. Entries **must** be from inner (FASTEST
+changing) to outer (slowest changing).
 }
 \examples{
 # Example usage

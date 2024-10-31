@@ -1,0 +1,47 @@
+#' Parallel Matrix Multiplication with C and OpenMP
+#'
+#' This function provides a wrapper around a C-based matrix multiplication
+#' function that utilizes OpenMP for parallel computation. It multiplies two
+#' matrices `A` and `B` and returns the result.
+#'
+#' @param A A numeric matrix with dimensions `N x M`. This is the left-hand side matrix.
+#' @param B A numeric matrix with dimensions `M x P`. This is the right-hand side matrix.
+#'
+#' @return A numeric matrix of dimensions `N x P`, the result of multiplying `A` by `B`.
+#'
+#' @details
+#' The C function `mat_mult` is implemented using OpenMP to take advantage of
+#' multi-core architectures for faster matrix multiplication of large datasets.
+#' This wrapper automatically handles the dimensions of matrices `A` and `B`,
+#' ensuring they are passed correctly to the C function.
+#'
+#' The matrices should conform in size, meaning that the number of columns in
+#' matrix `A` must be equal to the number of rows in matrix `B`. The function
+#' will return an error if this condition is not met.
+#'
+#' @examples
+#' # Generate two random matrices
+#' A <- matrix(runif(1e6 * 100), nrow = 1e6, ncol = 100)
+#' B <- matrix(runif(100 * 100), nrow = 100, ncol = 100)
+#'
+#' # Perform matrix multiplication
+#' result <- mat_mult_parallel(A, B)
+#'
+#' @useDynLib tidBIT, .registration = TRUE
+#' @export
+mat_mult_C <- function(A, B) {
+  # Check if matrices are conformable
+  if (ncol(A) != nrow(B)) {
+    stop("Non-conformable matrices: number of columns in A must match the number of rows in B.")
+  }
+
+  # Extract dimensions
+  N <- nrow(A)
+  M <- ncol(A)
+  P <- ncol(B)
+
+  # Call the C function for matrix multiplication
+  result <- .Call("mat_mult", A, B, as.integer(N), as.integer(M), as.integer(P))
+
+  return(result)
+}
