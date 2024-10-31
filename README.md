@@ -8,8 +8,8 @@
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/tetratech/tidBIT/graphs/commit-activity)
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-[![GitHub
-license](https://img.shields.io/github/license/tetratech/tidBIT.svg)](https://github.com/tetratech/tidBIT/blob/master/LICENSE)
+[![GitHub license](https://img.shields.io/github/license/tetratech/tidBIT.svg)](https://github.com/tetratech/tidBIT/blob/master/LICENSE)
+
 <!-- badges: end -->
 
 The goal of tidBIT is to …
