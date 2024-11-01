@@ -83,7 +83,9 @@ plot_obs_pred_res <- function(df, vars = c("y_obs", "y_pred", "y_resid"), vlab =
 #' @param x_var A character string specifying the column name for the x variable.
 #' @param y_var A character string specifying the column name for the y variable.
 #' @param xlab A character string specifying the label for the x-axis.
+#' Default = x_var
 #' @param ylab A character string specifying the label for the y-axis.
+#' Default = y_var
 #' @param ref_line A numeric vector of length 2 specifying the slope and intercept of a reference line. Defaults to `NA`.
 #' @param smooth_line Logical; if `TRUE`, adds a smooth line to the plot. Defaults to `FALSE`.
 #' @param plot_title A character string specifying the title for the plot. Defaults to `NA`.
@@ -119,15 +121,32 @@ plot_obs_pred_res <- function(df, vars = c("y_obs", "y_pred", "y_resid"), vlab =
 #' @importFrom dplyr mutate row_number select .data
 #' @importFrom stats qnorm
 #' @importFrom tidyr drop_na
+#' @importFrom rlang sym
 #'
 #' @export
 #'
-plot_bivariate_data <- function(df, x_var, y_var, xlab, ylab, ref_line = NA, smooth_line = FALSE, plot_title = NA,
-                                  na.rm = TRUE, plot_type ="all", n=3000,
-                                  sym_color = "gray40", alpha = 0.35,
-                                  bins = 30, bin_color_low = "gray75", bin_color_high = "gray5",
-                                  ref_line_color = "red", ref_line_width = 1, ref_line_type = "solid",
-                                  smooth_line_color = "blue", smooth_line_width = 1, smooth_line_type = "dashed") {
+plot_bivariate_data <- function(df
+                                , x_var
+                                , y_var
+                                , xlab = x_var
+                                , ylab = y_var
+                                , ref_line = NA
+                                , smooth_line = FALSE
+                                , plot_title = NA
+                                , na.rm = TRUE
+                                , plot_type ="all"
+                                , n=3000
+                                , sym_color = "gray40"
+                                , alpha = 0.35
+                                , bins = 30
+                                , bin_color_low = "gray75"
+                                , bin_color_high = "gray5"
+                                , ref_line_color = "red"
+                                , ref_line_width = 1
+                                , ref_line_type = "solid"
+                                , smooth_line_color = "blue"
+                                , smooth_line_width = 1
+                                , smooth_line_type = "dashed") {
 
 
   # remove missing values
@@ -136,6 +155,10 @@ plot_bivariate_data <- function(df, x_var, y_var, xlab, ylab, ref_line = NA, smo
   }
 
   max_points_to_plot <- n
+
+  # Convert x_var and y_var to symbols for safe referencing
+  x_sym <- rlang::sym(x_var)
+  y_sym <- rlang::sym(y_var)
 
   # Thinning the data if required
   if (nrow(df) > max_points_to_plot && plot_type == "thin") {
@@ -152,7 +175,7 @@ plot_bivariate_data <- function(df, x_var, y_var, xlab, ylab, ref_line = NA, smo
   }
 
   # Create the plot
-  p1 <- ggplot(data_to_plot, aes(x = .data[[x_var]], y = .data[[y_var]])) +
+  p1 <- ggplot(data_to_plot, aes(x = !!x_sym, y = !!y_sym)) +
     theme_minimal() +
     theme(panel.border = element_rect(color = "black", fill = NA, linewidth = 0.25)) +
     xlab(xlab) +

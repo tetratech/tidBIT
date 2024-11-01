@@ -17,10 +17,33 @@ knitr::opts_chunk$set(
 ```{r LastUpdate, echo = FALSE}
 cat(paste0("Last Update: ",Sys.time()))
 ```
-
-# tidBIT 0.1.0.9029 (2024-11-01)
+# tidBIT 0.1.0.9029_dev (2024-11-01)
 
 * refactor: Intermediate (unfinished) updates prior to merging updates from main branch
+
+# tidBIT 0.1.0.9034
+
+* wrapper for matrix multiplication added
+
+# tidBIT 0.1.0.9033
+
+* refactor help file for replicate_rows_by_seq
+
+# tidBIT 0.1.0.9032
+
+* added matrix multiplication function
+
+# tidBIT 0.1.0.9031
+
+* added Cholesky decomposition function
+
+# tidBIT 0.1.0.9030
+
+* added Cholesky decomposition function
+
+# tidBIT 0.1.0.9029
+
+* refactor: Add default xlab and ylab to plot_bivariate_date, Issue #13
 
 # tidBIT 0.1.0.9028
 

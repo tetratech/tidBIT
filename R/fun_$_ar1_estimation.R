@@ -209,13 +209,13 @@ ar1_default <- function(y) {
 
 #' Alternative ARIMA Application for AR(1) Model
 #'
-# Fit an AR(1) model to the time series data using the `arima` function with
-# alternative parameters. The `arima` function call uses order = c(1, 0, 0)
-# indicating an AR(1) model with no differencing and no moving average
-# component. An alternative method “ML" (Maximum Likelihood) and alternative
-# optimization "CG" (Conjugate Gradient algorithm) arguments are used. The
-# maximum number of iterations is increased to 200 (i.e., `optim.control =
-# list(maxit = 200)`).
+#' Fit an AR(1) model to the time series data using the `arima` function with
+#' alternative parameters. The `arima` function call uses order = c(1, 0, 0)
+#' indicating an AR(1) model with no differencing and no moving average
+#' component. An alternative method “ML" (Maximum Likelihood) and alternative
+#' optimization "CG" (Conjugate Gradient algorithm) arguments are used. The
+#' maximum number of iterations is increased to 200 (i.e., `optim.control =
+#' list(maxit = 200)`).
 #'
 #' @param y A numeric vector representing the time series data.
 #' @return A list containing the estimated AR(1) parameter (phi_1), standard
@@ -327,17 +327,17 @@ ar1_moment <- function(y) {
   }
 
   # Function to compute sample autocovariance
-  compute_autocovariance <- function(y, lag) {
+  compute_autocovariance <- function(y, y_lag) {
     y_mean <- compute_mean(y)
     valid_indices <- remove_na_pairs(y)
     if (length(valid_indices) == 0) {
       stop("No valid pairs to compute autocovariance")
     }
 
-    if (lag == 0) {
-      return(mean((y[valid_indices] - y_mean)^2))
+    if (y_lag == 0) {
+      return(compute_mean((y - y_mean)^2))
     } else {
-      return(mean((y[valid_indices] - y_mean) * (y[valid_indices + lag] - y_mean)))
+      return(compute_mean((y[valid_indices] - y_mean) * (y[valid_indices + y_lag] - y_mean)))
     }
   }
 

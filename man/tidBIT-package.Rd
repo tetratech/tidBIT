@@ -29,7 +29,10 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Rebecca Murphy \email{rmurphy@chesapeakebay.net}
+  \item Elgin Perry \email{eperry@chesapeake.net}
   \item Jon Harcum \email{Jon.Harcum@tetratech.com}
+  \item Breck Sullivan \email{bsullivan@chesapeake.net} [funder]
 }
 
 }
