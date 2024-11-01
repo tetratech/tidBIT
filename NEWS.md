@@ -4,7 +4,13 @@ NEWS
 
 <!-- NEWS.md is generated from NEWS.Rmd. Please edit that file -->
 
-    #> Last Update: 2024-10-03 15:06:11.82016
+
+#> Last Update: 2024-11-01 14:04:17.781064
+
+# tidBIT 0.1.0.9029_dev (2024-11-01)
+
+- refactor: Intermediate (unfinished) updates prior to merging updates
+  from main branch
 
 # tidBIT 0.1.0.9030
 

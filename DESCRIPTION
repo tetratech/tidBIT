@@ -39,7 +39,8 @@ Imports:
     tibble,
     tidyr,
     tidyselect,
-    zeallot
+    zeallot,
+    openxlsx
 Suggests: 
     devtools,
     knitr, 
