@@ -4,7 +4,28 @@ NEWS
 
 <!-- NEWS.md is generated from NEWS.Rmd. Please edit that file -->
 
-    #> Last Update: 2024-08-28 14:20:48.964563
+    #> Last Update: 2024-11-01 14:04:17.781064
+
+# tidBIT 0.1.0.9029 (2024-11-01)
+
+- refactor: Intermediate (unfinished) updates prior to merging updates
+  from main branch
+
+# tidBIT 0.1.0.9028
+
+- refactor: transformations: Fisher Z transformation option added.
+
+# tidBIT 0.1.0.9027
+
+- update help files
+
+# tidBIT 0.1.0.9026
+
+- refactor function files
+
+# tidBIT 0.1.0.9025
+
+- refactor transformations
 
 # tidBIT 0.1.0.9024
 
