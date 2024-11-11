@@ -1,15 +1,20 @@
 Package: tidBIT
 Type: Package
-Title: Chesapeake Bay 4D Model Functions
-Version: 0.1.0.9030
+Title: Chesapeake Bay 4D Interpolation Functions
+Version: 0.1.0.90304
 Authors@R: c(
+  person("Rebecca", "Murphy", email="rmurphy@chesapeakebay.net", role="aut"), 
+  person("Elgin", "Perry", email="eperry@chesapeake.net", role="aut"), 
   person("Jon", "Harcum", email="Jon.Harcum@tetratech.com", role="aut"), 
-  person("Erik W.", "Leppo", email="Erik.Leppo@tetratech.com", role=c("aut","cre")))
+  person("Erik W.", "Leppo", email="Erik.Leppo@tetratech.com", role=c("aut","cre")),
+  person("Breck", "Sullivan", email="bsullivan@chesapeake.net", role=c("aut","fnd")) 
+  )
 Maintainer: Erik W Leppo <Erik.Leppo@tetratech.com>
-Description: Collection of helper functions for Chesapeake Bay 4d model.
+Description: Collection of helper functions for Chesapeake Bay 4d interpolation.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+NeedsCompilation: yes
 VignetteBuilder: knitr
 Depends: 
     R (>= 3.5.0)
@@ -57,3 +62,4 @@ URL: https://github.com/tetratech/tidBIT
 BugReports: https://github.com/tetratech/tidBIT/issues
 Config/testthat/edition: 3
 RoxygenNote: 7.3.2
+Keywords: interpolation, Chesapeake Bay, spatial analysis, general additive model

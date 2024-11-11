@@ -4,6 +4,7 @@ NEWS
 
 <!-- NEWS.md is generated from NEWS.Rmd. Please edit that file -->
 
+
     #> Last Update: 2024-11-11 13:14:19.546181
 
 # tidBIT 0.1.0.9030_dev (2024-11-08)
@@ -19,6 +20,10 @@ NEWS
 
 - refactor: Intermediate (unfinished) updates prior to merging updates
   from main branch
+
+# tidBIT 0.1.0.9029
+
+- refactor: Add default xlab and ylab to plot_bivariate_date, Issue \#13
 
 # tidBIT 0.1.0.9028
 
