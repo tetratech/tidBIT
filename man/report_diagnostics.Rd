@@ -9,8 +9,8 @@ report_diagnostics(
   dn_model_rda = NULL,
   format_rmd = "html",
   path_rmd = NULL,
-  path_script = NULL,
-  dn_results = file.path(tempdir(), "diagnostics_results"),
+  report_volume = NULL,
+  dn_results = file.path(tempdir(), , "diagnostics_results"),
   fn_report_prefix = "cb4d_diagnostics~",
   quiet = FALSE
 )
@@ -28,9 +28,7 @@ Default = "html"}
 
 \item{path_rmd}{Path (directory and file name) of Notebook (RMD) file.}
 
-\item{path_script}{Path (directory and filename) of script to create objects
-for use in Notebook (RMD).  If NULL then only objects in the global
-environment will be used for the Notebook.  Default = NULL}
+\item{report_volume}{Report version (volume); 1 or 2.  Default = NULL}
 
 \item{dn_results}{Directory to save created notebook(s). The directory will
 be created if it does not exist.  Default is tempdir()}
@@ -47,68 +45,68 @@ Default = TRUE}
 Create diagnostics report for CB4D model output
 }
 \details{
-Default output directory is temporary directory
+Default output is an HTML report in temporary directory.
 Can access in Windows from the R console via `shell.exec(tempdir())`
 }
 \examples{
 
 # Example 1, Select File(s), file name
-fn_model_rda     <- "gs~CB5~all~2010_2022~mean~2023_10_23_005~by_term2.rda"
-dn_model_rda     <- file.path("cb4d_model", "cb4d_gam_models")
+fn_model_rda     <- "do~CB3~datahub~2016-2018~2023_10_07_005~by_term2~none.rda"
+dn_model_rda     <- system.file("extdata", package = "tidBIT")
 
 # Other input parameters
 format_rmd       <- "html"
-path_rmd         <- file.path("diagnotics_scripts"
-                              , "cb4d_model_diagnostics_vol01_report.Rmd")
-path_script      <- file.path("diagnotics_scripts"
-                              , "cb4d_model_diagnostics_vol01_objects.R")
+path_rmd         <- file.path(system.file("rmd", package = "tidBIT"),
+                              "cb4d_model_diagnostics_vol01_report.Rmd")
+report_volume    <- 1
 # use defaults for last 3 parameters
 dn_results       <- file.path(tempdir(), "diagnostics_results")
 fn_report_prefix <- "cb4d_model_report_vol01~"
 quiet            <- FALSE
 
 # Run Function
-report_diagnostics(fn_model_rda
-                  , dn_model_rda
-                  , format_rmd
-                  , path_rmd
-                  , path_script
-                  , dn_results
-                  , fn_report_prefix
-                  , quiet)
+report_diagnostics(fn_model_rda,
+                   dn_model_rda,
+                   format_rmd,
+                   path_rmd,
+                   report_volume,
+                   dn_results,
+                   fn_report_prefix,
+                   quiet)
 # open results folder (Windows only)
 shell.exec(dn_results)
 
 
 # Example 2, Select File(s), dialog box (Windows only)
-if (!require(tcltk)) {install.packages("tcltk")}  #install if needed
-library(tcltk)
-## get full path so have to convert for use with function
-path_model_rda  <- tcltk::tk_choose.files()
-fn_model_rda    <- basename(path_model_rda)
-dn_model_rda    <- dirname(path_model_rda)
+#if (!require(tcltk)) {install.packages("tcltk")}  #install if needed
+#library(tcltk)
+### get full path so have to convert for use with function
+#path_model_rda  <- tcltk::tk_choose.files()
+#fn_model_rda    <- basename(path_model_rda)
+#dn_model_rda    <- dirname(path_model_rda)
+
+fn_model_rda     <- "do~CB3~datahub~2016-2018~2023_10_07_005~by_term2~none.rda"
+dn_model_rda     <- system.file("extdata", package = "tidBIT")
 
 # Other input parameters
 format_rmd       <- "html"
-path_rmd         <- file.path("diagnotics_scripts"
-                              , "cb4d_diagnostics_vol01_report.Rmd")
-path_rmd <- file.path("inst", "rmd", "cb4d_model_diagnostics_vol01_report.Rmd")
-path_script      <- file.path("diagnotics_scripts"
-                              , "cb4d_diagnostics_vol01_objects.R")
+path_rmd         <- file.path(system.file("rmd", package = "tidBIT"),
+                              "cb4d_model_diagnostics_vol02_report.Rmd")
+report_volume    <- 2
 # use defaults for last 3 parameters
 dn_results       <- file.path(tempdir(), "diagnostics_results")
-fn_report_prefix <- "cb4d_model_report_vol01~"
+fn_report_prefix <- "cb4d_model_report_vol02~"
 quiet            <- FALSE
 
 # Run Function
-report_diagnostic(fn_model_rda
-                  , dn_model_rda
-                  , format_rmd
-                  , path_rmd
-                  , path_script
-                  , dn_results
-                  , fn_report_prefix
-                  , quiet)
+report_diagnostics(fn_model_rda,
+                   dn_model_rda,
+                   format_rmd,
+                   path_rmd,
+                   report_volume,
+                   dn_results,
+                   fn_report_prefix,
+                   quiet)
 # open results folder (Windows only)
 shell.exec(dn_results)
 

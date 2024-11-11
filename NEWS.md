@@ -4,9 +4,18 @@ NEWS
 
 <!-- NEWS.md is generated from NEWS.Rmd. Please edit that file -->
 
-    #> Last Update: 2024-11-01 14:04:17.781064
+    #> Last Update: 2024-11-11 13:14:19.546181
 
-# tidBIT 0.1.0.9029 (2024-11-01)
+# tidBIT 0.1.0.9030_dev (2024-11-08)
+
+- style: Move commas to end of line in `report_diagnostics`
+- refactor: Move support files for `report_diagnostics`
+  - RMD and R files
+- refactor: Update `report_diagnostics` help
+- docs: Update packages in DESCRIPTION for use with diagnostics report
+- refactor: Add new functions for use with diagnostics report
+
+# tidBIT 0.1.0.9029_dev (2024-11-01)
 
 - refactor: Intermediate (unfinished) updates prior to merging updates
   from main branch

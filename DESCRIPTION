@@ -1,7 +1,7 @@
 Package: tidBIT
 Type: Package
 Title: Chesapeake Bay 4D Model Functions
-Version: 0.1.0.9029
+Version: 0.1.0.9030
 Authors@R: c(
   person("Jon", "Harcum", email="Jon.Harcum@tetratech.com", role="aut"), 
   person("Erik W.", "Leppo", email="Erik.Leppo@tetratech.com", role=c("aut","cre")))
@@ -39,7 +39,20 @@ Imports:
 Suggests: 
     devtools,
     knitr, 
-    rmarkdown
+    rmarkdown,
+    conflicted,
+    leaflet.extras,
+    htmlwidgets,
+    htmltools,
+    viridis,
+    writexl,
+    pander,
+    gratia,
+    tools,
+    gridExtra,
+    hexbin,
+    plotly,
+    baytrends
 URL: https://github.com/tetratech/tidBIT
 BugReports: https://github.com/tetratech/tidBIT/issues
 Config/testthat/edition: 3
