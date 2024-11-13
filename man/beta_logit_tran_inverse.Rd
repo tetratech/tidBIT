@@ -2,63 +2,54 @@
 % Please edit documentation in R/fun_$_transformations.R
 \name{beta_logit_tran_inverse}
 \alias{beta_logit_tran_inverse}
-\title{Inverse Beta Logit Transformation}
+\title{Inverse Beta Logit Transformation (Optimized with C Integration)}
 \usage{
-beta_logit_tran_inverse(z, bl4, show_msgs = FALSE)
+beta_logit_tran_inverse(z, bl4)
 }
 \arguments{
-\item{z}{A numeric vector representing the transformed data to be
-back-transformed.}
+\item{z}{A numeric vector or matrix representing the transformed data to be
+back-transformed to its original bounded scale.}
 
-\item{bl4}{A numeric vector of length four providing the transformation
+\item{bl4}{A numeric vector of length four containing the transformation
 parameters: the lower (`a`) and upper (`b`) bounds of the original data's
-domain, and the `b1` and `b2` parameters of the beta distribution function.}
-
-\item{show_msgs}{Logical; if `TRUE`, messages will be issue where applicable}
+domain, and the `b1` and `b2` shape parameters for the beta distribution.}
 }
 \value{
-A numeric vector of the same length as `z`, containing the
-back-transformed values, aiming to reflect the original observations.
+A numeric vector or matrix (same dimensions as `z`), containing the
+back-transformed values, allowing results to be interpreted on the original
+scale of the data.
 }
 \description{
-Reverses the beta logit transformation applied by
-`beta_logit_tran`, converting a numeric vector `z` from an unbounded range
-back to its original bounded domain. This process involves applying the
-inverse logit function to `z`, using the inverse beta cumulative distribution
- function, and then scaling the result back to the original domain defined by
- parameters `a` and `b`. It is useful for interpreting the results of
-analyses performed on data transformed by `beta_logit_tran`, allowing the
-transformed values to be mapped back to their original scale.
+Converts a numeric vector or matrix `z` back from an unbounded
+range to its original bounded domain. This optimized version leverages a
+C function for performance gains, especially when handling large datasets.
+The transformation reverses the beta logit process applied in
+`beta_logit_tran`, using the inverse logit function and the inverse beta
+cumulative distribution, with scaling defined by `a` and `b`.
 }
 \details{
-The inverse transformation process consists of the following steps:
+The inverse transformation consists of the following steps:
 \enumerate{
-  \item Apply the inverse logit function to `z`, mapping it from an unbounded range to (0,1).
-  \item Use the inverse beta cumulative distribution function with parameters `b1` and `b2` to
-       find the corresponding quantile values.
-  \item Scale these values back to the original domain of the data, defined by the lower (`a`)
-       and upper (`b`) bounds.
+  \item Apply the inverse logit function to `z`, mapping it to the (0,1) range.
+  \item Use the beta quantile function (inverse cumulative distribution)
+        with shape parameters `b1` and `b2`.
+  \item Scale the values back to the original data's bounded domain, defined
+        by the lower (`a`) and upper (`b`) bounds.
 }
-This function enables the recontextualization of model outputs or analyses
-back to the practical, bounded domain of the original data, facilitating
-interpretation and decision-making.
+By integrating with C, this function is designed to efficiently handle large
+numeric vectors and matrices, making it suitable for high-performance data
+transformations in complex analyses.
 }
 \examples{
 \dontrun{
-x <- seq(0, 1, length.out = 101)
-bl4 <- c(0, 1, 2, 2)  # beta logit transformation parameters
-transformed_x <- beta_logit_tran(x, bl4, TRUE)
-back_transformed_x <- beta_logit_tran_inverse(transformed_x, bl4, TRUE)
+z <- runif(100, 0, 5)  # Simulated transformed values
+bl4 <- c(-0.5, 20, 1, 5)      # Transformation parameters
+original_values <- beta_logit_tran_inverse(z, bl4)
 }
 
 }
 \seealso{
-\code{\link[stats]{qbeta}} for details on beta distribution
-  functions.
-  \code{\link{transform_data}},
-  \code{\link{beta_logit_tran}},
-  \code{\link{fisherZ}},
-  \code{\link{fisherZ_inverse}},
-  \code{\link{transform_data_inverse}}
+\code{\link[stats]{qbeta}} for details on beta distribution functions.
+\code{\link{beta_logit_tran}} for the corresponding transformation function.
 }
 \keyword{internal}

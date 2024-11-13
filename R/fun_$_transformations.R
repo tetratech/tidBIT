@@ -158,7 +158,7 @@ transform_data_inverse <- function(y
   } else if (trans_name == "log") {
     y_obs <- exp(y)
   } else if (startsWith(trans_name, "BL_")) {
-    y_obs <- beta_logit_tran_inverse(y, bl4 = trans_parms, show_msgs=FALSE)
+    y_obs <- beta_logit_tran_inverse(y, bl4 = trans_parms)
   } else if (trans_name == "fisherZ") {
     y_obs <- fisherZ_inverse(y_obs)
   } else {
@@ -327,7 +327,6 @@ beta_logit_tran <- function(x, bl4, show_msgs = FALSE) {
 #' @param bl4 A numeric vector of length four providing the transformation
 #' parameters: the lower (`a`) and upper (`b`) bounds of the original data's
 #' domain, and the `b1` and `b2` parameters of the beta distribution function.
-#' @param show_msgs Logical; if `TRUE`, messages will be issue where applicable
 #'
 #' @return A numeric vector of the same length as `z`, containing the
 #' back-transformed values, aiming to reflect the original observations.
@@ -356,7 +355,7 @@ beta_logit_tran <- function(x, bl4, show_msgs = FALSE) {
 #' @export
 #' @keywords internal
 #'
-beta_logit_tran_inverse <- function(z, bl4, show_msgs=FALSE) {
+beta_logit_tran_inverse_dep <- function(z, bl4) {
 
   # global variable bindings
   a <- b <- b1 <- b2 <- . <- NULL
@@ -385,7 +384,7 @@ beta_logit_tran_inverse <- function(z, bl4, show_msgs=FALSE) {
 
   # Return original values
   return(x)
-}## FUN ~ beta_logit_tran_inverse
+}## FUN ~ beta_logit_tran_inverse_dep
 
 
 
@@ -435,3 +434,81 @@ fisherZ_inverse <- function(z) {
   r <- (exp(2 * z) - 1) / (exp(2 * z) + 1)
   return(r)
 }
+
+
+
+
+#' @title Inverse Beta Logit Transformation (Optimized with C Integration)
+#'
+#' @description Converts a numeric vector or matrix `z` back from an unbounded
+#' range to its original bounded domain. This optimized version leverages a
+#' C function for performance gains, especially when handling large datasets.
+#' The transformation reverses the beta logit process applied in
+#' `beta_logit_tran`, using the inverse logit function and the inverse beta
+#' cumulative distribution, with scaling defined by `a` and `b`.
+#'
+#' @details The inverse transformation consists of the following steps:
+#' \enumerate{
+#'   \item Apply the inverse logit function to `z`, mapping it to the (0,1) range.
+#'   \item Use the beta quantile function (inverse cumulative distribution)
+#'         with shape parameters `b1` and `b2`.
+#'   \item Scale the values back to the original data's bounded domain, defined
+#'         by the lower (`a`) and upper (`b`) bounds.
+#' }
+#' By integrating with C, this function is designed to efficiently handle large
+#' numeric vectors and matrices, making it suitable for high-performance data
+#' transformations in complex analyses.
+#'
+#' @param z A numeric vector or matrix representing the transformed data to be
+#' back-transformed to its original bounded scale.
+#' @param bl4 A numeric vector of length four containing the transformation
+#' parameters: the lower (`a`) and upper (`b`) bounds of the original data's
+#' domain, and the `b1` and `b2` shape parameters for the beta distribution.
+#'
+#' @return A numeric vector or matrix (same dimensions as `z`), containing the
+#' back-transformed values, allowing results to be interpreted on the original
+#' scale of the data.
+#'
+#' @examples
+#' \dontrun{
+#' z <- runif(100, 0, 5)  # Simulated transformed values
+#' bl4 <- c(-0.5, 20, 1, 5)      # Transformation parameters
+#' original_values <- beta_logit_tran_inverse(z, bl4)
+#' }
+#'
+#' @useDynLib tidBIT, .registration = TRUE
+#'
+#' @seealso \code{\link[stats]{qbeta}} for details on beta distribution functions.
+#' \code{\link{beta_logit_tran}} for the corresponding transformation function.
+#'
+#' @export
+#' @keywords internal
+#'
+beta_logit_tran_inverse <- function(z, bl4) {
+
+  # Error handling for input types and lengths
+  if (!is.numeric(z)) stop("z must be a numeric vector or matrix.")
+  if (length(bl4) != 4 || any(is.na(bl4))) stop("bl4 must be a numeric vector with exactly four non-NA elements.")
+
+  # Extract parameters from bl4
+  a <- bl4[1]; b <- bl4[2]; b1 <- bl4[3]; b2 <- bl4[4]
+
+  # Prepare result vector of the same length as z (flattened if z is a matrix)
+  result <- numeric(length(z))
+
+  # Call the C function
+  c_result <- .C("beta_logit_tran_inverse_C",
+                 as.double(z), as.double(result),
+                 as.integer(length(z)), as.double(a),
+                 as.double(b), as.double(b1), as.double(b2))
+
+  # Extract and reshape only the second element of the result
+  transformed_result <- c_result[[2]]
+  if (is.matrix(z)) {
+    transformed_result <- matrix(transformed_result, nrow = nrow(z), ncol = ncol(z))
+  }
+
+  # Return the reshaped result
+  return(transformed_result)
+}## FUN ~ beta_logit_tran_inverse
+
