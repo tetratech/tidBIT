@@ -15,15 +15,28 @@
 #'
 #' @details
 #'
-#' Default output is an HTML report in temporary directory.
-#' Can access in Windows from the R console via `shell.exec(tempdir())`
+#' Default output is an HTML report in temporary directory.  But a Word document
+#' (docx) is also an option.
+#'
+#' To switch between volume 1 and 2 reports change the parameters "path_rmd" and
+#' "report_volume" to the correct report template and volume number.
+#'
+#' The default report templates are contained in the package but user versions
+#' can be used as well.
+#'
+#' The report objects are created by the internal function `report_objects` and
+#' are derived from the 4D model output files (in RDA format).  As long as the
+#' objects are in the "env_cb4d" environment they can be used in the report.
+#'
+#' Users can access the temp directory, in Windows, from the R console via
+#' `shell.exec(tempdir())`.
 #'
 #' @param fn_model_rda CB4D model output RDA files, single value or vector of
 #' filenames.
 #' @param dn_model_rda Directory containing all of the model RDA files.  If
 #' files are in separate folders provide a vector of the same length as
 #' fn_model_rda
-#' @param format_rmd Notebook (RMD) output format, html or word.
+#' @param format_rmd Notebook (RMD) output format, 'html' or 'docx'.
 #' Default = "html"
 #' @param path_rmd Path (directory and file name) of Notebook (RMD) file.
 #' @param report_volume Report version (volume); 1 or 2.  Default = NULL
@@ -150,10 +163,10 @@ report_diagnostics <- function(fn_model_rda = NULL,
 
   if (format_rmd == "html") {
     fn_ext <- ".html"
-  } else if (format_rmd == "word") {
+  } else if (format_rmd == "docx") {
     fn_ext <- ".docx"
   } else {
-    msg <- "Valid RMD formats are 'html' or 'word'."
+    msg <- "Valid RMD formats are 'html' or 'docx'."
     stop(msg)
   }## IF ~ format_rmd
 

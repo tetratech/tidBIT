@@ -107,6 +107,17 @@ generate_date_time <- function(start_date_time
   return(dates_tibble)
 }
 
+# *** JBH 05.20: updated to address map palette se
+#' @keywords internal
+get_palette <- function(column, true_color, false_color) {
+  unique_values <- unique(column)
+  if (length(unique_values) == 1) {
+    return(ifelse(unique_values == TRUE, true_color, false_color))
+  } else {
+    return(c(true_color, false_color))
+  }
+}## get_palette
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # create report objects
 # 20241108
@@ -225,14 +236,44 @@ report_objects <- function(report_version = NULL) {
     ### 2.0 model map----
     {
 
-      # *** JBH03.27: vastly revised functions
+      # # *** JBH03.27: vastly revised functions
+       # M1 <<- map_base() %>%
+       #   map_polygon(sf_obj = cb4d_segments,
+       #               obj_name = "cbseg_92",
+       #               col_name = "in_subestuary",
+       #               col_palette = c("goldenrod", "blue"),
+       #               legend_title = "In Subestuary") %>%
+       #   map_points(sf_obj = cb4d_stations,
+       #              obj_name = "station",
+       #              col_name = "fixed",
+       #              col_palette = c("black", "red"),
+       #              legend_title = "Fixed Station")
+       # print(M1)
+
+      # *** JBH 05.20: updated to address map palette se
+      # moved get_palette as a stand alone function
+
+      # Get palettes for in_subestuary and fixed columns
+      in_subestuary_palette <- get_palette(cb4d_segments$in_subestuary,
+                                           "goldenrod",
+                                           "blue")
+      fixed_palette <- get_palette(cb4d_stations$fixed,
+                                   "black",
+                                   "red")
+
+      # Create the map
       M1 <<- map_base() %>%
-        map_polygon(sf_obj = cb4d_segments, obj_name = "cbseg_92",
-                    col_name = "in_subestuary", col_palette = c("goldenrod", "blue"),
+        map_polygon(sf_obj = cb4d_segments,
+                    obj_name = "cbseg_92",
+                    col_name = "in_subestuary",
+                    col_palette = in_subestuary_palette,
                     legend_title = "In Subestuary") %>%
-        map_points(sf_obj = cb4d_stations, obj_name = "station",
-                   col_name = "fixed", col_palette = c("black", "red"),
+        map_points(sf_obj = cb4d_stations,
+                   obj_name = "station",
+                   col_name = "fixed",
+                   col_palette = fixed_palette,
                    legend_title = "Fixed Station")
+
       print(M1)
 
       #
@@ -748,7 +789,7 @@ report_objects <- function(report_version = NULL) {
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Ensure any objects created here are referenced in the RMD if want them included
 
-    # 1.0 meta information about model----
+    ## 1.0 meta information about model----
     {
       title_ith <- gsub("\\.rda$"
                         , ""
@@ -768,17 +809,47 @@ report_objects <- function(report_version = NULL) {
 
     }## 1.0
 
-    # 2.0 model map----
+    ## 2.0 model map----
     {
 
-      # *** JBH03.27: vastly revised functions
+      # # *** JBH03.27: vastly revised functions
+      # M2 <<- map_base() %>%
+      #   map_polygon(sf_obj = cb4d_segments,
+      #               obj_name = "cbseg_92",
+      #               col_name = "in_subestuary",
+      #               col_palette = c("goldenrod", "blue"),
+      #               legend_title = "In Subestuary") %>%
+      #   map_points(sf_obj = cb4d_stations,
+      #              obj_name = "station",
+      #              col_name = "fixed",
+      #              col_palette = c("black", "red"),
+      #              legend_title = "Fixed Station")
+      # print(M2)
+
+      # *** JBH 05.20: updated to address map pallette se
+      # moved get_palette as a stand alone function
+
+      # Get palettes for in_subestuary and fixed columns
+      in_subestuary_palette <- get_palette(cb4d_segments$in_subestuary,
+                                           "goldenrod",
+                                           "blue")
+      fixed_palette <- get_palette(cb4d_stations$fixed,
+                                   "black",
+                                   "red")
+
+      # Create the map
       M2 <<- map_base() %>%
-        map_polygon(sf_obj = cb4d_segments, obj_name = "cbseg_92",
-                    col_name = "in_subestuary", col_palette = c("goldenrod", "blue"),
+        map_polygon(sf_obj = cb4d_segments,
+                    obj_name = "cbseg_92",
+                    col_name = "in_subestuary",
+                    col_palette = in_subestuary_palette,
                     legend_title = "In Subestuary") %>%
-        map_points(sf_obj = cb4d_stations, obj_name = "station",
-                   col_name = "fixed", col_palette = c("black", "red"),
+        map_points(sf_obj = cb4d_stations,
+                   obj_name = "station",
+                   col_name = "fixed",
+                   col_palette = fixed_palette,
                    legend_title = "Fixed Station")
+
       print(M2)
 
       M2_static  <<- ggplot2::ggplot(cb4d_segments) +
@@ -790,7 +861,7 @@ report_objects <- function(report_version = NULL) {
 
     }## 2.0
 
-    # 3.0 model summary----
+    ## 3.0 model summary----
     {
       # substantively want what we get from
       # summary(gs)
@@ -809,7 +880,7 @@ report_objects <- function(report_version = NULL) {
 
     }## 3.0
 
-    # 4.0 statistics by station and 5.0 NEW----
+    ## 4.0 statistics by station and 5.0 NEW----
     {
 
       station <- strsplit(basename(i), "~")[[1]][2]
@@ -822,12 +893,17 @@ report_objects <- function(report_version = NULL) {
       # Borrow depths table (7.0) from Volume 1 report
       cross_tab <- dplyr::left_join(cb4d_data %>%
                                # select(station) %>%
-                                 dplyr::group_by(station, in_subestuary, fixed, reg, cbseg_92) %>%
-                                 dplyr::summarise(num_rec_tot = dplyr::n(), .groups = 'drop') ,
+                                 dplyr::group_by(station, in_subestuary,
+                                                 fixed,
+                                                 reg,
+                                                 cbseg_92) %>%
+                                 dplyr::summarise(num_rec_tot = dplyr::n(),
+                                                  .groups = 'drop') ,
                              cb4d_data %>%
                                dplyr::mutate(depth_grp = round(depth, 0)) %>%
                                dplyr::group_by(station, depth_grp) %>%
-                               dplyr::summarise(num_rec = dplyr::n(), .groups = 'drop') %>%  # varied depths
+                               dplyr::summarise(num_rec = dplyr::n(),
+                                                .groups = 'drop') %>%  # varied depths
                                tidyr::pivot_wider(names_from = depth_grp
                                            , values_from = num_rec
                                            , values_fill = list(n = 0)
@@ -871,13 +947,13 @@ report_objects <- function(report_version = NULL) {
       names(ls_p5_dat) <- station_vec
 
 
-      ## Loop ----
+      ### Loop ----
       for (s in seq_len_station_vec) {
         # s<-1
         cat(paste0(s,"\n"))
         s_name <- station_vec[s]
 
-        ## depth vector ----
+        ### depth vector ----
         cross_tab_s <- dplyr::filter(cross_tab, station == s_name) %>%
           dplyr::select_if(~ !any(is.na(.)))
 
@@ -936,7 +1012,7 @@ report_objects <- function(report_version = NULL) {
         depth_vec <- depth_target_s[depth_target_s %in% s_depth]
 
 
-        ## 4, plot ----
+        ### 4, plot ----
         # create plots and save to list
 
         # p4 <- plot_faceted(data = cb4d_data
@@ -975,7 +1051,7 @@ report_objects <- function(report_version = NULL) {
         }## IF ~ format_rmd
 
         ls_faceted <<- ls_faceted
-        ## 5, prediction ----
+        ### 5, prediction ----
 
         #~~~~~~~~~~~   make function: make_prediction_data_set
         # first make prediction data set
@@ -1020,8 +1096,13 @@ report_objects <- function(report_version = NULL) {
         # Create a new column that combines station and depth
         data <- cb4d_data %>%
           dplyr::mutate(depth_grp = round(depth, 0)) %>%
-          dplyr::filter(station %in% s_name, depth_grp %in% depth_target_s) %>%
-          dplyr::mutate(station_depth = paste0("Station: ", station, ", Depth: ", depth_grp, " m"))
+          dplyr::filter(station %in% s_name,
+                        depth_grp %in% depth_target_s) %>%
+          dplyr::mutate(station_depth = paste0("Station: ",
+                                               station,
+                                               ", Depth: ",
+                                               depth_grp,
+                                               " m"))
 
 
         # Convert station_depth to a factor and order it by depth
@@ -1036,8 +1117,13 @@ report_objects <- function(report_version = NULL) {
 
         # Create a new column that combines station and depth
         pred <- p_dat %>%
-          dplyr::filter(station %in% s_name, depth %in% depth_target_s) %>%
-          dplyr::mutate(station_depth = paste0("Station: ", station, ", Depth: ", depth, " m"))
+          dplyr::filter(station %in% s_name,
+                        depth %in% depth_target_s) %>%
+          dplyr::mutate(station_depth = paste0("Station: ",
+                                               station,
+                                               ", Depth: ",
+                                               depth,
+                                               " m"))
 
         # Convert station_depth to a factor and order it by depth
         if (order == "station") {
@@ -1053,9 +1139,14 @@ report_objects <- function(report_version = NULL) {
 
 
         ls_p5[[s]] <- try(ggplot2::ggplot(data, aes(x = date_time, y = y_obs)) +
-                             ggplot2::geom_point(color = "salmon", shape = 1, alpha = 1) +
-                             ggplot2::geom_line(data = pred, aes(x = date_time, y = y_pred), color = "black") +
-                             ggplot2::facet_wrap(~station_depth, scales = "free_x") +
+                             ggplot2::geom_point(color = "red",
+                                                 shape = 1,
+                                                 alpha = 1) +
+                             ggplot2::geom_line(data = pred,
+                                                aes(x = date_time, y = y_pred),
+                                                color = "black") +
+                             ggplot2::facet_wrap(~station_depth,
+                                                 scales = "free_x") +
                              ggplot2::theme_minimal() +
                              ggplot2::theme(panel.border = element_rect(color = "black"
                                                               , fill = NA

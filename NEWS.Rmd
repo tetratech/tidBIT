@@ -18,6 +18,16 @@ knitr::opts_chunk$set(
 cat(paste0("Last Update: ",Sys.time()))
 ```
 
+# tidBIT 0.1.0.9031_dev (2024-11-13)
+
+* docs: Update documentation details for `report_diagnostics`
+* docs: Begin set up of GitHub Action for pkgdown
+* fix: Update `report_objects` palette for maps
+    + volume 1 map 1
+    + volume 2 map 2
+* refactor: Change color of points in volume 2 report; `report_diagnostics`
+    + Change salmon to red
+
 # tidBIT 0.1.0.9030_dev (2024-11-08)
 
 * style: Move commas to end of line in `report_diagnostics`

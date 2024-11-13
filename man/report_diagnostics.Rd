@@ -23,7 +23,7 @@ filenames.}
 files are in separate folders provide a vector of the same length as
 fn_model_rda}
 
-\item{format_rmd}{Notebook (RMD) output format, html or word.
+\item{format_rmd}{Notebook (RMD) output format, 'html' or 'docx'.
 Default = "html"}
 
 \item{path_rmd}{Path (directory and file name) of Notebook (RMD) file.}
@@ -45,8 +45,21 @@ Default = TRUE}
 Create diagnostics report for CB4D model output
 }
 \details{
-Default output is an HTML report in temporary directory.
-Can access in Windows from the R console via `shell.exec(tempdir())`
+Default output is an HTML report in temporary directory.  But a Word document
+(docx) is also an option.
+
+To switch between volume 1 and 2 reports change the parameters "path_rmd" and
+"report_volume" to the correct report template and volume number.
+
+The default report templates are contained in the package but user versions
+can be used as well.
+
+The report objects are created by the internal function `report_objects` and
+are derived from the 4D model output files (in RDA format).  As long as the
+objects are in the "env_cb4d" environment they can be used in the report.
+
+Users can access the temp directory, in Windows, from the R console via
+`shell.exec(tempdir())`.
 }
 \examples{
 
