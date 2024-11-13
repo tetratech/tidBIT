@@ -1,7 +1,7 @@
 Package: tidBIT
 Type: Package
 Title: Chesapeake Bay 4D Interpolation Functions
-Version: 0.1.0.9034
+Version: 0.1.0.90304
 Authors@R: c(
   person("Rebecca", "Murphy", email="rmurphy@chesapeakebay.net", role="aut"), 
   person("Elgin", "Perry", email="eperry@chesapeake.net", role="aut"), 
@@ -44,7 +44,20 @@ Imports:
 Suggests: 
     devtools,
     knitr, 
-    rmarkdown
+    rmarkdown,
+    conflicted,
+    leaflet.extras,
+    htmlwidgets,
+    htmltools,
+    viridis,
+    writexl,
+    pander,
+    gratia,
+    tools,
+    gridExtra,
+    hexbin,
+    plotly,
+    baytrends
 URL: https://github.com/tetratech/tidBIT
 BugReports: https://github.com/tetratech/tidBIT/issues
 Config/testthat/edition: 3

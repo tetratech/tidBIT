@@ -4,13 +4,51 @@ NEWS
 
 <!-- NEWS.md is generated from NEWS.Rmd. Please edit that file -->
 
+    #> Last Update: 2024-11-13 14:35:30.262278
 
-#> Last Update: 2024-11-01 14:04:17.781064
+# tidBIT 0.1.0.9031_dev (2024-11-13)
+
+- docs: Update documentation details for `report_diagnostics`
+- docs: Begin set up of GitHub Action for pkgdown
+- fix: Update `report_objects` palette for maps
+  - volume 1 map 1
+  - volume 2 map 2
+- refactor: Change color of points in volume 2 report;
+  `report_diagnostics`
+  - Change salmon to red
+
+# tidBIT 0.1.0.9030_dev (2024-11-08)
+
+- style: Move commas to end of line in `report_diagnostics`
+- refactor: Move support files for `report_diagnostics`
+  - RMD and R files
+- refactor: Update `report_diagnostics` help
+- docs: Update packages in DESCRIPTION for use with diagnostics report
+- refactor: Add new functions for use with diagnostics report
+- refactor: Update `report_objects` function
+  - Add package prefix to functions
+  - Add objects to global environment where needed for rendering of RMD
 
 # tidBIT 0.1.0.9029_dev (2024-11-01)
 
 - refactor: Intermediate (unfinished) updates prior to merging updates
   from main branch
+
+# tidBIT 0.1.0.9034
+
+- wrapper for matrix multiplication added
+
+# tidBIT 0.1.0.9033
+
+- refactor help file for replicate_rows_by_seq
+
+# tidBIT 0.1.0.9032
+
+- added matrix multiplication function
+
+# tidBIT 0.1.0.9031
+
+- added Cholesky decomposition function
 
 # tidBIT 0.1.0.9030
 

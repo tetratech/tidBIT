@@ -15,20 +15,31 @@
 #'
 #' @details
 #'
-#' Default output directory is temporary directory
-#' Can access in Windows from the R console via `shell.exec(tempdir())`
+#' Default output is an HTML report in temporary directory.  But a Word document
+#' (docx) is also an option.
+#'
+#' To switch between volume 1 and 2 reports change the parameters "path_rmd" and
+#' "report_volume" to the correct report template and volume number.
+#'
+#' The default report templates are contained in the package but user versions
+#' can be used as well.
+#'
+#' The report objects are created by the internal function `report_objects` and
+#' are derived from the 4D model output files (in RDA format).  As long as the
+#' objects are in the "env_cb4d" environment they can be used in the report.
+#'
+#' Users can access the temp directory, in Windows, from the R console via
+#' `shell.exec(tempdir())`.
 #'
 #' @param fn_model_rda CB4D model output RDA files, single value or vector of
 #' filenames.
 #' @param dn_model_rda Directory containing all of the model RDA files.  If
 #' files are in separate folders provide a vector of the same length as
 #' fn_model_rda
-#' @param format_rmd Notebook (RMD) output format, html or word.
+#' @param format_rmd Notebook (RMD) output format, 'html' or 'docx'.
 #' Default = "html"
 #' @param path_rmd Path (directory and file name) of Notebook (RMD) file.
-#' @param path_script Path (directory and filename) of script to create objects
-#' for use in Notebook (RMD).  If NULL then only objects in the global
-#' environment will be used for the Notebook.  Default = NULL
+#' @param report_volume Report version (volume); 1 or 2.  Default = NULL
 #' @param dn_results Directory to save created notebook(s). The directory will
 #' be created if it does not exist.  Default is tempdir()
 #' @param fn_report_prefix Prefix for generated Notebook output.  The base name
@@ -41,75 +52,75 @@
 #' @examples
 #'
 #' # Example 1, Select File(s), file name
-#' fn_model_rda     <- "gs~CB5~all~2010_2022~mean~2023_10_23_005~by_term2.rda"
-#' dn_model_rda     <- file.path("cb4d_model", "cb4d_gam_models")
+#' fn_model_rda     <- "do~CB3~datahub~2016-2018~2023_10_07_005~by_term2~none.rda"
+#' dn_model_rda     <- system.file("extdata", package = "tidBIT")
 #'
 #' # Other input parameters
 #' format_rmd       <- "html"
-#' path_rmd         <- file.path("diagnotics_scripts"
-#'                               , "cb4d_model_diagnostics_vol01_report.Rmd")
-#' path_script      <- file.path("diagnotics_scripts"
-#'                               , "cb4d_model_diagnostics_vol01_objects.R")
+#' path_rmd         <- file.path(system.file("rmd", package = "tidBIT"),
+#'                               "cb4d_model_diagnostics_vol01_report.Rmd")
+#' report_volume    <- 1
 #' # use defaults for last 3 parameters
 #' dn_results       <- file.path(tempdir(), "diagnostics_results")
 #' fn_report_prefix <- "cb4d_model_report_vol01~"
 #' quiet            <- FALSE
 #'
 #' # Run Function
-#' report_diagnostics(fn_model_rda
-#'                   , dn_model_rda
-#'                   , format_rmd
-#'                   , path_rmd
-#'                   , path_script
-#'                   , dn_results
-#'                   , fn_report_prefix
-#'                   , quiet)
+#' report_diagnostics(fn_model_rda,
+#'                    dn_model_rda,
+#'                    format_rmd,
+#'                    path_rmd,
+#'                    report_volume,
+#'                    dn_results,
+#'                    fn_report_prefix,
+#'                    quiet)
 #' # open results folder (Windows only)
 #' shell.exec(dn_results)
 #'
 #'
 #' # Example 2, Select File(s), dialog box (Windows only)
-#' if (!require(tcltk)) {install.packages("tcltk")}  #install if needed
-#' library(tcltk)
-#' ## get full path so have to convert for use with function
-#' path_model_rda  <- tcltk::tk_choose.files()
-#' fn_model_rda    <- basename(path_model_rda)
-#' dn_model_rda    <- dirname(path_model_rda)
+#' #if (!require(tcltk)) {install.packages("tcltk")}  #install if needed
+#' #library(tcltk)
+#' ### get full path so have to convert for use with function
+#' #path_model_rda  <- tcltk::tk_choose.files()
+#' #fn_model_rda    <- basename(path_model_rda)
+#' #dn_model_rda    <- dirname(path_model_rda)
+#'
+#' fn_model_rda     <- "do~CB3~datahub~2016-2018~2023_10_07_005~by_term2~none.rda"
+#' dn_model_rda     <- system.file("extdata", package = "tidBIT")
 #'
 #' # Other input parameters
 #' format_rmd       <- "html"
-#' path_rmd         <- file.path("diagnotics_scripts"
-#'                               , "cb4d_diagnostics_vol01_report.Rmd")
-#' path_rmd <- file.path("inst", "rmd", "cb4d_model_diagnostics_vol01_report.Rmd")
-#' path_script      <- file.path("diagnotics_scripts"
-#'                               , "cb4d_diagnostics_vol01_objects.R")
+#' path_rmd         <- file.path(system.file("rmd", package = "tidBIT"),
+#'                               "cb4d_model_diagnostics_vol02_report.Rmd")
+#' report_volume    <- 2
 #' # use defaults for last 3 parameters
 #' dn_results       <- file.path(tempdir(), "diagnostics_results")
-#' fn_report_prefix <- "cb4d_model_report_vol01~"
+#' fn_report_prefix <- "cb4d_model_report_vol02~"
 #' quiet            <- FALSE
 #'
 #' # Run Function
-#' report_diagnostic(fn_model_rda
-#'                   , dn_model_rda
-#'                   , format_rmd
-#'                   , path_rmd
-#'                   , path_script
-#'                   , dn_results
-#'                   , fn_report_prefix
-#'                   , quiet)
+#' report_diagnostics(fn_model_rda,
+#'                    dn_model_rda,
+#'                    format_rmd,
+#'                    path_rmd,
+#'                    report_volume,
+#'                    dn_results,
+#'                    fn_report_prefix,
+#'                    quiet)
 #' # open results folder (Windows only)
 #' shell.exec(dn_results)
 #'
 #' @export
-report_diagnostics <- function(fn_model_rda = NULL
-                              , dn_model_rda = NULL
-                              , format_rmd = "html"
-                              , path_rmd = NULL
-                              , path_script = NULL
-                              , dn_results = file.path(tempdir()
-                                                       , "diagnostics_results")
-                              , fn_report_prefix = "cb4d_diagnostics~"
-                              , quiet = FALSE
+report_diagnostics <- function(fn_model_rda = NULL,
+                               dn_model_rda = NULL,
+                               format_rmd = "html",
+                               path_rmd = NULL,
+                               report_volume = NULL,
+                               dn_results = file.path(tempdir(),
+                                                       , "diagnostics_results"),
+                               fn_report_prefix = "cb4d_diagnostics~",
+                               quiet = FALSE
                               ) {
   # Time ----
   tic <- Sys.time()
@@ -119,13 +130,13 @@ report_diagnostics <- function(fn_model_rda = NULL
   run_type <- NULL
 
   ## check for NULL
-  param_all <- list(fn_model_rda
-                    , dn_model_rda
-                    , format_rmd
-                    , path_rmd
-                    , dn_results
-                    , fn_report_prefix
-                    , quiet)
+  param_all <- list(fn_model_rda,
+                    dn_model_rda,
+                    format_rmd,
+                    path_rmd,
+                    dn_results,
+                    fn_report_prefix,
+                    quiet)
   if (any(sapply(param_all, is.null))) {
     msg <- "One or more parameters is NULL."
     stop(msg)
@@ -152,10 +163,10 @@ report_diagnostics <- function(fn_model_rda = NULL
 
   if (format_rmd == "html") {
     fn_ext <- ".html"
-  } else if (format_rmd == "word") {
+  } else if (format_rmd == "docx") {
     fn_ext <- ".docx"
   } else {
-    msg <- "Valid RMD formats are 'html' or 'word'."
+    msg <- "Valid RMD formats are 'html' or 'docx'."
     stop(msg)
   }## IF ~ format_rmd
 
@@ -193,9 +204,9 @@ report_diagnostics <- function(fn_model_rda = NULL
     }## IF ~ file.exists(i)
 
     # File name
-    fn_output <- paste0(fn_report_prefix
-                        , tools::file_path_sans_ext(basename(i))
-                        , fn_ext)
+    fn_output <- paste0(fn_report_prefix,
+                        tools::file_path_sans_ext(basename(i)),
+                        fn_ext)
 
     # Load Model and Create Objects ----
     #
@@ -203,29 +214,33 @@ report_diagnostics <- function(fn_model_rda = NULL
     # Set Env
     env_cb4d <- .GlobalEnv
 
-    if (!is.null(path_script)) {
-      # Skip if file does not exist
-      if (!file.exists(path_script)) {
-        msg <- paste0("Script missing; ", path_script)
-        stop(msg)
-      }## IF ~ file.exists(i)
-      #
-      # Load RDA
-      ## assign variables in global environment so can access outside of function
-      run_type <<- "script"
-      i <<- i
-      ## loads in script
-      if (!quiet) {
-        msg <- "Load and run script"
-        message(msg)
-      }## IF ~ quiet
-      # Load Script
-      source(path_script)
-    } else {
-      # (for testing)
-      # Load RDA
-      load(i)
-    }## IF ~ run_type)
+    # if (!is.null(path_obj)) {
+    #   # Skip if file does not exist
+    #   if (!file.exists(path_obj)) {
+    #     msg <- paste0("Object script missing; ", path_obj)
+    #     stop(msg)
+    #   }## IF ~ file.exists(i)
+    #   #
+    #   # Load RDA
+    #   ## assign variables in global environment so can access outside of function
+    #   run_type <<- "script"
+    #   i <<- i
+    #   ## loads in script
+    #   if (!quiet) {
+    #     msg <- "Load and run script"
+    #     message(msg)
+    #   }## IF ~ quiet
+    #   # Load Script
+    #   source(path_obj)
+    # } else {
+    #   # (for testing)
+    #   # Load RDA
+    #   load(i)
+    # }## IF ~ run_type)
+
+    run_type <<- "script"
+    i <<- i
+    report_objects(report_volume)
 
     #~~~~~~~~~~~~
     # Env Notes -
@@ -241,19 +256,19 @@ report_diagnostics <- function(fn_model_rda = NULL
     #~~~~~~~~~~~~
 
     # Render RMD ----
-    rmarkdown::render(path_rmd
-                      , output_format = paste0(format_rmd, "_document")
-                      , output_file = fn_output
-                      , output_dir = dn_results
-                      , quiet = quiet
-                      , envir = env_cb4d)
+    rmarkdown::render(path_rmd,
+                      output_format = paste0(format_rmd, "_document"),
+                      output_file = fn_output,
+                      output_dir = dn_results,
+                      quiet = quiet,
+                      envir = env_cb4d)
 
     # Time, RMD ----
     if (!quiet) {
       toc_rmd <- Sys.time()
       timer_rmd <- difftime(toc_rmd, tic, units = "mins")
-      msg <- paste0("\nRun Time (min), RMD:\n"
-                    , round(timer_rmd, 1))
+      msg <- paste0("\nRun Time (min), RMD:\n",
+                    round(timer_rmd, 1))
       message(msg)
     }## IF ~ quiet
 
@@ -263,8 +278,8 @@ report_diagnostics <- function(fn_model_rda = NULL
   if (!quiet) {
     toc <- Sys.time()
     timer_rmd <- difftime(toc, tic, units = "mins")
-    msg <- paste0("\nRun Time (min), total:\n"
-                  , round(timer_rmd, 1))
+    msg <- paste0("\nRun Time (min), total:\n",
+                  round(timer_rmd, 1))
     message(msg)
   }## IF ~ quiet
 
