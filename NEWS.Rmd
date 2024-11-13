@@ -18,6 +18,10 @@ knitr::opts_chunk$set(
 cat(paste0("Last Update: ",Sys.time()))
 ```
 
+# tidBIT 0.1.0.90305_dev (2024-11-13)
+
+* docs: refactored beta_logit_tran_inverse to algorithm updated for execution time
+
 # tidBIT 0.1.0.9031_dev (2024-11-13)
 
 * docs: Update documentation details for `report_diagnostics`

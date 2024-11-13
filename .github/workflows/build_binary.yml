@@ -27,30 +27,36 @@ jobs:
           choco install pandoc
           pandoc --version
 
-      # Step 4: Install R dependencies
+      # Step 4: Install GSL (GNU Scientific Library)
+      - name: Install GSL
+        run: |
+          choco install gsl
+          gsl-config --version  # Optional: Check version for debugging
+
+      # Step 5: Install R dependencies
       - name: Install dependencies
         run: |
           Rscript -e 'install.packages("remotes")'
           Rscript -e 'remotes::install_deps(dependencies = TRUE)'
 
-      # Step 5: Build the package and binary
+      # Step 6: Build the package and binary
       - name: Build package and binary
         run: |
           Rscript -e 'devtools::build(binary = TRUE)'  # Build the binary package
 
-      # Step 6: Get the Version from DESCRIPTION (using R)
+      # Step 7: Get the Version from DESCRIPTION (using R)
       - name: Get Version from DESCRIPTION
         id: get_version
         run: |
           Rscript -e 'version <- desc::desc_get_version(); cat(paste0("::set-output name=version::", version, "\n"))'
-      
-      # Step 7: Create or Update GitHub Release and Upload Binary
+
+      # Step 8: Create or Update GitHub Release and Upload Binary
       - name: Create or Update GitHub Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: "v${{ steps.get_version.outputs.version }}"  # Dynamically use the version
           name: "v${{ steps.get_version.outputs.version }} Release"
           body: "Release notes for version ${{ steps.get_version.outputs.version }}."
-          files: D:/a/tidBIT/tidBIT_*.zip  # Specify the binary file to upload
+          files: ${{ github.workspace }}/tidBIT_*.zip  # Specify the binary file to upload
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
