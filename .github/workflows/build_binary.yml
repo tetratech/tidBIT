@@ -32,6 +32,7 @@ jobs:
         run: |
           Rscript -e 'install.packages("remotes")'
           Rscript -e 'remotes::install_deps(dependencies = TRUE)'
+          Rscript -e 'if (!requireNamespace("devtools", quietly = TRUE)) install.packages("devtools")'
 
       # Step 5: Build the package and binary
       - name: Build package and binary
