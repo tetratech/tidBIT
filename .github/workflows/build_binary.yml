@@ -52,12 +52,13 @@ jobs:
           for i in {1..3}; do Rscript -e 'remotes::install_deps(dependencies = TRUE)' && break || sleep 15; done
 
       # Build the package with explicit flags
-      - name: Build Package and Binary
+      - name: Build Package with Verbose Logs
         env:
           PKG_CFLAGS: "-fopenmp"
-          PKG_LIBS: "-lgsl -lgslcblas -fopenmp -lm -lR"
+          PKG_LIBS: "-L/lib/x86_64-linux-gnu -lgsl -lgslcblas -fopenmp -lm -lR"
+          LD_LIBRARY_PATH: "/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH"
         run: |
-          R CMD INSTALL --configure-vars="PKG_CFLAGS='-fopenmp' PKG_LIBS='-lgsl -lgslcblas -fopenmp -lm -lR'" .
+          R CMD INSTALL --configure-vars="PKG_CFLAGS='-fopenmp' PKG_LIBS='-L/lib/x86_64-linux-gnu -lgsl -lgslcblas -fopenmp -lm -lR'" --debug .
 
       - name: Get Version from DESCRIPTION
         id: get_version
