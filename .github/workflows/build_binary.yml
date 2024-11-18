@@ -33,6 +33,7 @@ jobs:
       # Ensure R API Libraries Are Linked Correctly
       - name: Set Compiler Environment Variables
         run: |
+          mkdir -p ~/.R
           echo "PKG_CFLAGS=-fopenmp" >> ~/.R/Makevars
           echo "PKG_LIBS=-lgsl -lgslcblas -fopenmp -lm -lR" >> ~/.R/Makevars
 
