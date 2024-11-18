@@ -19,25 +19,31 @@ jobs:
       - name: Set up R
         uses: r-lib/actions/setup-r@v2
 
-      # Set up RSPM to use pre-built binaries
+      # Configure RSPM for pre-built binaries
       - name: Configure CRAN mirror to RSPM
         run: |
           echo 'options(repos = c(CRAN = "https://packagemanager.rstudio.com/all/__linux__/jammy/latest"))' >> ~/.Rprofile
 
-      # Install System Dependencies for GSL, OpenMP, and Required Tools
+      # Install system dependencies for GSL, OpenMP, and build tools
       - name: Install System Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgsl-dev libomp-dev build-essential
+          sudo apt-get install -y libgsl-dev libomp-dev build-essential gcc gfortran
 
-      # Ensure R API Libraries Are Linked Correctly
-      - name: Set Compiler Environment Variables
+      # Set up library paths for the linker
+      - name: Configure Library Paths
         run: |
-          mkdir -p ~/.R
-          echo "PKG_CFLAGS=-fopenmp" >> ~/.R/Makevars
-          echo "PKG_LIBS=-lgsl -lgslcblas -fopenmp -lm -lR" >> ~/.R/Makevars
+          echo "/usr/lib/x86_64-linux-gnu" | sudo tee -a /etc/ld.so.conf.d/custom-libs.conf
+          echo "/usr/local/lib" | sudo tee -a /etc/ld.so.conf.d/custom-libs.conf
+          sudo ldconfig
 
-      - name: Install Key Packages
+      # Clean up any precompiled objects
+      - name: Clean Up Precompiled Files
+        run: |
+          find src -name "*.o" -type f -delete
+          find src -name "*.so" -type f -delete
+
+      - name: Install Key R Packages
         run: |
           Rscript -e 'install.packages(c("remotes", "desc", "devtools"))'
 
@@ -45,12 +51,13 @@ jobs:
         run: |
           for i in {1..3}; do Rscript -e 'remotes::install_deps(dependencies = TRUE)' && break || sleep 15; done
 
+      # Build the package with explicit flags
       - name: Build Package and Binary
         env:
           PKG_CFLAGS: "-fopenmp"
           PKG_LIBS: "-lgsl -lgslcblas -fopenmp -lm -lR"
         run: |
-          Rscript -e 'devtools::build(binary = TRUE)'
+          R CMD INSTALL --configure-vars="PKG_CFLAGS='-fopenmp' PKG_LIBS='-lgsl -lgslcblas -fopenmp -lm -lR'" .
 
       - name: Get Version from DESCRIPTION
         id: get_version
