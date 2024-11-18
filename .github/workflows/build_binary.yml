@@ -24,11 +24,17 @@ jobs:
         run: |
           echo 'options(repos = c(CRAN = "https://packagemanager.rstudio.com/all/__linux__/jammy/latest"))' >> ~/.Rprofile
 
-      # Install System Dependencies for GSL and OpenMP
+      # Install System Dependencies for GSL, OpenMP, and Required Tools
       - name: Install System Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgsl-dev libomp-dev
+          sudo apt-get install -y libgsl-dev libomp-dev build-essential
+
+      # Ensure R API Libraries Are Linked Correctly
+      - name: Set Compiler Environment Variables
+        run: |
+          echo "PKG_CFLAGS=-fopenmp" >> ~/.R/Makevars
+          echo "PKG_LIBS=-lgsl -lgslcblas -fopenmp -lm -lR" >> ~/.R/Makevars
 
       - name: Install Key Packages
         run: |
@@ -41,7 +47,7 @@ jobs:
       - name: Build Package and Binary
         env:
           PKG_CFLAGS: "-fopenmp"
-          PKG_LIBS: "-lgsl -lgslcblas -fopenmp -lm"
+          PKG_LIBS: "-lgsl -lgslcblas -fopenmp -lm -lR"
         run: |
           Rscript -e 'devtools::build(binary = TRUE)'
 
