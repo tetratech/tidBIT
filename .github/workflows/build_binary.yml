@@ -19,7 +19,7 @@ jobs:
       - name: Set up R
         uses: r-lib/actions/setup-r@v2
 
-      # Configure RSPM for pre-built binaries
+      # Configure CRAN mirror to RSPM
       - name: Configure CRAN mirror to RSPM
         run: |
           echo 'options(repos = c(CRAN = "https://packagemanager.rstudio.com/all/__linux__/jammy/latest"))' >> ~/.Rprofile
@@ -30,14 +30,14 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libgsl-dev libomp-dev build-essential gcc gfortran
 
-      # Set up library paths for the linker
-      - name: Configure Library Paths
+      # Debugging Library Paths
+      - name: Debug Libraries
         run: |
-          echo "/usr/lib/x86_64-linux-gnu" | sudo tee -a /etc/ld.so.conf.d/custom-libs.conf
-          echo "/usr/local/lib" | sudo tee -a /etc/ld.so.conf.d/custom-libs.conf
-          sudo ldconfig
+          echo "Checking GSL library:"
+          ldconfig -p | grep gsl || echo "GSL library not found"
+          echo "Checking OpenMP library:"
+          ldconfig -p | grep omp || echo "OpenMP library not found"
 
-      # Clean up any precompiled objects
       - name: Clean Up Precompiled Files
         run: |
           find src -name "*.o" -type f -delete
