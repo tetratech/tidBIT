@@ -98,49 +98,60 @@ jobs:
           echo "Building the Windows binary"
           
           # Ensure artifacts directory exists
-          mkdir -p artifacts
+          mkdir artifacts
           
           # Debug the environment and library paths
           echo "Verifying environment paths:"
-          echo $PATH
+          echo $env:PATH
           
           echo "Verifying presence of GCC:"
           where gcc || echo "GCC not found"
       
           echo "Verifying MinGW library path:"
-          if [ -d "C:/ProgramData/chocolatey/lib/mingw/tools/install" ]; then
+          if (Test-Path "C:/ProgramData/chocolatey/lib/mingw/tools/install") {
             echo "MinGW directory found at C:/ProgramData/chocolatey/lib/mingw/tools/install."
-            dir C:/ProgramData/chocolatey/lib/mingw/tools/install
-          elif [ -d "C:/mingw64" ]; then
+            Get-ChildItem "C:/ProgramData/chocolatey/lib/mingw/tools/install"
+          } elseif (Test-Path "C:/mingw64") {
             echo "MinGW directory found at C:/mingw64."
-            dir C:/mingw64
-          else
+            Get-ChildItem "C:/mingw64"
+          } else {
             echo "MinGW directory not found in expected paths."
             exit 1
-          fi
+          }
           
           # Attempt to build the package binary
           echo "Attempting to build the package binary:"
-          Rscript -e "devtools::build(binary = TRUE, path = 'artifacts')" || ( \
-            echo "Build failed. Attempting to diagnose issues..." && \
-            echo "GSL library directory contents:" && \
-            if [ -d "C:/msys64/mingw64/lib" ]; then \
-              dir C:/msys64/mingw64/lib; \
-            else \
-              echo "GSL library not found"; \
-            fi && \
-            echo "Include directory contents:" && \
-            if [ -d "C:/msys64/mingw64/include" ]; then \
-              dir C:/msys64/mingw64/include; \
-            else \
-              echo "Include files not found"; \
-            fi && \
-            exit 1 \
-          )
+          try {
+            Rscript -e "devtools::build(binary = TRUE, path = 'artifacts')"
+          } catch {
+            echo "Build failed. Attempting to diagnose issues..."
+            if (Test-Path "C:/msys64/mingw64/lib") {
+              echo "GSL library directory contents:"
+              Get-ChildItem "C:/msys64/mingw64/lib"
+            } else {
+              echo "GSL library not found"
+            }
+            if (Test-Path "C:/msys64/mingw64/include") {
+              echo "Include directory contents:"
+              Get-ChildItem "C:/msys64/mingw64/include"
+            } else {
+              echo "Include files not found"
+            }
+            exit 1
+          }
           
           # Verify artifacts
           echo "Checking artifacts directory:"
-          dir artifacts
+          Get-ChildItem artifacts
+        shell: pwsh
+        env:
+          OS_TYPE: windows
+          _R_INSTALL_TIME_PATCHES_: no
+          R_LIBS_USER: D:\a\_temp\Library
+          TZ: UTC
+          _R_CHECK_SYSTEM_CLOCK_: FALSE
+          NOT_CRAN: true
+
 
       # Step 9: Debug Artifacts Directory
       - name: Verify Artifacts
