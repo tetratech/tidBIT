@@ -15,19 +15,30 @@ jobs:
       OS_TYPE: windows
 
     steps:
+      # Checkout the repository
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # Set up R environment
       - name: Set up R
         uses: r-lib/actions/setup-r@v2
 
+      # Install Rtools and dependencies
       - name: Install Rtools and Dependencies
         run: |
-          choco install gsl -y
           choco install mingw -y
           choco install rtools -y
           refreshenv
 
+      # Manually install GSL as Chocolatey lacks a GSL package
+      - name: Install GSL Manually
+        run: |
+          echo "Downloading GSL binaries manually."
+          curl -o gsl.zip https://ftp.gnu.org/gnu/gsl/gsl-latest.tar.gz
+          tar -xzf gsl-latest.tar.gz -C C:/msys64/mingw64
+          echo "GSL installation completed."
+
+      # Debug library paths
       - name: Debug Library Paths
         run: |
           echo "Checking GSL library in Windows:"
@@ -37,13 +48,14 @@ jobs:
           echo "Verifying PATH:"
           echo %PATH%
 
+      # Verify Rtools installation
       - name: Verify Rtools Installation
         run: |
           echo "Checking Rtools installation:"
           where gcc || echo "GCC not found"
           where make || echo "Make not found"
-          where Rtools || echo "Rtools not found"
 
+      # Configure Makevars
       - name: Configure Makevars
         run: |
           echo "Setting up Makevars file for Windows."
@@ -51,26 +63,31 @@ jobs:
           echo CC=gcc > %USERPROFILE%\.R\Makevars.win
           echo CXX=g++ >> %USERPROFILE%\.R\Makevars.win
           echo PKG_CFLAGS=-I"C:/msys64/mingw64/include" >> %USERPROFILE%\.R\Makevars.win
-          echo PKG_LIBS=-L"C:/msys64/mingw64/lib" -lgsl -lgslcblas >> %USERPROFILE%\.R\Makevars.win
+          echo PKG_LIBS=-L"C:/msys64/mingw64/lib -lgsl -lgslcblas" >> %USERPROFILE%\.R\Makevars.win
           type %USERPROFILE%\.R\Makevars.win
 
+      # Install key R packages
       - name: Install Key R Packages
         run: |
           Rscript -e 'install.packages(c("remotes", "desc", "devtools"))'
 
+      # Install dependencies for the package
       - name: Install Dependencies
         run: |
           Rscript -e 'remotes::install_deps(dependencies = TRUE)'
 
+      # Build Windows binary package
       - name: Build Windows Binary
         run: |
           mkdir -p artifacts
           Rscript -e "devtools::build(binary = TRUE, path = 'artifacts')"
 
+      # Debug built files
       - name: Debug Built Files
         run: |
           echo "Listing artifacts directory:"
           dir artifacts
+
 
   # build-linux:
   #   runs-on: ubuntu-latest
