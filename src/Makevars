@@ -1,13 +1,55 @@
-# General flags
-PKG_CFLAGS = -fopenmp
-PKG_LIBS = -fopenmp -lm
+# General Compiler Flags
+# Enable OpenMP for parallel processing and use optimization/debugging flags
+PKG_CFLAGS = -fopenmp -O2
+PKG_LIBS = -fopenmp -lm  # Link with OpenMP and math library
 
-# Platform-specific configurations
+# Platform-Specific Configurations
 ifeq ($(OS_TYPE),windows)
+  # Windows-specific configurations
   PKG_LIBS += -L"C:/msys64/mingw64/lib" -lgsl -lgslcblas
-else ifeq ($(OS_TYPE),darwin) # macOS
+  PKG_CFLAGS += -I"C:/msys64/mingw64/include"
+
+else ifeq ($(OS_TYPE),darwin)
+  # macOS-specific configurations
+  ifeq ($(shell command -v brew),)
+    $(error Homebrew is not installed or not in PATH. Install Homebrew to proceed: https://brew.sh)
+  endif
   PKG_CFLAGS += -I$(shell brew --prefix libomp)/include
-  PKG_LIBS += -L$(shell brew --prefix libomp)/lib -lomp -lgsl -lgslcblas
-else # Linux
+  PKG_LIBS += -L$(shell brew --prefix libomp)/lib -lomp
+  PKG_LIBS += -L$(shell brew --prefix gsl)/lib -lgsl -lgslcblas
+
+else ifeq ($(OS_TYPE),linux)
+  # Linux-specific configurations
   PKG_LIBS += -L/lib/x86_64-linux-gnu -lgsl -lgslcblas
+  PKG_CFLAGS += -I/usr/include
+
+  # Optional: Dynamically find GSL and OpenMP paths if not in default location
+  GSL_LIB_DIR = $(shell ldconfig -p | grep libgsl | head -n 1 | awk '{print $$4}' | xargs dirname)
+  ifneq ($(GSL_LIB_DIR),)
+    PKG_LIBS += -L$(GSL_LIB_DIR)
+  endif
+  OPENMP_LIB_DIR = $(shell ldconfig -p | grep libomp | head -n 1 | awk '{print $$4}' | xargs dirname)
+  ifneq ($(OPENMP_LIB_DIR),)
+    PKG_LIBS += -L$(OPENMP_LIB_DIR)
+  endif
+
+else
+  $(error Unsupported platform: $(OS_TYPE). Please specify OS_TYPE as windows, darwin, or linux.)
+endif
+
+# Debugging Configuration (Optional, Comment Out for Production)
+DEBUG_FLAGS = -g -Wall -Wextra
+PKG_CFLAGS += $(DEBUG_FLAGS)
+
+# Notes:
+# 1. OS_TYPE must be defined in the build environment (e.g., linux, darwin, windows).
+# 2. The file dynamically finds libraries on Linux and ensures Homebrew is installed on macOS.
+# 3. Debugging flags provide detailed logs during the build process.
+
+# Fallback error handling if GSL or OpenMP libraries are not found
+ifndef GSL_LIB_DIR
+  $(warning GSL libraries not found. Ensure libgsl is installed and accessible.)
+endif
+ifndef OPENMP_LIB_DIR
+  $(warning OpenMP libraries not found. Ensure libomp is installed and accessible.)
 endif
