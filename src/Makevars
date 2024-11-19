@@ -2,9 +2,12 @@
 PKG_CFLAGS = -fopenmp
 PKG_LIBS = -fopenmp -lm
 
-# Platform-specific paths
+# Platform-specific configurations
 ifeq ($(OS_TYPE),windows)
   PKG_LIBS += -L"C:/msys64/mingw64/lib" -lgsl -lgslcblas
-else
+else ifeq ($(OS_TYPE),darwin) # macOS
+  PKG_CFLAGS += -I$(shell brew --prefix libomp)/include
+  PKG_LIBS += -L$(shell brew --prefix libomp)/lib -lomp -lgsl -lgslcblas
+else # Linux
   PKG_LIBS += -L/lib/x86_64-linux-gnu -lgsl -lgslcblas
 endif
