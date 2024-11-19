@@ -73,7 +73,6 @@ jobs:
             echo "Rtools directory not found in $rtoolsPath"
           }
 
-
       # Step 6: Configure Makevars File for Windows
       - name: Configure Makevars.win
         run: |
@@ -82,11 +81,11 @@ jobs:
           echo CC=gcc > %USERPROFILE%\.R\Makevars.win
           echo CXX=g++ >> %USERPROFILE%\.R\Makevars.win
           echo PKG_CFLAGS=-I"C:/ProgramData/chocolatey/lib/mingw/tools/install/mingw64/include" >> %USERPROFILE%\.R\Makevars.win
-          echo PKG_LIBS=-L"C:/ProgramData/chocolatey/lib/mingw/tools/install/mingw64/lib -lm" >> %USERPROFILE%\.R\Makevars.win
+          echo PKG_LIBS=-L"C:/ProgramData/chocolatey/lib/mingw/tools/install/mingw64/lib" -lgsl -lgslcblas -lm >> %USERPROFILE%\.R\Makevars.win
           echo "Makevars.win content:"
           type %USERPROFILE%\.R\Makevars.win
 
-      # Step 7: Install R Packages
+      # Step 7: Install Required R Packages
       - name: Install Required R Packages
         run: |
           echo "Installing required R packages"
@@ -125,16 +124,16 @@ jobs:
           Rscript -e "devtools::build(binary = TRUE, path = 'artifacts')" || ( \
             echo "Build failed. Attempting to diagnose issues..." && \
             echo "GSL library directory contents:" && \
-            if [ -d "C:/msys64/mingw64/lib" ]; then
-              dir C:/msys64/mingw64/lib
-            else
-              echo "GSL library not found"
+            if [ -d "C:/msys64/mingw64/lib" ]; then \
+              dir C:/msys64/mingw64/lib; \
+            else \
+              echo "GSL library not found"; \
             fi && \
             echo "Include directory contents:" && \
-            if [ -d "C:/msys64/mingw64/include" ]; then
-              dir C:/msys64/mingw64/include
-            else
-              echo "Include files not found"
+            if [ -d "C:/msys64/mingw64/include" ]; then \
+              dir C:/msys64/mingw64/include; \
+            else \
+              echo "Include files not found"; \
             fi && \
             exit 1 \
           )
@@ -142,82 +141,18 @@ jobs:
           # Verify artifacts
           echo "Checking artifacts directory:"
           dir artifacts
-        shell: C:\rtools44\usr\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
-        env:
-          OS_TYPE: windows
-          _R_INSTALL_TIME_PATCHES_: no
-          R_LIBS_USER: D:\a\_temp\Library
-          TZ: UTC
-          _R_CHECK_SYSTEM_CLOCK_: FALSE
-          NOT_CRAN: true
 
       # Step 9: Debug Artifacts Directory
-      - name: Build Windows Binary
+      - name: Verify Artifacts
         run: |
-          echo "Building the Windows binary"
-      
-          # Ensure artifacts directory exists
-          mkdir -p artifacts
-      
-          # Debug the environment and library paths
-          echo "Verifying environment paths:"
-          echo $PATH
-      
-          echo "Verifying presence of GCC:"
-          where gcc || echo "GCC not found"
-      
-          echo "Verifying MinGW library path:"
-          if [ -d "C:/ProgramData/chocolatey/lib/mingw/tools/install" ]; then
-            echo "MinGW directory found at C:/ProgramData/chocolatey/lib/mingw/tools/install."
-            dir C:/ProgramData/chocolatey/lib/mingw/tools/install
-          elif [ -d "C:/mingw64" ]; then
-            echo "MinGW directory found at C:/mingw64."
-            dir C:/mingw64
+          echo "Checking artifacts directory..."
+          if [ "$(ls artifacts)" ]; then
+            echo "Artifacts successfully created:"
+            dir artifacts
           else
-            echo "MinGW directory not found in expected paths."
+            echo "No artifacts created."
             exit 1
           fi
-      
-          echo "Verifying GSL and OpenMP libraries:"
-          if [ -d "C:/msys64/mingw64/lib" ]; then
-            echo "GSL library directory found."
-            dir C:/msys64/mingw64/lib
-          else
-            echo "GSL library directory not found."
-          fi
-          if [ -d "C:/msys64/mingw64/include" ]; then
-            echo "Include directory for headers found."
-            dir C:/msys64/mingw64/include
-          else
-            echo "Include directory for headers not found."
-          fi
-      
-          echo "Attempting to build the package binary:"
-          Rscript -e "devtools::build(binary = TRUE, path = 'artifacts')" || ( \
-            echo "Build failed. Attempting additional diagnosis..." && \
-            echo "Environment PATH:" && \
-            echo $PATH && \
-            echo "Verifying Rtools binaries:" && \
-            where gcc || echo "GCC not found" && \
-            echo "Listing MinGW directories for clues:" && \
-            dir C:/mingw64 || echo "C:/mingw64 not accessible." && \
-            dir C:/msys64/mingw64/lib || echo "C:/msys64/mingw64/lib not accessible." && \
-            dir C:/msys64/mingw64/include || echo "C:/msys64/mingw64/include not accessible." && \
-            exit 1 \
-          )
-      
-          # Verify artifacts
-          echo "Checking artifacts directory:"
-          dir artifacts
-        shell: C:\rtools44\usr\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
-        env:
-          OS_TYPE: windows
-          _R_INSTALL_TIME_PATCHES_: no
-          R_LIBS_USER: D:\a\_temp\Library
-          TZ: UTC
-          _R_CHECK_SYSTEM_CLOCK_: false
-          NOT_CRAN: true
-
 
 
 
