@@ -39,13 +39,40 @@ jobs:
           echo "Updated PATH: $env:PATH"
 
       # Step 5: Verify Rtools and MinGW Installation
-      - name: Verify Installations
+      - name: Verify Rtools and MinGW installation
         run: |
           echo "Verifying Rtools and MinGW installation"
+      
+          # Check if gcc is installed
           where gcc || echo "GCC not found"
+      
+          # Check if make is installed
           where make || echo "Make not found"
-          dir C:\ProgramData\chocolatey\lib\mingw\tools\install || echo "MinGW directory not found"
-          dir "C:\Program Files\Rtools" || echo "Rtools directory not found"
+      
+          # Check for MinGW directory in Chocolatey installation path
+          $mingwPath = "C:\ProgramData\chocolatey\lib\mingw\tools\install"
+          if (Test-Path $mingwPath) {
+            echo "MinGW directory found: $mingwPath"
+          } else {
+            echo "MinGW directory not found in $mingwPath"
+          }
+      
+          # Check for MinGW binaries in default MinGW location
+          $mingwBinPath = "C:\ProgramData\mingw64\mingw32\bin"
+          if (Test-Path $mingwBinPath) {
+            echo "MinGW binaries found: $mingwBinPath"
+          } else {
+            echo "MinGW binaries not found in $mingwBinPath"
+          }
+      
+          # Check if Rtools is installed
+          $rtoolsPath = "C:\Program Files\Rtools"
+          if (Test-Path $rtoolsPath) {
+            echo "Rtools directory found: $rtoolsPath"
+          } else {
+            echo "Rtools directory not found in $rtoolsPath"
+          }
+
 
       # Step 6: Configure Makevars File for Windows
       - name: Configure Makevars.win
