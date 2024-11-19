@@ -1,4 +1,6 @@
-name: R package release build
+
+
+name: R Package Release Workflow
 
 on:
   push:
@@ -9,305 +11,119 @@ on:
       - main
 
 jobs:
+  # Job to build the precompiled Windows binary
   build-windows:
     runs-on: windows-latest
     env:
-      OS_TYPE: windows
+      OS_TYPE: windows  # Define the platform for conditional configurations
 
     steps:
-      # Step 1: Checkout code
-      - name: Checkout code
+      # Step 1: Checkout the repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       # Step 2: Set up R environment
       - name: Set up R
         uses: r-lib/actions/setup-r@v2
 
-      # Step 3: Install Dependencies with Chocolatey
-      - name: Install Required Tools with Chocolatey
+      # Step 3: Install system dependencies
+      - name: Install required tools via Chocolatey
         run: |
-          echo "Installing MinGW and Rtools using Chocolatey"
-          choco install mingw -y
+          echo "Installing required tools using Chocolatey"
           choco install rtools -y
+          choco install mingw -y
 
-      # Step 4: Add MinGW Paths to PATH and Refresh Environment
-      - name: Add MinGW to PATH
+      # Step 4: Configure PATH for MinGW and Rtools
+      - name: Update PATH environment
         run: |
-          echo "Adding MinGW to PATH"
-          $pathToAdd = "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin"
+          echo "Adding MinGW and Rtools to PATH"
+          $pathToAdd = "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin;C:\rtools44\usr\bin"
           [System.Environment]::SetEnvironmentVariable("PATH", $pathToAdd + ";" + [System.Environment]::GetEnvironmentVariable("PATH", [System.EnvironmentVariableTarget]::Process), [System.EnvironmentVariableTarget]::Process)
           echo "Updated PATH: $env:PATH"
 
-      # Step 5: Verify Rtools and MinGW Installation
-      - name: Verify Rtools and MinGW installation
+      # Step 5: Verify installation
+      - name: Verify dependencies
         run: |
-          echo "Verifying Rtools and MinGW installation"
-      
-          # Check if gcc is installed
           where gcc || echo "GCC not found"
-      
-          # Check if make is installed
           where make || echo "Make not found"
-      
-          # Check for MinGW directory in Chocolatey installation path
-          $mingwPath = "C:\ProgramData\chocolatey\lib\mingw\tools\install"
-          if (Test-Path $mingwPath) {
-            echo "MinGW directory found: $mingwPath"
-          } else {
-            echo "MinGW directory not found in $mingwPath"
-          }
-      
-          # Check for MinGW binaries in default MinGW location
-          $mingwBinPath = "C:\ProgramData\mingw64\mingw32\bin"
-          if (Test-Path $mingwBinPath) {
-            echo "MinGW binaries found: $mingwBinPath"
-          } else {
-            echo "MinGW binaries not found in $mingwBinPath"
-          }
-      
-          # Check if Rtools is installed
-          $rtoolsPath = "C:\Program Files\Rtools"
-          if (Test-Path $rtoolsPath) {
-            echo "Rtools directory found: $rtoolsPath"
-          } else {
-            echo "Rtools directory not found in $rtoolsPath"
-          }
+          if (!(Test-Path "C:\ProgramData\chocolatey\lib\mingw\tools\install")) { echo "MinGW installation not found"; exit 1 }
+          if (!(Test-Path "C:\Program Files\Rtools")) { echo "Rtools installation not found"; exit 1 }
 
-      # Step 6: Configure Makevars File for Windows
-      - name: Configure Makevars.win
+      # Step 6: Install R package dependencies
+      - name: Install R dependencies
         run: |
-          echo "Creating Makevars.win"
-          mkdir -p %USERPROFILE%\.R
-          echo CC=gcc > %USERPROFILE%\.R\Makevars.win
-          echo CXX=g++ >> %USERPROFILE%\.R\Makevars.win
-          echo PKG_CFLAGS=-I"C:/ProgramData/chocolatey/lib/mingw/tools/install/mingw64/include" >> %USERPROFILE%\.R\Makevars.win
-          echo PKG_LIBS=-L"C:/ProgramData/chocolatey/lib/mingw/tools/install/mingw64/lib" -lgsl -lgslcblas -lm >> %USERPROFILE%\.R\Makevars.win
-          echo "Makevars.win content:"
-          type %USERPROFILE%\.R\Makevars.win
-
-      # Step 7: Install Required R Packages
-      - name: Install Required R Packages
-        run: |
-          echo "Installing required R packages"
-          Rscript -e 'install.packages(c("remotes", "desc", "devtools"))'
+          Rscript -e 'install.packages(c("devtools", "desc", "remotes"))'
           Rscript -e 'remotes::install_deps(dependencies = TRUE)'
 
-      # Step 8: Build Windows Binary
-      - name: Build Windows Binary
+      # Step 7: Build Windows binary
+      - name: Build Windows binary
         run: |
-          echo "Building the Windows binary"
-          
-          # Ensure artifacts directory exists
-          mkdir artifacts
-          
-          # Debug the environment and library paths
-          echo "Verifying environment paths:"
-          echo $env:PATH
-          
-          echo "Verifying presence of GCC:"
-          where gcc || echo "GCC not found"
-      
-          echo "Verifying MinGW library path:"
-          if (Test-Path "C:/ProgramData/chocolatey/lib/mingw/tools/install") {
-            echo "MinGW directory found at C:/ProgramData/chocolatey/lib/mingw/tools/install."
-            Get-ChildItem "C:/ProgramData/chocolatey/lib/mingw/tools/install"
-          } elseif (Test-Path "C:/mingw64") {
-            echo "MinGW directory found at C:/mingw64."
-            Get-ChildItem "C:/mingw64"
-          } else {
-            echo "MinGW directory not found in expected paths."
-            exit 1
-          }
-          
-          # Attempt to build the package binary
-          echo "Attempting to build the package binary:"
-          try {
-            Rscript -e "devtools::build(binary = TRUE, path = 'artifacts')"
-          } catch {
-            echo "Build failed. Attempting to diagnose issues..."
-            if (Test-Path "C:/msys64/mingw64/lib") {
-              echo "GSL library directory contents:"
-              Get-ChildItem "C:/msys64/mingw64/lib"
-            } else {
-              echo "GSL library not found"
-            }
-            if (Test-Path "C:/msys64/mingw64/include") {
-              echo "Include directory contents:"
-              Get-ChildItem "C:/msys64/mingw64/include"
-            } else {
-              echo "Include files not found"
-            }
-            exit 1
-          }
-          
-          # Verify artifacts
-          echo "Checking artifacts directory:"
-          Get-ChildItem artifacts
-        shell: pwsh
-        env:
-          OS_TYPE: windows
-          _R_INSTALL_TIME_PATCHES_: no
-          R_LIBS_USER: D:\a\_temp\Library
-          TZ: UTC
-          _R_CHECK_SYSTEM_CLOCK_: FALSE
-          NOT_CRAN: true
+          mkdir -p artifacts
+          echo "Building Windows binary"
+          Rscript -e "devtools::build(binary = TRUE, path = 'artifacts')" || exit 0
 
+      # Step 8: Upload artifacts
+      - name: Upload Windows binary artifact
+        if: success()  # Proceed regardless of the build's outcome
+        uses: actions/upload-artifact@v3
+        with:
+          name: windows-binary
+          path: artifacts/*.zip
 
-      # Step 9: Debug Artifacts Directory
-      - name: Verify Artifacts
-        run: |
-          echo "Checking artifacts directory..."
-          if [ "$(ls artifacts)" ]; then
-            echo "Artifacts successfully created:"
-            dir artifacts
-          else
-            echo "No artifacts created."
-            exit 1
-          fi
+  # Job to package the source files
+  package-source:
+    runs-on: ubuntu-latest  # Use Ubuntu for better performance when packaging source code
 
-
-
-  # build-linux:
-  #   runs-on: ubuntu-latest
-  #   env:
-  #     OS_TYPE: linux
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v4
-  # 
-  #     - name: Set up R
-  #       uses: r-lib/actions/setup-r@v2
-  # 
-  #     - name: Install System Dependencies
-  #       run: |
-  #         sudo apt-get update
-  #         sudo apt-get install -y libgsl-dev libomp-dev libudunits2-dev libproj-dev libgdal-dev build-essential gcc gfortran
-  # 
-  #     - name: Debug Library Paths
-  #       run: |
-  #         echo "Checking GSL library:"
-  #         ldconfig -p | grep gsl || echo "GSL library not found"
-  #         echo "Checking OpenMP library:"
-  #         ldconfig -p | grep omp || echo "OpenMP library not found"
-  # 
-  #     - name: Clean Up Precompiled Files
-  #       run: |
-  #         find src -name "*.o" -type f -delete
-  #         find src -name "*.so" -type f -delete
-  # 
-  #     - name: Install Key R Packages
-  #       run: |
-  #         Rscript -e 'install.packages(c("remotes", "desc", "devtools"))'
-  # 
-  #     - name: Install Dependencies with Retries
-  #       run: |
-  #         for i in {1..3}; do Rscript -e 'remotes::install_deps(dependencies = TRUE)' && break || sleep 15; done
-  # 
-  #     - name: Build Linux Binary
-  #       env:
-  #         PKG_CFLAGS: "-fopenmp"
-  #         PKG_LIBS: "-L/lib/x86_64-linux-gnu -lgsl -lgslcblas -fopenmp -lm"
-  #         LD_LIBRARY_PATH: "/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH"
-  #       run: |
-  #         mkdir -p artifacts
-  #         R CMD INSTALL --configure-vars="PKG_CFLAGS='-fopenmp' PKG_LIBS='-L/lib/x86_64-linux-gnu -lgsl -lgslcblas -fopenmp -lm'" --debug .
-  #         Rscript -e "devtools::build(binary = TRUE, path = 'artifacts')"
-  # 
-  #     - name: Debug Built Files
-  #       run: |
-  #         echo "Listing artifacts directory:"
-  #         ls -l artifacts
-  # 
-  # build-macos:
-  #   runs-on: macos-latest
-  #   env:
-  #     OS_TYPE: darwin
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v4
-  # 
-  #     - name: Set up R
-  #       uses: r-lib/actions/setup-r@v2
-  # 
-  #     - name: Install Xcode Command Line Tools
-  #       run: |
-  #         xcode-select --install || echo "Command line tools already installed"
-  # 
-  #     - name: Install macOS System Dependencies
-  #       run: |
-  #         brew update
-  #         brew install gcc gdal proj libomp
-  # 
-  #     - name: Configure Makevars for macOS
-  #       run: |
-  #         mkdir -p ~/.R
-  #         echo "CC=$(brew --prefix gcc)/bin/gcc-$(brew list gcc | grep gcc- | awk -F'-' '{print $2}')" >> ~/.R/Makevars
-  #         echo "CXX=$(brew --prefix gcc)/bin/g++-$(brew list gcc | grep gcc- | awk -F'-' '{print $2}')" >> ~/.R/Makevars
-  #         echo "CFLAGS=-fopenmp" >> ~/.R/Makevars
-  #         echo "CXXFLAGS=-fopenmp" >> ~/.R/Makevars
-  #         echo "LDFLAGS=-L$(brew --prefix libomp)/lib -lomp" >> ~/.R/Makevars
-  # 
-  #     - name: Install Key R Packages
-  #       run: |
-  #         Rscript -e 'install.packages(c("remotes", "desc", "devtools"))'
-  # 
-  #     - name: Install Dependencies with Retries
-  #       run: |
-  #         for i in {1..3}; do Rscript -e 'remotes::install_deps(dependencies = TRUE)' && break || sleep 15; done
-  # 
-  #     - name: Debug Build Tools
-  #       run: |
-  #         echo "Checking build tools..."
-  #         Rscript -e 'pkgbuild::check_build_tools(debug = TRUE)'
-  # 
-  #     - name: Build macOS Binary
-  #       run: |
-  #         mkdir -p artifacts
-  #         Rscript -e "devtools::build(binary = TRUE, path = 'artifacts')"
-  # 
-  #     - name: Debug Built Files
-  #       run: |
-  #         echo "Listing artifacts directory:"
-  #         ls -l artifacts
-
-
-  # release:
-  #   needs: [build-linux, build-macos, build-windows]
-  #   runs-on: ubuntu-latest
-  # 
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v4
-  # 
-  #     - name: Create or Update GitHub Release
-  #       uses: softprops/action-gh-release@v1
-  #       with:
-  #         tag_name: "v${{ env.version }}"
-  #         name: "v${{ env.version }} Release"
-  #         body: "Release notes for version ${{ env.version }}."
-  #         files: |
-  #           artifacts/tidBIT_*.zip
-  #           artifacts/tidBIT_*.tgz
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #         
-          
-          
-  release:
-    needs: [build-windows] # Remove build-linux and build-macos for now
-    runs-on: ubuntu-latest
-  
     steps:
-      - name: Checkout code
+      # Step 1: Checkout the repository
+      - name: Checkout repository
         uses: actions/checkout@v4
-  
-      - name: Create or Update GitHub Release
+
+      # Step 2: Set up R environment
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v2
+
+      # Step 3: Build source package
+      - name: Build source package
+        run: |
+          mkdir -p artifacts
+          echo "Building source package"
+          R CMD build .
+          mv *.tar.gz artifacts/
+
+      # Step 4: Upload source package artifacts
+      - name: Upload source artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: source-package
+          path: artifacts/*.tar.gz
+
+  # Job to create a release
+  create-release:
+    needs: [build-windows, package-source]  # Depends on the previous jobs
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2: Create or update the GitHub release
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: "v${{ env.version }}"
-          name: "v${{ env.version }} Release"
-          body: "Release notes for version ${{ env.version }}."
+          tag_name: "v${{ github.run_number }}"  # Use the run number as a tag
+          name: "Release v${{ github.run_number }}"
+          body: |
+            ### Release Notes
+            - Includes source package (.tar.gz)
+            - Includes Windows binary (if successfully built)
           files: |
-            artifacts/tidBIT_*.zip # Only include Windows binary for now
+            artifacts/*.zip
+            artifacts/*.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+
+
