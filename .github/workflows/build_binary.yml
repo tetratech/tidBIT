@@ -1,4 +1,4 @@
-name: R package binary build 
+name: R package binary build
 
 on:
   push:
@@ -28,43 +28,44 @@ jobs:
       - name: Install System Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgsl-dev libomp-dev libudunits2-dev libproj-dev libgdal-dev build-essential gcc gfortran
+          sudo apt-get install -y \
+            libgsl-dev \
+            libomp-dev \
+            libudunits2-dev \
+            libproj-dev \
+            libgdal-dev \
+            build-essential \
+            gcc \
+            gfortran
 
-      # Debugging Library Paths
-      - name: Debug Libraries
+      - name: Build Package for Windows
         run: |
-          echo "Checking GSL library:"
-          ldconfig -p | grep gsl || echo "GSL library not found"
-          echo "Checking OpenMP library:"
-          ldconfig -p | grep omp || echo "OpenMP library not found"
+          mkdir -p artifacts  # Create an output directory
+          Rscript -e "devtools::build(binary = TRUE, path = 'artifacts')"
 
-      - name: Clean Up Precompiled Files
-        run: |
-          find src -name "*.o" -type f -delete
-          find src -name "*.so" -type f -delete
+      - name: Build Package for macOS
+        runs-on: macos-latest
+        steps:
+          - name: Checkout code
+            uses: actions/checkout@v4
 
-      - name: Install Key R Packages
-        run: |
-          Rscript -e 'install.packages(c("remotes", "desc", "devtools"))'
+          - name: Set up R
+            uses: r-lib/actions/setup-r@v2
 
-      - name: Install Dependencies with Retries
-        run: |
-          for i in {1..3}; do Rscript -e 'remotes::install_deps(dependencies = TRUE)' && break || sleep 15; done
+          - name: Build macOS Binary
+            run: |
+              mkdir -p artifacts  # Create an output directory
+              Rscript -e "devtools::build(binary = TRUE, path = 'artifacts')"
 
-      - name: Build Package and Binary
-        env:
-          OS_TYPE: linux  # Explicitly set to 'linux' for GitHub Actions
-          PKG_CFLAGS: "-fopenmp"
-          PKG_LIBS: "-L/lib/x86_64-linux-gnu -lgsl -lgslcblas -fopenmp -lm"
-          LD_LIBRARY_PATH: "/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH"
-        run: |
-          R CMD INSTALL --configure-vars="PKG_CFLAGS='-fopenmp' PKG_LIBS='-L/lib/x86_64-linux-gnu -lgsl -lgslcblas -fopenmp -lm'" --debug .
+          - name: Debug macOS Built Files
+            run: |
+              echo "Listing artifacts directory:"
+              ls -l artifacts
 
-      - name: Get Version from DESCRIPTION
-        id: get_version
+      - name: Debug Built Files (Linux/Windows)
         run: |
-          version=$(Rscript -e "cat(as.character(desc::desc_get_version()))")
-          echo "version=$version" >> $GITHUB_ENV
+          echo "Listing artifacts directory:"
+          ls -l artifacts
 
       - name: Create or Update GitHub Release
         uses: softprops/action-gh-release@v1
@@ -72,6 +73,8 @@ jobs:
           tag_name: "v${{ env.version }}"
           name: "v${{ env.version }} Release"
           body: "Release notes for version ${{ env.version }}."
-          files: ${{ github.workspace }}/tidBIT_*.zip
+          files: |
+            artifacts/tidBIT_*.zip
+            artifacts/tidBIT_*.tgz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
