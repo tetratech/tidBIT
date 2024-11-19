@@ -63,7 +63,7 @@ jobs:
       - name: Get Version from DESCRIPTION
         id: get_version
         run: |
-          version=$(Rscript -e 'cat(desc::desc_get_version())')
+          version=$(Rscript -e "cat(as.character(desc::desc_get_version()))")
           echo "version=$version" >> $GITHUB_ENV
 
       - name: Create or Update GitHub Release
