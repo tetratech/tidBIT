@@ -1,4 +1,4 @@
-name: R package binary build
+name: R package binary build 
 
 on:
   push:
