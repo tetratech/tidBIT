@@ -97,8 +97,48 @@ jobs:
       - name: Build Windows Binary
         run: |
           echo "Building the Windows binary"
-          mkdir -p artifacts
-          Rscript -e "devtools::build(binary = TRUE, path = 'artifacts')"
+      
+          # Ensure artifacts directory exists
+          mkdir artifacts
+      
+          # Debug the environment and library paths
+          echo "Verifying environment paths:"
+          echo $PATH
+          echo "Verifying presence of GCC:"
+          where gcc || echo "GCC not found"
+          echo "Verifying MinGW library path:"
+          if [ -d "C:/ProgramData/chocolatey/lib/mingw/tools/install" ]; then
+            echo "MinGW directory found."
+            dir C:/ProgramData/chocolatey/lib/mingw/tools/install
+          else
+            echo "MinGW directory not found"
+            exit 1
+          fi
+      
+          # Attempt to build the package binary
+          echo "Attempting to build the package binary:"
+          Rscript -e "devtools::build(binary = TRUE, path = 'artifacts')" || ( \
+            echo "Build failed. Attempting to diagnose issues..." && \
+            echo "GSL library directory contents:" && \
+            if [ -d "C:/msys64/mingw64/lib" ]; then
+              dir C:/msys64/mingw64/lib
+            else
+              echo "GSL library not found"
+            fi && \
+            echo "Include directory contents:" && \
+            if [ -d "C:/msys64/mingw64/include" ]; then
+              dir C:/msys64/mingw64/include
+            else
+              echo "Include files not found"
+            fi && \
+            exit 1 \
+          )
+
+          # Verify artifacts
+          echo "Checking artifacts directory:"
+          dir artifacts
+        shell: bash
+
 
       # Step 9: Debug Artifacts Directory
       - name: Debug Built Artifacts
