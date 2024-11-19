@@ -15,78 +15,70 @@ jobs:
       OS_TYPE: windows
 
     steps:
-      # Checkout the repository
+      # Step 1: Checkout code
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Set up R environment
+      # Step 2: Set up R environment
       - name: Set up R
         uses: r-lib/actions/setup-r@v2
 
-      # Install Rtools and dependencies
-      - name: Install Rtools and Dependencies
+      # Step 3: Install Dependencies with Chocolatey
+      - name: Install Required Tools with Chocolatey
         run: |
+          echo "Installing MinGW and Rtools using Chocolatey"
           choco install mingw -y
           choco install rtools -y
-          refreshenv
 
-      # Manually install GSL as Chocolatey lacks a GSL package
-      - name: Install GSL Manually
+      # Step 4: Add MinGW Paths to PATH and Refresh Environment
+      - name: Add MinGW to PATH
         run: |
-          echo "Downloading GSL binaries manually."
-          curl -o gsl.zip https://ftp.gnu.org/gnu/gsl/gsl-latest.tar.gz
-          tar -xzf gsl-latest.tar.gz -C C:/msys64/mingw64
-          echo "GSL installation completed."
+          echo "Adding MinGW to PATH"
+          $pathToAdd = "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin"
+          [System.Environment]::SetEnvironmentVariable("PATH", $pathToAdd + ";" + [System.Environment]::GetEnvironmentVariable("PATH", [System.EnvironmentVariableTarget]::Process), [System.EnvironmentVariableTarget]::Process)
+          echo "Updated PATH: $env:PATH"
 
-      # Debug library paths
-      - name: Debug Library Paths
+      # Step 5: Verify Rtools and MinGW Installation
+      - name: Verify Installations
         run: |
-          echo "Checking GSL library in Windows:"
-          dir C:\msys64\mingw64\lib\gsl* || echo "GSL library not found"
-          echo "Checking MinGW binaries:"
-          dir C:\msys64\mingw64\bin || echo "MinGW binaries not found"
-          echo "Verifying PATH:"
-          echo %PATH%
-
-      # Verify Rtools installation
-      - name: Verify Rtools Installation
-        run: |
-          echo "Checking Rtools installation:"
+          echo "Verifying Rtools and MinGW installation"
           where gcc || echo "GCC not found"
           where make || echo "Make not found"
+          dir C:\ProgramData\chocolatey\lib\mingw\tools\install || echo "MinGW directory not found"
+          dir "C:\Program Files\Rtools" || echo "Rtools directory not found"
 
-      # Configure Makevars
-      - name: Configure Makevars
+      # Step 6: Configure Makevars File for Windows
+      - name: Configure Makevars.win
         run: |
-          echo "Setting up Makevars file for Windows."
+          echo "Creating Makevars.win"
           mkdir -p %USERPROFILE%\.R
           echo CC=gcc > %USERPROFILE%\.R\Makevars.win
           echo CXX=g++ >> %USERPROFILE%\.R\Makevars.win
-          echo PKG_CFLAGS=-I"C:/msys64/mingw64/include" >> %USERPROFILE%\.R\Makevars.win
-          echo PKG_LIBS=-L"C:/msys64/mingw64/lib -lgsl -lgslcblas" >> %USERPROFILE%\.R\Makevars.win
+          echo PKG_CFLAGS=-I"C:/ProgramData/chocolatey/lib/mingw/tools/install/mingw64/include" >> %USERPROFILE%\.R\Makevars.win
+          echo PKG_LIBS=-L"C:/ProgramData/chocolatey/lib/mingw/tools/install/mingw64/lib -lm" >> %USERPROFILE%\.R\Makevars.win
+          echo "Makevars.win content:"
           type %USERPROFILE%\.R\Makevars.win
 
-      # Install key R packages
-      - name: Install Key R Packages
+      # Step 7: Install R Packages
+      - name: Install Required R Packages
         run: |
+          echo "Installing required R packages"
           Rscript -e 'install.packages(c("remotes", "desc", "devtools"))'
-
-      # Install dependencies for the package
-      - name: Install Dependencies
-        run: |
           Rscript -e 'remotes::install_deps(dependencies = TRUE)'
 
-      # Build Windows binary package
+      # Step 8: Build Windows Binary
       - name: Build Windows Binary
         run: |
+          echo "Building the Windows binary"
           mkdir -p artifacts
           Rscript -e "devtools::build(binary = TRUE, path = 'artifacts')"
 
-      # Debug built files
-      - name: Debug Built Files
+      # Step 9: Debug Artifacts Directory
+      - name: Debug Built Artifacts
         run: |
-          echo "Listing artifacts directory:"
+          echo "Debugging artifacts directory"
           dir artifacts
+
 
 
   # build-linux:
