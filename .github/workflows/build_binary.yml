@@ -71,8 +71,17 @@ jobs:
       # Install macOS system dependencies
       - name: Install macOS System Dependencies
         run: |
-          brew install gdal proj
-          brew install libomp
+          brew install gcc gdal proj libomp
+
+      # Configure Makevars for gcc and OpenMP
+      - name: Configure Makevars for macOS
+        run: |
+          mkdir -p ~/.R
+          echo "CC=$(brew --prefix gcc)/bin/gcc-$(brew list gcc | grep gcc- | awk -F'-' '{print $2}')" >> ~/.R/Makevars
+          echo "CXX=$(brew --prefix gcc)/bin/g++-$(brew list gcc | grep gcc- | awk -F'-' '{print $2}')" >> ~/.R/Makevars
+          echo "CFLAGS=-fopenmp" >> ~/.R/Makevars
+          echo "CXXFLAGS=-fopenmp" >> ~/.R/Makevars
+          echo "LDFLAGS=-L$(brew --prefix libomp)/lib -lomp" >> ~/.R/Makevars
 
       # Install Key R Packages
       - name: Install Key R Packages
