@@ -1,3 +1,5 @@
+
+
 # General flags for all platforms
 PKG_CFLAGS = -fopenmp
 PKG_LIBS = -fopenmp -lm
@@ -15,3 +17,5 @@ else ifeq ($(OS_TYPE),linux)  # Linux
 else
   $(error Unsupported platform: $(OS_TYPE). Set OS_TYPE to windows, darwin, or linux.)
 endif
+
+
