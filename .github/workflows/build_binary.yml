@@ -148,7 +148,8 @@ jobs:
 
   # Job to create a release
   create-release:
-    needs: [build-windows, package-source]  # Depends on the previous jobs
+  #  needs: [build-windows, package-source]  # Depends on the previous jobs
+    needs: [build-windows]  # Depends on the previous jobs
     runs-on: ubuntu-latest
 
     steps:
