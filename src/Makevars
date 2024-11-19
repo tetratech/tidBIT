@@ -1,5 +1,5 @@
 # General Compiler Flags
-# Enable OpenMP for parallel processing and use optimization/debugging flags
+# Enable OpenMP for parallel processing and include optimization/debugging flags
 PKG_CFLAGS = -fopenmp -O2
 PKG_LIBS = -fopenmp -lm  # Link with OpenMP and math library
 
@@ -43,7 +43,7 @@ PKG_CFLAGS += $(DEBUG_FLAGS)
 
 # Notes:
 # 1. OS_TYPE must be defined in the build environment (e.g., linux, darwin, windows).
-# 2. The file dynamically finds libraries on Linux and ensures Homebrew is installed on macOS.
+# 2. This file dynamically finds libraries on Linux and ensures Homebrew is installed on macOS.
 # 3. Debugging flags provide detailed logs during the build process.
 
 # Fallback error handling if GSL or OpenMP libraries are not found
