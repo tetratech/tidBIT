@@ -13,7 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       OS_TYPE: linux
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -21,14 +20,22 @@ jobs:
       - name: Set up R
         uses: r-lib/actions/setup-r@v2
 
-      - name: Configure CRAN mirror to RSPM
-        run: |
-          echo 'options(repos = c(CRAN = "https://packagemanager.rstudio.com/all/__linux__/jammy/latest"))' >> ~/.Rprofile
-
       - name: Install System Dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y libgsl-dev libomp-dev libudunits2-dev libproj-dev libgdal-dev build-essential gcc gfortran
+
+      - name: Debug Library Paths
+        run: |
+          echo "Checking GSL library:"
+          ldconfig -p | grep gsl || echo "GSL library not found"
+          echo "Checking OpenMP library:"
+          ldconfig -p | grep omp || echo "OpenMP library not found"
+
+      - name: Clean Up Precompiled Files
+        run: |
+          find src -name "*.o" -type f -delete
+          find src -name "*.so" -type f -delete
 
       - name: Install Key R Packages
         run: |
@@ -39,15 +46,24 @@ jobs:
           for i in {1..3}; do Rscript -e 'remotes::install_deps(dependencies = TRUE)' && break || sleep 15; done
 
       - name: Build Linux Binary
+        env:
+          PKG_CFLAGS: "-fopenmp"
+          PKG_LIBS: "-L/lib/x86_64-linux-gnu -lgsl -lgslcblas -fopenmp -lm"
+          LD_LIBRARY_PATH: "/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH"
         run: |
           mkdir -p artifacts
+          R CMD INSTALL --configure-vars="PKG_CFLAGS='-fopenmp' PKG_LIBS='-L/lib/x86_64-linux-gnu -lgsl -lgslcblas -fopenmp -lm'" --debug .
           Rscript -e "devtools::build(binary = TRUE, path = 'artifacts')"
+
+      - name: Debug Built Files
+        run: |
+          echo "Listing artifacts directory:"
+          ls -l artifacts
 
   build-macos:
     runs-on: macos-latest
     env:
       OS_TYPE: darwin
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -61,6 +77,7 @@ jobs:
 
       - name: Install macOS System Dependencies
         run: |
+          brew update
           brew install gcc gdal proj libomp
 
       - name: Configure Makevars for macOS
@@ -80,10 +97,21 @@ jobs:
         run: |
           for i in {1..3}; do Rscript -e 'remotes::install_deps(dependencies = TRUE)' && break || sleep 15; done
 
+      - name: Debug Build Tools
+        run: |
+          echo "Checking build tools..."
+          Rscript -e 'pkgbuild::check_build_tools(debug = TRUE)'
+
       - name: Build macOS Binary
         run: |
           mkdir -p artifacts
           Rscript -e "devtools::build(binary = TRUE, path = 'artifacts')"
+
+      - name: Debug Built Files
+        run: |
+          echo "Listing artifacts directory:"
+          ls -l artifacts
+
 
   build-windows:
     runs-on: windows-latest
@@ -99,9 +127,23 @@ jobs:
 
       - name: Install Rtools and Dependencies
         run: |
-          choco install gsl
-          choco install mingw
-          choco install rtools
+          choco install gsl -y
+          choco install mingw -y
+          choco install rtools -y
+          refreshenv
+
+      - name: Debug Library Paths
+        run: |
+          echo "Checking GSL library in Windows:"
+          dir C:\msys64\mingw64\lib\gsl* || echo "GSL library not found"
+          echo "Checking MinGW binaries:"
+          dir C:\msys64\mingw64\bin || echo "MinGW binaries not found" 
+
+      - name: Verify Rtools Installation
+        run: |
+          echo "Checking Rtools installation:"
+          where gcc || echo "GCC not found"
+          where make || echo "Make not found"
 
       - name: Install Key R Packages
         run: |
