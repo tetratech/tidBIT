@@ -44,10 +44,47 @@ jobs:
       # Step 5: Verify installation
       - name: Verify dependencies
         run: |
+          echo "Checking for GCC compiler:"
           where gcc || echo "GCC not found"
+      
+          echo "Checking for Make utility:"
           where make || echo "Make not found"
-          if (!(Test-Path "C:\ProgramData\chocolatey\lib\mingw\tools\install")) { echo "MinGW installation not found"; exit 1 }
-          if (!(Test-Path "C:\Program Files\Rtools")) { echo "Rtools installation not found"; exit 1 }
+      
+          echo "Checking for MinGW installation:"
+          $mingwPaths = @(
+            "C:\ProgramData\chocolatey\lib\mingw\tools\install",
+            "C:\mingw64"
+          )
+          $foundMinGW = $false
+          foreach ($path in $mingwPaths) {
+            if (Test-Path $path) {
+              echo "MinGW installation found at: $path"
+              $foundMinGW = $true
+              break
+            }
+          }
+          if (-not $foundMinGW) {
+            echo "MinGW installation not found in the following paths:"
+            $mingwPaths | ForEach-Object { echo $_ }
+            exit 1
+          }
+      
+          echo "Checking for Rtools installation:"
+          if (Test-Path "C:\Program Files\Rtools") {
+            echo "Rtools installation found at C:\Program Files\Rtools"
+          } else {
+            echo "Rtools installation not found at C:\Program Files\Rtools"
+            exit 1
+          }
+        shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+        env:
+          OS_TYPE: windows
+          _R_INSTALL_TIME_PATCHES_: no
+          R_LIBS_USER: D:\a\_temp\Library
+          TZ: UTC
+          _R_CHECK_SYSTEM_CLOCK_: FALSE
+          NOT_CRAN: true
+
 
       # Step 6: Install R package dependencies
       - name: Install R dependencies
