@@ -28,7 +28,7 @@ jobs:
       - name: Install System Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgsl-dev libomp-dev libudunits2-dev libproj-dev build-essential gcc gfortran
+          sudo apt-get install -y libgsl-dev libomp-dev libudunits2-dev libproj-dev libgdal-dev build-essential gcc gfortran
 
       # Debugging Library Paths
       - name: Debug Libraries
