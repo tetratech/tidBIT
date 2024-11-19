@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  build:
+  build-windows:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,53 +19,72 @@ jobs:
       - name: Set up R
         uses: r-lib/actions/setup-r@v2
 
-      # Configure CRAN mirror to RSPM
       - name: Configure CRAN mirror to RSPM
         run: |
           echo 'options(repos = c(CRAN = "https://packagemanager.rstudio.com/all/__linux__/jammy/latest"))' >> ~/.Rprofile
 
-      # Install system dependencies for GSL, OpenMP, and build tools
       - name: Install System Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y \
-            libgsl-dev \
-            libomp-dev \
-            libudunits2-dev \
-            libproj-dev \
-            libgdal-dev \
-            build-essential \
-            gcc \
-            gfortran
+          sudo apt-get install -y libgsl-dev libomp-dev libudunits2-dev libproj-dev libgdal-dev build-essential gcc gfortran
+
+      - name: Debug Libraries
+        run: |
+          echo "Checking GSL library:"
+          ldconfig -p | grep gsl || echo "GSL library not found"
+          echo "Checking OpenMP library:"
+          ldconfig -p | grep omp || echo "OpenMP library not found"
+
+      - name: Clean Up Precompiled Files
+        run: |
+          find src -name "*.o" -type f -delete
+          find src -name "*.so" -type f -delete
+
+      - name: Install Key R Packages
+        run: |
+          Rscript -e 'install.packages(c("remotes", "desc", "devtools"))'
+
+      - name: Install Dependencies with Retries
+        run: |
+          for i in {1..3}; do Rscript -e 'remotes::install_deps(dependencies = TRUE)' && break || sleep 15; done
 
       - name: Build Package for Windows
         run: |
-          mkdir -p artifacts  # Create an output directory
+          mkdir -p artifacts
           Rscript -e "devtools::build(binary = TRUE, path = 'artifacts')"
 
-      - name: Build Package for macOS
-        runs-on: macos-latest
-        steps:
-          - name: Checkout code
-            uses: actions/checkout@v4
-
-          - name: Set up R
-            uses: r-lib/actions/setup-r@v2
-
-          - name: Build macOS Binary
-            run: |
-              mkdir -p artifacts  # Create an output directory
-              Rscript -e "devtools::build(binary = TRUE, path = 'artifacts')"
-
-          - name: Debug macOS Built Files
-            run: |
-              echo "Listing artifacts directory:"
-              ls -l artifacts
-
-      - name: Debug Built Files (Linux/Windows)
+      - name: Debug Built Files
         run: |
           echo "Listing artifacts directory:"
           ls -l artifacts
+
+  build-macos:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v2
+
+      - name: Build macOS Binary
+        run: |
+          mkdir -p artifacts
+          Rscript -e "devtools::build(binary = TRUE, path = 'artifacts')"
+
+      - name: Debug Built Files
+        run: |
+          echo "Listing artifacts directory:"
+          ls -l artifacts
+
+  release:
+    needs: [build-windows, build-macos]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Create or Update GitHub Release
         uses: softprops/action-gh-release@v1
