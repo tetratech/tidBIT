@@ -137,13 +137,26 @@ jobs:
           echo "Checking GSL library in Windows:"
           dir C:\msys64\mingw64\lib\gsl* || echo "GSL library not found"
           echo "Checking MinGW binaries:"
-          dir C:\msys64\mingw64\bin || echo "MinGW binaries not found" 
+          dir C:\msys64\mingw64\bin || echo "MinGW binaries not found"
+          echo "Verifying PATH:"
+          echo %PATH%
 
       - name: Verify Rtools Installation
         run: |
           echo "Checking Rtools installation:"
           where gcc || echo "GCC not found"
           where make || echo "Make not found"
+          where Rtools || echo "Rtools not found"
+
+      - name: Configure Makevars
+        run: |
+          echo "Setting up Makevars file for Windows."
+          mkdir -p %USERPROFILE%\.R
+          echo CC=gcc > %USERPROFILE%\.R\Makevars.win
+          echo CXX=g++ >> %USERPROFILE%\.R\Makevars.win
+          echo PKG_CFLAGS=-I"C:/msys64/mingw64/include" >> %USERPROFILE%\.R\Makevars.win
+          echo PKG_LIBS=-L"C:/msys64/mingw64/lib" -lgsl -lgslcblas >> %USERPROFILE%\.R\Makevars.win
+          type %USERPROFILE%\.R\Makevars.win
 
       - name: Install Key R Packages
         run: |
@@ -157,6 +170,11 @@ jobs:
         run: |
           mkdir -p artifacts
           Rscript -e "devtools::build(binary = TRUE, path = 'artifacts')"
+
+      - name: Debug Built Files
+        run: |
+          echo "Listing artifacts directory:"
+          dir artifacts
 
   release:
     needs: [build-linux, build-macos, build-windows]
