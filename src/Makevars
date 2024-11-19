@@ -1,25 +1,17 @@
-# General Compiler Flags
-PKG_CFLAGS = -fopenmp -O2
+# General flags for all platforms
+PKG_CFLAGS = -fopenmp
 PKG_LIBS = -fopenmp -lm
 
-# Platform-Specific Configurations
-ifeq ($(OS_TYPE),windows)
-  # Windows-specific configurations using MinGW
-  PKG_CFLAGS += -I"C:/mingw64/include"
-  PKG_LIBS += -L"C:/mingw64/lib" -lgsl -lgslcblas
-else ifeq ($(OS_TYPE),darwin)
-  # macOS-specific configurations
+# Platform-specific configurations
+ifeq ($(OS_TYPE),windows)  # Windows
+  PKG_CFLAGS += -I"C:/msys64/mingw64/include"
+  PKG_LIBS += -L"C:/msys64/mingw64/lib" -lgsl -lgslcblas
+else ifeq ($(OS_TYPE),darwin)  # macOS
   PKG_CFLAGS += -I$(shell brew --prefix libomp)/include
-  PKG_LIBS += -L$(shell brew --prefix libomp)/lib -lomp
-  PKG_LIBS += -L$(shell brew --prefix gsl)/lib -lgsl -lgslcblas
-else ifeq ($(OS_TYPE),linux)
-  # Linux-specific configurations
+  PKG_LIBS += -L$(shell brew --prefix libomp)/lib -lomp -lgsl -lgslcblas
+else ifeq ($(OS_TYPE),linux)  # Linux
   PKG_CFLAGS += -I/usr/include
-  PKG_LIBS += -L/usr/lib/x86_64-linux-gnu -lgsl -lgslcblas -fopenmp
+  PKG_LIBS += -L/lib/x86_64-linux-gnu -lgsl -lgslcblas
 else
-  $(error Unsupported platform: $(OS_TYPE). Please specify OS_TYPE as windows, darwin, or linux.)
+  $(error Unsupported platform: $(OS_TYPE). Set OS_TYPE to windows, darwin, or linux.)
 endif
-
-# Debugging Configuration (Optional)
-DEBUG_FLAGS = -g
-PKG_CFLAGS += $(DEBUG_FLAGS)
