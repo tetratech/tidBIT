@@ -123,10 +123,23 @@ jobs:
       # Step 3: Build source package
       - name: Build source package
         run: |
+          echo "Setting up artifacts directory"
           mkdir -p artifacts
+      
+          echo "Installing vignette builder dependencies"
+          Rscript -e 'if (!requireNamespace("knitr", quietly = TRUE)) install.packages("knitr")'
+      
           echo "Building source package"
           R CMD build .
+      
+          echo "Moving source package to artifacts"
           mv *.tar.gz artifacts/
+        shell: /usr/bin/bash -e {0}
+        env:
+          R_LIBS_USER: /home/runner/work/_temp/Library
+          TZ: UTC
+          _R_CHECK_SYSTEM_CLOCK_: FALSE
+          NOT_CRAN: true
 
       # Step 4: Upload source package artifacts
       - name: Upload source artifacts
