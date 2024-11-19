@@ -112,7 +112,6 @@ jobs:
           echo "Listing artifacts directory:"
           ls -l artifacts
 
-
   build-windows:
     runs-on: windows-latest
     env:
