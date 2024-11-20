@@ -1,7 +1,14 @@
 
 
-# Compiler flags
-PKG_CFLAGS = -fopenmp
 
-# Linker flags
-PKG_LIBS = -fopenmp -lgsl -lgslcblas -lm
+# General flags
+PKG_CFLAGS = -fopenmp
+PKG_LIBS = -fopenmp -lm
+
+# Platform-specific paths
+ifeq ($(OS_TYPE),windows)
+  PKG_LIBS += -L"C:/msys64/mingw64/lib" -lgsl -lgslcblas
+else
+  PKG_LIBS += -L/lib/x86_64-linux-gnu -lgsl -lgslcblas
+endif
+
