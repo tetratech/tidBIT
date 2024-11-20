@@ -1,21 +1,7 @@
 
 
-# General flags for all platforms
+# Compiler flags
 PKG_CFLAGS = -fopenmp
-PKG_LIBS = -fopenmp -lm
 
-# Platform-specific configurations
-ifeq ($(OS_TYPE),windows)  # Windows
-  PKG_CFLAGS += -I"C:/msys64/mingw64/include"
-  PKG_LIBS += -L"C:/msys64/mingw64/lib" -lgsl -lgslcblas
-else ifeq ($(OS_TYPE),darwin)  # macOS
-  PKG_CFLAGS += -I$(shell brew --prefix libomp)/include
-  PKG_LIBS += -L$(shell brew --prefix libomp)/lib -lomp -lgsl -lgslcblas
-else ifeq ($(OS_TYPE),linux)  # Linux
-  PKG_CFLAGS += -I/usr/include
-  PKG_LIBS += -L/lib/x86_64-linux-gnu -lgsl -lgslcblas
-else
-  $(error Unsupported platform: $(OS_TYPE). Set OS_TYPE to windows, darwin, or linux.)
-endif
-
-
+# Linker flags
+PKG_LIBS = -fopenmp -lgsl -lgslcblas -lm
