@@ -24,15 +24,26 @@ jobs:
         run: |
           echo "Creating artifacts directory"
           mkdir -p artifacts
-          
+
+          echo "Installing vignette builder dependencies"
+          Rscript -e 'if (!requireNamespace("knitr", quietly = TRUE)) install.packages("knitr")'
+          Rscript -e 'if (!requireNamespace("rmarkdown", quietly = TRUE)) install.packages("rmarkdown")'
+
           echo "Building tar.gz source package"
           R CMD build .
-          
+
           echo "Building zip source package"
           zip -r artifacts/source.zip .
-          
+
           echo "Moving tar.gz source package to artifacts"
           mv *.tar.gz artifacts/
+        shell: /usr/bin/bash -e {0}
+        env:
+          R_LIBS_USER: /home/runner/work/_temp/Library
+          TZ: UTC
+          _R_CHECK_SYSTEM_CLOCK_: FALSE
+          NOT_CRAN: true
+
 
       # Step 4: Upload source artifacts
       - name: Upload source artifacts
