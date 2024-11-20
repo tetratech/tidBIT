@@ -39,42 +39,53 @@ jobs:
           [System.Environment]::SetEnvironmentVariable("PATH", $pathToAdd + ";" + [System.Environment]::GetEnvironmentVariable("PATH", [System.EnvironmentVariableTarget]::Process), [System.EnvironmentVariableTarget]::Process)
           echo "Updated PATH: $env:PATH"
 
-      # Step 5: Verify installation
+      # Step 5: Verify dependencies
       - name: Verify dependencies
         run: |
           echo "Checking for GCC compiler:"
-          where gcc || echo "GCC not found"
+          if (!(Get-Command gcc -ErrorAction SilentlyContinue)) {
+            echo "Error: GCC not found in PATH"
+          } else {
+            echo "GCC is available in PATH"
+          }
       
           echo "Checking for Make utility:"
-          where make || echo "Make not found"
+          if (!(Get-Command make -ErrorAction SilentlyContinue)) {
+            echo "Error: Make utility not found in PATH"
+          } else {
+            echo "Make utility is available in PATH"
+          }
       
           echo "Checking for MinGW installation:"
           $mingwPaths = @(
             "C:\ProgramData\chocolatey\lib\mingw\tools\install",
             "C:\mingw64"
           )
-          $foundMinGW = $false
+          $foundMinGW = $null
           foreach ($path in $mingwPaths) {
-            if (Test-Path $path) {
+            if (Test-Path -Path $path) {
               echo "MinGW installation found at: $path"
-              $foundMinGW = $true
+              $foundMinGW = $path
               break
             }
           }
           if (-not $foundMinGW) {
-            echo "MinGW installation not found in the following paths:"
+            echo "Error: MinGW installation not found. Checked paths:"
             $mingwPaths | ForEach-Object { echo $_ }
             exit 1
           }
       
           echo "Checking for Rtools installation:"
-          if (Test-Path "C:\Program Files\Rtools") {
-            echo "Rtools installation found at C:\Program Files\Rtools"
-          } else {
-            echo "Rtools installation not found at C:\Program Files\Rtools"
+          $rtoolsPath = "C:\rtools44"
+          if (!(Test-Path -Path $rtoolsPath)) {
+            echo "Error: Rtools installation not found at $rtoolsPath"
             exit 1
+          } else {
+            echo "Rtools installation found at: $rtoolsPath"
           }
-        shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+      
+          echo "All dependencies verified successfully."
+        shell: pwsh
         env:
           OS_TYPE: windows
           _R_INSTALL_TIME_PATCHES_: no
@@ -82,7 +93,8 @@ jobs:
           TZ: UTC
           _R_CHECK_SYSTEM_CLOCK_: FALSE
           NOT_CRAN: true
-
+      
+      
 
       # Step 6: Install R package dependencies
       - name: Install R dependencies
