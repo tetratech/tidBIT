@@ -1,79 +1,68 @@
-name: R Package Source Release
+name: Build and Release Source Package
 
 on:
   push:
-    branches:
-      - main
-  workflow_dispatch:
+    tags:
+      - '*'
 
 jobs:
-  package-source:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the repository
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-      # Step 2: Set up R environment
-      - name: Set up R
-        uses: r-lib/actions/setup-r@v2
+    - name: Set up R
+      uses: r-lib/actions/setup-r@v2
 
-      # Step 3: Create source package
-      - name: Install R package dependencies
-        run: |
-          echo "Installing required R package dependencies"
-          Rscript -e 'install.packages(c("remotes", "corrplot", "dplyr", "flextable", "ggplot2", "GGally", "leaflet", "lubridate", "officer", "patchwork", "readxl", "rstudioapi", "scales", "sf", "tibble", "tidyr", "tidyselect", "zeallot", "openxlsx"))'
-          Rscript -e 'remotes::install_deps(dependencies = TRUE)'
-          
-      - name: Build source package
-        run: |
-          echo "Creating artifacts directory"
-          mkdir -p artifacts
+    - name: Install system dependencies for R packages
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libcurl4-openssl-dev libxml2-dev libssl-dev libfontconfig1-dev libharfbuzz-dev libfribidi-dev libfreetype6-dev libtiff5-dev libjpeg-dev gdal-bin libgdal-dev
 
-          echo "Building tar.gz source package"
-          R CMD build .
+    - name: Install required R packages
+      run: |
+        echo "Installing R package dependencies"
+        Rscript -e 'install.packages(c("flextable", "leaflet", "officer", "sf"), repos = "https://cran.rstudio.com")'
 
-          echo "Building zip source package"
-          zip -r artifacts/source.zip .
+    - name: Create artifacts directory
+      run: |
+        echo "Creating artifacts directory"
+        mkdir -p artifacts
 
-          echo "Moving tar.gz source package to artifacts"
-          mv *.tar.gz artifacts/
-        shell: bash
-        env:
-          R_LIBS_USER: /home/runner/work/_temp/Library
-          TZ: UTC
-          _R_CHECK_SYSTEM_CLOCK_: FALSE
-          NOT_CRAN: true
+    - name: Build source package
+      run: |
+        echo "Building tar.gz source package"
+        R CMD build .
 
+    - name: Build zip source package
+      run: |
+        echo "Building zip source package"
+        zip -r artifacts/source.zip .
 
-      # Step 4: Upload source artifacts
-      - name: Upload source artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: source-artifacts
-          path: artifacts/
+    - name: Move tar.gz to artifacts
+      run: |
+        echo "Moving tar.gz source package to artifacts"
+        mv *.tar.gz artifacts/
 
-  create-release:
-    needs: package-source
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: tidBIT-source-packages
+        path: artifacts/
+
+  release:
+    needs: build
     runs-on: ubuntu-latest
-
     steps:
-      # Step 1: Checkout the repository
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      # Step 2: Upload to GitHub release
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: "v${{ github.run_number }}"
-          name: "Release v${{ github.run_number }}"
-          body: |
-            ### Release Notes
-            - Includes source package in `.tar.gz` and `.zip` formats.
-          files: |
-            artifacts/source.zip
-            artifacts/*.tar.gz
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Create a release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref_name }}
+        release_name: Release ${{ github.ref_name }}
+        draft: false
+        prerelease: false
+        files: artifacts/*
