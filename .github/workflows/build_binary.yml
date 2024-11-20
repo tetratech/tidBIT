@@ -20,14 +20,16 @@ jobs:
         uses: r-lib/actions/setup-r@v2
 
       # Step 3: Create source package
+      - name: Install R package dependencies
+        run: |
+          echo "Installing required R package dependencies"
+          Rscript -e 'install.packages(c("remotes", "corrplot", "dplyr", "flextable", "ggplot2", "GGally", "leaflet", "lubridate", "officer", "patchwork", "readxl", "rstudioapi", "scales", "sf", "tibble", "tidyr", "tidyselect", "zeallot", "openxlsx"))'
+          Rscript -e 'remotes::install_deps(dependencies = TRUE)'
+          
       - name: Build source package
         run: |
           echo "Creating artifacts directory"
           mkdir -p artifacts
-
-          echo "Installing vignette builder dependencies"
-          Rscript -e 'if (!requireNamespace("knitr", quietly = TRUE)) install.packages("knitr")'
-          Rscript -e 'if (!requireNamespace("rmarkdown", quietly = TRUE)) install.packages("rmarkdown")'
 
           echo "Building tar.gz source package"
           R CMD build .
@@ -37,7 +39,7 @@ jobs:
 
           echo "Moving tar.gz source package to artifacts"
           mv *.tar.gz artifacts/
-        shell: /usr/bin/bash -e {0}
+        shell: bash
         env:
           R_LIBS_USER: /home/runner/work/_temp/Library
           TZ: UTC
