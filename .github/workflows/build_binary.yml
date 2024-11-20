@@ -143,7 +143,23 @@ jobs:
       - name: Set up R
         uses: r-lib/actions/setup-r@v2
 
-      # Step 3: Build source package
+      # Step 3: Install system dependencies
+      - name: Install system dependencies for R packages
+        run: |
+          echo "Installing system dependencies for R packages"
+          sudo apt-get update
+          sudo apt-get install -y libxml2-dev libcurl4-openssl-dev libssl-dev \
+                                  libgdal-dev libgeos-dev libproj-dev \
+                                  libudunits2-dev gfortran
+
+      # Step 4: Install R package dependencies
+      - name: Install R package dependencies
+        run: |
+          echo "Installing all R package dependencies"
+          Rscript -e 'install.packages("remotes")'
+          Rscript -e 'remotes::install_deps(dependencies = TRUE)'
+
+      # Step 5: Build source package
       - name: Build source package
         run: |
           echo "Setting up artifacts directory"
@@ -151,6 +167,7 @@ jobs:
 
           echo "Installing vignette builder dependencies"
           Rscript -e 'if (!requireNamespace("knitr", quietly = TRUE)) install.packages("knitr")'
+          Rscript -e 'if (!requireNamespace("rmarkdown", quietly = TRUE)) install.packages("rmarkdown")'
 
           echo "Building source package"
           R CMD build .
@@ -164,7 +181,7 @@ jobs:
           _R_CHECK_SYSTEM_CLOCK_: FALSE
           NOT_CRAN: true
 
-      # Step 4: Upload source package artifacts
+      # Step 6: Upload source package artifacts
       - name: Upload source artifacts
         uses: actions/upload-artifact@v3
         with:
