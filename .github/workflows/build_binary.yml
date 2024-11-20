@@ -1,197 +1,13 @@
-name: R Package Release Workflow 
+name: R Package Source Release
 
 on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
-  # Job to build the precompiled Windows binary
-  build-windows:
-    runs-on: windows-latest
-    env:
-      OS_TYPE: windows  # Define the platform for conditional configurations
-
-    steps:
-      # Step 1: Checkout the repository
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      # Step 2: Set up R environment
-      - name: Set up R
-        uses: r-lib/actions/setup-r@v2
-
-      # Step 3: Install system dependencies
-      - name: Install required tools via Chocolatey
-        run: |
-          echo "Installing required tools using Chocolatey"
-          choco install rtools -y
-          choco install mingw -y
-
-      # Step 4: Configure PATH for MinGW and Rtools
-      - name: Update PATH environment
-        run: |
-          echo "Adding MinGW and Rtools to PATH"
-          $pathToAdd = "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin;C:\rtools44\usr\bin"
-          [System.Environment]::SetEnvironmentVariable("PATH", $pathToAdd + ";" + [System.Environment]::GetEnvironmentVariable("PATH", [System.EnvironmentVariableTarget]::Process), [System.EnvironmentVariableTarget]::Process)
-          echo "Updated PATH: $env:PATH"
-
-      # Step 5: Verify dependencies
-      - name: Verify dependencies
-        run: |
-          echo "Checking for GCC compiler:"
-          if (!(Get-Command gcc -ErrorAction SilentlyContinue)) {
-            echo "Error: GCC not found in PATH"
-          } else {
-            echo "GCC is available in PATH"
-          }
-      
-          echo "Checking for Make utility:"
-          if (!(Get-Command make -ErrorAction SilentlyContinue)) {
-            echo "Error: Make utility not found in PATH"
-          } else {
-            echo "Make utility is available in PATH"
-          }
-      
-          echo "Checking for MinGW installation:"
-          $mingwPaths = @(
-            "C:\ProgramData\chocolatey\lib\mingw\tools\install",
-            "C:\mingw64"
-          )
-          $foundMinGW = $null
-          foreach ($path in $mingwPaths) {
-            if (Test-Path -Path $path) {
-              echo "MinGW installation found at: $path"
-              $foundMinGW = $path
-              break
-            }
-          }
-          if (-not $foundMinGW) {
-            echo "Error: MinGW installation not found. Checked paths:"
-            $mingwPaths | ForEach-Object { echo $_ }
-            exit 1
-          }
-      
-          echo "Checking for Rtools installation:"
-          $rtoolsPath = "C:\rtools44"
-          if (!(Test-Path -Path $rtoolsPath)) {
-            echo "Error: Rtools installation not found at $rtoolsPath"
-            exit 1
-          } else {
-            echo "Rtools installation found at: $rtoolsPath"
-          }
-      
-          echo "All dependencies verified successfully."
-        shell: pwsh
-        env:
-          OS_TYPE: windows
-          _R_INSTALL_TIME_PATCHES_: no
-          R_LIBS_USER: D:\a\_temp\Library
-          TZ: UTC
-          _R_CHECK_SYSTEM_CLOCK_: FALSE
-          NOT_CRAN: true
-      
-      
-
-      # Step 6: Install R package dependencies
-      - name: Install R dependencies
-        run: |
-          Rscript -e 'install.packages(c("devtools", "desc", "remotes"))'
-          Rscript -e 'remotes::install_deps(dependencies = TRUE)'
-
-      # Step 7: Build Windows binary
-      - name: Build Windows binary
-        run: |
-          echo "Creating artifacts directory..."
-          mkdir -p artifacts
-      
-          echo "Building Windows binary..."
-          Rscript -e "tryCatch(devtools::build(binary = TRUE, path = 'artifacts'), error = function(e) { message('Build failed:', e$message); quit(save = 'no', status = 0) })"
-          
-          echo "Build process completed."
-        shell: pwsh
-        env:
-          OS_TYPE: windows
-          _R_INSTALL_TIME_PATCHES_: no
-          R_LIBS_USER: D:\a\_temp\Library
-          TZ: UTC
-          _R_CHECK_SYSTEM_CLOCK_: FALSE
-          NOT_CRAN: true
-
-
-      # Step 8: Upload artifacts
-      - name: Upload Windows binary artifact
-        if: success()  # Proceed regardless of the build's outcome
-        uses: actions/upload-artifact@v3
-        with:
-          name: windows-binary
-          path: artifacts/*.zip
-
-  # Job to package the source files
   package-source:
-    runs-on: ubuntu-latest  # Use Ubuntu for better performance when packaging source code
-
-    steps:
-      # Step 1: Checkout the repository
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      # Step 2: Set up R environment
-      - name: Set up R
-        uses: r-lib/actions/setup-r@v2
-
-      # Step 3: Install system dependencies
-      - name: Install system dependencies for R packages
-        run: |
-          echo "Installing system dependencies for R packages"
-          sudo apt-get update
-          sudo apt-get install -y libxml2-dev libcurl4-openssl-dev libssl-dev \
-                                  libgdal-dev libgeos-dev libproj-dev \
-                                  libudunits2-dev gfortran
-
-      # Step 4: Install R package dependencies
-      - name: Install R package dependencies
-        run: |
-          echo "Installing all R package dependencies"
-          Rscript -e 'install.packages("remotes")'
-          Rscript -e 'remotes::install_deps(dependencies = TRUE)'
-
-      # Step 5: Build source package
-      - name: Build source package
-        run: |
-          echo "Setting up artifacts directory"
-          mkdir -p artifacts
-
-          echo "Installing vignette builder dependencies"
-          Rscript -e 'if (!requireNamespace("knitr", quietly = TRUE)) install.packages("knitr")'
-          Rscript -e 'if (!requireNamespace("rmarkdown", quietly = TRUE)) install.packages("rmarkdown")'
-
-          echo "Building source package"
-          R CMD build .
-
-          echo "Moving source package to artifacts"
-          mv *.tar.gz artifacts/
-        shell: /usr/bin/bash -e {0}
-        env:
-          R_LIBS_USER: /home/runner/work/_temp/Library
-          TZ: UTC
-          _R_CHECK_SYSTEM_CLOCK_: FALSE
-          NOT_CRAN: true
-
-      # Step 6: Upload source package artifacts
-      - name: Upload source artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: source-package
-          path: artifacts/*.tar.gz
-
-  # Job to create a release
-  create-release:
-    needs: [build-windows, package-source]  # Depends on the previous jobs
-  #  needs: [build-windows]  # Depends on the previous jobs
     runs-on: ubuntu-latest
 
     steps:
@@ -199,21 +15,52 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Step 2: Create or update the GitHub release
+      # Step 2: Set up R environment
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v2
+
+      # Step 3: Create source package
+      - name: Build source package
+        run: |
+          echo "Creating artifacts directory"
+          mkdir -p artifacts
+          
+          echo "Building tar.gz source package"
+          R CMD build .
+          
+          echo "Building zip source package"
+          zip -r artifacts/source.zip .
+          
+          echo "Moving tar.gz source package to artifacts"
+          mv *.tar.gz artifacts/
+
+      # Step 4: Upload source artifacts
+      - name: Upload source artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: source-artifacts
+          path: artifacts/
+
+  create-release:
+    needs: package-source
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2: Upload to GitHub release
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: "v${{ github.run_number }}"  # Use the run number as a tag
+          tag_name: "v${{ github.run_number }}"
           name: "Release v${{ github.run_number }}"
           body: |
             ### Release Notes
-            - Includes source package (.tar.gz)
-            - Includes Windows binary (if successfully built)
+            - Includes source package in `.tar.gz` and `.zip` formats.
           files: |
-            artifacts/*.zip
+            artifacts/source.zip
             artifacts/*.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-
-
