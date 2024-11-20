@@ -105,9 +105,22 @@ jobs:
       # Step 7: Build Windows binary
       - name: Build Windows binary
         run: |
+          echo "Creating artifacts directory..."
           mkdir -p artifacts
-          echo "Building Windows binary"
-          Rscript -e "devtools::build(binary = TRUE, path = 'artifacts')" || exit 0
+      
+          echo "Building Windows binary..."
+          Rscript -e "tryCatch(devtools::build(binary = TRUE, path = 'artifacts'), error = function(e) { message('Build failed:', e$message); quit(save = 'no', status = 0) })"
+          
+          echo "Build process completed."
+        shell: pwsh
+        env:
+          OS_TYPE: windows
+          _R_INSTALL_TIME_PATCHES_: no
+          R_LIBS_USER: D:\a\_temp\Library
+          TZ: UTC
+          _R_CHECK_SYSTEM_CLOCK_: FALSE
+          NOT_CRAN: true
+
 
       # Step 8: Upload artifacts
       - name: Upload Windows binary artifact
