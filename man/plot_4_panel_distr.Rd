@@ -17,17 +17,24 @@ plot_4_panel_distr(
 \arguments{
 \item{y}{A numeric vector of data to evaluate.}
 
-\item{vlab}{A character string specifying the label for the plots. Used as the y-axis label for the normal probability plot and boxplot, and the x-axis label for the histogram and density plot.}
+\item{vlab}{A character string specifying the label for the plots. Used as
+the y-axis label for the normal probability plot and boxplot, and the
+x-axis label for the histogram and density plot.}
 
-\item{main}{A character string specifying the main title for the combined plot. Defaults to 'Distribution Plots'.}
+\item{main}{A character string specifying the main title for the combined
+plot. Defaults to 'Distribution Plots'.}
 
-\item{na.rm}{Logical; if `TRUE`, removes missing values before analysis. Defaults to `TRUE`.}
+\item{na.rm}{Logical; if `TRUE`, removes missing values before analysis.
+Defaults to `TRUE`.}
 
-\item{plot_type}{A character string specifying the type of plot ("all" or "thin"). Defaults to `"all"`.}
+\item{plot_type}{A character string specifying the type of plot ("all" or
+"thin"). Defaults to `"all"`.}
 
-\item{n}{An integer specifying the maximum number of points to plot for the normal probability plot and density plot. Defaults to `3000`.}
+\item{n}{An integer specifying the maximum number of points to plot for the
+normal probability plot and density plot. Defaults to `3000`.}
 
-\item{bin_width_min}{A numeric value specifying the minimum bin width for the histogram and density plot. Defaults to `0.2`.}
+\item{bin_width_min}{A numeric value specifying the minimum bin width for the
+histogram and density plot. Defaults to `0.2`.}
 }
 \value{
 A ggplot object representing the 4-panel distribution plot.

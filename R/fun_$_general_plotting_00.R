@@ -107,12 +107,12 @@ plot_obs_pred_res <- function(df, vars = c("y_obs", "y_pred", "y_resid"), vlab =
 #' @return A ggplot object representing the bivariate plot.
 #'
 #' @examples
-#' \dontrun{
-#' df <- data.frame(x = rnorm(1000), y = rnorm(1000))
+#' set.seed(12271963)
+#' df <- data.frame(MASS::mvrnorm(500, mu = c(1, 1), Sigma = matrix(c(1, 0.5, 0.5, 1), 2)))
+#' names(df) <- c("x", "y")
 #' plot_bivariate_data(df, "x", "y", "X-axis Label", "Y-axis Label")
 #' plot_bivariate_data(df, "x", "y", "X-axis Label", "Y-axis Label",
-#'                      ref_line = c(1,1), smooth_line = TRUE)
-#' }
+#'                      ref_line = c(1,0), smooth_line = TRUE)
 #'
 #' @seealso \code{\link{plot_obs_pred_res}}
 #'
@@ -233,12 +233,19 @@ plot_bivariate_data <- function(df
 #' exceeds a specified maximum.
 #'
 #' @param y A numeric vector of data to evaluate.
-#' @param vlab A character string specifying the label for the plots. Used as the y-axis label for the normal probability plot and boxplot, and the x-axis label for the histogram and density plot.
-#' @param main A character string specifying the main title for the combined plot. Defaults to 'Distribution Plots'.
-#' @param na.rm Logical; if `TRUE`, removes missing values before analysis. Defaults to `TRUE`.
-#' @param plot_type A character string specifying the type of plot ("all" or "thin"). Defaults to `"all"`.
-#' @param n An integer specifying the maximum number of points to plot for the normal probability plot and density plot. Defaults to `3000`.
-#' @param bin_width_min A numeric value specifying the minimum bin width for the histogram and density plot. Defaults to `0.2`.
+#' @param vlab A character string specifying the label for the plots. Used as
+#'   the y-axis label for the normal probability plot and boxplot, and the
+#'   x-axis label for the histogram and density plot.
+#' @param main A character string specifying the main title for the combined
+#'   plot. Defaults to 'Distribution Plots'.
+#' @param na.rm Logical; if `TRUE`, removes missing values before analysis.
+#'   Defaults to `TRUE`.
+#' @param plot_type A character string specifying the type of plot ("all" or
+#'   "thin"). Defaults to `"all"`.
+#' @param n An integer specifying the maximum number of points to plot for the
+#'   normal probability plot and density plot. Defaults to `3000`.
+#' @param bin_width_min A numeric value specifying the minimum bin width for the
+#'   histogram and density plot. Defaults to `0.2`.
 #'
 #' @return A ggplot object representing the 4-panel distribution plot.
 #'

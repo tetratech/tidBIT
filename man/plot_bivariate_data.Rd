@@ -89,12 +89,12 @@ plot types (points, hex bins) and adds optional reference lines and smooth lines
 if the number of points exceeds a specified maximum.
 }
 \examples{
-\dontrun{
-df <- data.frame(x = rnorm(1000), y = rnorm(1000))
+set.seed(12271963)
+df <- data.frame(MASS::mvrnorm(500, mu = c(1, 1), Sigma = matrix(c(1, 0.5, 0.5, 1), 2)))
+names(df) <- c("x", "y")
 plot_bivariate_data(df, "x", "y", "X-axis Label", "Y-axis Label")
 plot_bivariate_data(df, "x", "y", "X-axis Label", "Y-axis Label",
-                     ref_line = c(1,1), smooth_line = TRUE)
-}
+                     ref_line = c(1,0), smooth_line = TRUE)
 
 }
 \seealso{

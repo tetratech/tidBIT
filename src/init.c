@@ -6,13 +6,17 @@
 void Derr_recursive_C(int *dBlks, double *rhos, int *dimension, int *total_size, double *ie, double *de);
 SEXP mat_mult(SEXP matA, SEXP matB, SEXP nrowA, SEXP ncolA, SEXP ncolB);
 void beta_logit_tran_inverse_C(double *z, double *result, int *len, double *a, double *b, double *b1, double *b2);
+void hod_edge_match(int *group_rows, int *num_groups, double *real_y, int *nrow, int *ncol, int *debug);
+
 
 // Register the C routines
 static const R_CMethodDef CEntries[] = {
   {"Derr_recursive_C", (DL_FUNC) &Derr_recursive_C, 6},
   {"beta_logit_tran_inverse_C", (DL_FUNC) &beta_logit_tran_inverse_C, 7},
+  {"hod_edge_match", (DL_FUNC) &hod_edge_match, 6},  // Update to 6 arguments
   {NULL, NULL, 0}
 };
+
 
 static const R_CallMethodDef CallEntries[] = {
   {"mat_mult", (DL_FUNC) &mat_mult, 5},
