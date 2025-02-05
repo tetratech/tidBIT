@@ -31,8 +31,7 @@
 #'   i = c(1, 1, 1, 2, 2, 2),
 #'   j = c(1, 1, 1, 1, 1, 1),
 #'   k = c(1, 1, 1, 1, 1, 1),
-#'   water_mask = c(1, 1, 1, 1, 1, 1),
-#'   water_mask_id = 1:6
+#'   row_id = 1:6
 #' )
 #' real_y <- matrix(1:36, nrow = 6, ncol = 6, byrow=TRUE)
 #'
@@ -44,17 +43,17 @@
 hod_edge_match_C <- function(int_grid, real_y, debug = 0) {
   # Preprocess int_grid to extract grouped summaries
   int_grid_lst <- int_grid %>%
-    dplyr::filter(water_mask == 1) %>%
+    # dplyr::filter(water_mask == 1) %>%
     dplyr::group_by(i, j, k) %>%
     dplyr::summarise(
-      water_mask_id_first = min(water_mask_id),
-      water_mask_id_last = max(water_mask_id),
+      row_id_first = min(row_id),
+      row_id_last = max(row_id),
       .groups = "drop"
     )
 
   # Flatten grouped summaries into a single integer vector
   group_rows <- int_grid_lst %>%
-    dplyr::select(i, j, k, water_mask_id_first, water_mask_id_last) %>%
+    dplyr::select(i, j, k, row_id_first, row_id_last) %>%
     as.matrix() %>%
     t() %>%
     as.integer()

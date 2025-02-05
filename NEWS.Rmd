@@ -18,6 +18,10 @@ knitr::opts_chunk$set(
 cat(paste0("Last Update: ",Sys.time()))
 ```
 
+# tidBIT 0.1.0.9037 (2025-02-03)
+
+* refactor: hod_edge_match_C to new int_grid format; transform_inverse> FisherZ bug corrected
+
 # tidBIT 0.1.0.9036 (2024-12-02)
 
 * refactor: Add new function hod_edge_match_C

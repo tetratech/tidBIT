@@ -17,7 +17,7 @@ reverse. Supported values include "none", "log", and those starting with
 the transformation to be reversed. For beta logit transformations, this
 should be a numeric vector specifying the parameters of the transformation.}
 
-\item{show_msgs}{Logical; if `TRUE`, messages will be issue where applicable}
+\item{show_msgs}{Logical; if `TRUE`, messages will be issued where applicable.}
 }
 \value{
 A numeric vector containing the back-transformed data, aiming to

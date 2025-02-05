@@ -13,7 +13,7 @@ beta_logit_tran(x, bl4, show_msgs = FALSE)
 parameters: the lower (`a`) and upper (`b`) bounds of the data's domain, and
 the `b1` and `b2` parameters of the beta distribution function.}
 
-\item{show_msgs}{Logical; if `TRUE`, messages will be issue where applicable}
+\item{show_msgs}{Logical; if `TRUE`, messages will be issued where applicable.}
 }
 \value{
 A numeric vector of the same length as `x`, containing the

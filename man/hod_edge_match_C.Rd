@@ -39,8 +39,7 @@ int_grid <- tibble::tibble(
   i = c(1, 1, 1, 2, 2, 2),
   j = c(1, 1, 1, 1, 1, 1),
   k = c(1, 1, 1, 1, 1, 1),
-  water_mask = c(1, 1, 1, 1, 1, 1),
-  water_mask_id = 1:6
+  row_id = 1:6
 )
 real_y <- matrix(1:36, nrow = 6, ncol = 6, byrow=TRUE)
 

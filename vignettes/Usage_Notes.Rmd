@@ -1,5 +1,5 @@
 ---
-title: "Training Notes"
+title: "Usage Notes"
 author: "Jon.Harcum@tetratech.com and Erik.Leppo@tetratech.com"
 date: "`r Sys.Date()`"
 output: 
@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 ```
 
 ## Purpose
-The purpose of this vignette is to cover the basics ...
+The purpose of this vignette is to ...
 
 ```{r initialize, echo=TRUE, eval=FALSE}
 library(tidBIT)

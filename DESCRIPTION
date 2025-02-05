@@ -1,7 +1,7 @@
 Package: tidBIT
 Type: Package
 Title: Chesapeake Bay 4D Interpolation Functions
-Version: 0.1.0.9036
+Version: 0.1.0.9037
 Authors@R: c(
   person("Rebecca", "Murphy", email="rmurphy@chesapeakebay.net", role="aut"), 
   person("Elgin", "Perry", email="eperry@chesapeake.net", role="aut"), 

@@ -30,7 +30,7 @@
 #' @param trans_parms A numeric vector or other relevant parameters required by
 #' the transformation. For beta logit transformations, this should be a numeric
 #' vector specifying the parameters of the transformation.
-#' @param show_msgs Logical; if `TRUE`, messages will be issue where applicable
+#' @param show_msgs Logical; if `TRUE`, messages will be issued where applicable.
 #'
 #' @return A numeric vector containing the transformed data.
 #'
@@ -116,7 +116,7 @@ transform_data <- function(y_obs, trans_name, trans_parms, show_msgs = FALSE) {
 #' @param trans_parms A numeric vector or other relevant parameters required by
 #' the transformation to be reversed. For beta logit transformations, this
 #' should be a numeric vector specifying the parameters of the transformation.
-#' @param show_msgs Logical; if `TRUE`, messages will be issue where applicable
+#' @param show_msgs Logical; if `TRUE`, messages will be issued where applicable.
 #'
 #' @return A numeric vector containing the back-transformed data, aiming to
 #' reflect the original observations before any transformation was applied.
@@ -160,7 +160,7 @@ transform_data_inverse <- function(y
   } else if (startsWith(trans_name, "BL_")) {
     y_obs <- beta_logit_tran_inverse(y, bl4 = trans_parms)
   } else if (trans_name == "fisherZ") {
-    y_obs <- fisherZ_inverse(y_obs)
+    y_obs <- fisherZ_inverse(y)
   } else {
     stop("Unknown inverse transformation")
   }
@@ -195,7 +195,7 @@ transform_data_inverse <- function(y
 #' @param bl4 A numeric vector of length four providing the transformation
 #' parameters: the lower (`a`) and upper (`b`) bounds of the data's domain, and
 #' the `b1` and `b2` parameters of the beta distribution function.
-#' @param show_msgs Logical; if `TRUE`, messages will be issue where applicable
+#' @param show_msgs Logical; if `TRUE`, messages will be issued where applicable.
 #'
 #' @return A numeric vector of the same length as `x`, containing the
 #' transformed values.
