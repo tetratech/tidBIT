@@ -50,7 +50,7 @@ exceeds a specified maximum.
 }
 \examples{
 \dontrun{
-y <- rnorm(6000)
+y <- stats::rnorm(6000)
 plot_4_panel_distr(y)
 plot_4_panel_distr(y, plot_type = "thin")
 }

@@ -38,9 +38,12 @@
 #' # Perform edge matching
 #' updated_real_y <- hod_edge_match_C(int_grid, real_y)
 #'
-#' @useDynLib tidBIT, .registration = TRUE
+#' @useDynLib tidBITcore, .registration = TRUE
 #' @export
 hod_edge_match_C <- function(int_grid, real_y, debug = 0) {
+
+  i <- j <- k <- row_id <- row_id_first <- row_id_last <- NULL
+
   # Preprocess int_grid to extract grouped summaries
   int_grid_lst <- int_grid %>%
     # dplyr::filter(water_mask == 1) %>%

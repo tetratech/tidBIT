@@ -27,7 +27,7 @@
 #' # Perform matrix multiplication
 #' result <- mat_mult_parallel(A, B)
 #'
-#' @useDynLib tidBIT, .registration = TRUE
+#' @useDynLib tidBITcore, .registration = TRUE
 #' @export
 mat_mult_C <- function(A, B) {
   # Check if matrices are conformable

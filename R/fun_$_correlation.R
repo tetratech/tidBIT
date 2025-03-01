@@ -21,7 +21,7 @@
 #' data <- mtcars[, c("mpg", "disp", "hp", "qsec", "drat", "wt")]
 #' compute_cor_matrix(data)
 #'
-#' @importFrom stats pnorm cor
+#' @importFrom stats pnorm cor rnorm median anova
 #'
 #' @export
 #'

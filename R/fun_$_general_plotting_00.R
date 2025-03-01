@@ -24,12 +24,12 @@
 #'
 #' @examples
 #' \dontrun{
-#' df <- data.frame(y_obs = rnorm(6000), y_pred = rnorm(6000), y_resid = rnorm(6000))
+#' df <- data.frame(y_obs = stats::rnorm(6000), y_pred = stats::rnorm(6000), y_resid = stats::rnorm(6000))
 #' plot_obs_pred_res(df)
 #' plot_obs_pred_res(df, main = "Diagnostic Plots")
 #' plot_obs_pred_res(df, main = "Diagnostic Plots", plot_type = "thin")
 #' plot_obs_pred_res(df, main = "Diagnostic Plots", plot_type = "hex")
-#' df1 <- data.frame(obs = rnorm(1000), pred = rnorm(1000), resid  = rnorm(1000))
+#' df1 <- data.frame(obs = stats::rnorm(1000), pred = stats::rnorm(1000), resid  = stats::rnorm(1000))
 #' plot_obs_pred_res(df1, vars = c("obs", "pred", "resid"),
 #'                   vlab = c("Obs.", "Pred.", "Res."),
 #'                   main = "Diagnostic Plots", plot_type = "all",
@@ -251,7 +251,7 @@ plot_bivariate_data <- function(df
 #'
 #' @examples
 #' \dontrun{
-#' y <- rnorm(6000)
+#' y <- stats::rnorm(6000)
 #' plot_4_panel_distr(y)
 #' plot_4_panel_distr(y, plot_type = "thin")
 #' }
@@ -274,7 +274,7 @@ plot_4_panel_distr <- function(y, vlab = "", main = 'Distribution Plots',
   # phase 2 refactor idea: convert this function as a wrapper for the 4 plots
 
   # for testing
-  # y <- rnorm(60000)
+  # y <- stats::rnorm(60000)
   # vlab = 'Observed'; main = 'Distribution Plots'; na.rm = TRUE; plot_type = "all"; n=3000;bin_width_min = 0.1
   # vlab = 'Observed'; main = 'Distribution Plots'; na.rm = TRUE; plot_type = "thin"; n=3000;bin_width_min = 0.1
 

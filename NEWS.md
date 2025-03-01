@@ -4,7 +4,25 @@ NEWS
 
 <!-- NEWS.md is generated from NEWS.Rmd. Please edit that file -->
 
-    #> Last Update: 2024-11-13 14:35:30.262278
+    #> Last Update: 2025-03-01 10:45:42.533007
+
+# tidBITcore 0.2.0.9001 (2025-03-01)
+
+- renamed tidBIT to tidBITcore
+
+# tidBIT 0.1.0.9037 (2025-02-03)
+
+- refactor: hod_edge_match_C to new int_grid format; transform_inverse\>
+  FisherZ bug corrected
+
+# tidBIT 0.1.0.9036 (2024-12-02)
+
+- refactor: Add new function hod_edge_match_C
+
+# tidBIT 0.1.0.90305_dev (2024-11-13)
+
+- docs: refactored beta_logit_tran_inverse to algorithm updated for
+  execution time
 
 # tidBIT 0.1.0.9031_dev (2024-11-13)
 

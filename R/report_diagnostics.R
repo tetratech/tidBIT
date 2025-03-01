@@ -53,11 +53,11 @@
 #'
 #' # Example 1, Select File(s), file name
 #' fn_model_rda     <- "do~CB3~datahub~2016-2018~2023_10_07_005~by_term2~none.rda"
-#' dn_model_rda     <- system.file("extdata", package = "tidBIT")
+#' dn_model_rda     <- system.file("extdata", package = "tidBITcore")
 #'
 #' # Other input parameters
 #' format_rmd       <- "html"
-#' path_rmd         <- file.path(system.file("rmd", package = "tidBIT"),
+#' path_rmd         <- file.path(system.file("rmd", package = "tidBITcore"),
 #'                               "cb4d_model_diagnostics_vol01_report.Rmd")
 #' report_volume    <- 1
 #' # use defaults for last 3 parameters
@@ -87,11 +87,11 @@
 #' #dn_model_rda    <- dirname(path_model_rda)
 #'
 #' fn_model_rda     <- "do~CB3~datahub~2016-2018~2023_10_07_005~by_term2~none.rda"
-#' dn_model_rda     <- system.file("extdata", package = "tidBIT")
+#' dn_model_rda     <- system.file("extdata", package = "tidBITcore")
 #'
 #' # Other input parameters
 #' format_rmd       <- "html"
-#' path_rmd         <- file.path(system.file("rmd", package = "tidBIT"),
+#' path_rmd         <- file.path(system.file("rmd", package = "tidBITcore"),
 #'                               "cb4d_model_diagnostics_vol02_report.Rmd")
 #' report_volume    <- 2
 #' # use defaults for last 3 parameters

@@ -225,7 +225,7 @@ pry(gs, c("cb4d_data"
         d_num <- dt
         d_num_prev <- depth_target[match(d_num, depth_target) - 1]
         # add max measured if between targets
-        if (median(c(d_num_prev, s_depth_max, d_num)) == s_depth_max) {
+        if (stats::median(c(d_num_prev, s_depth_max, d_num)) == s_depth_max) {
           depth_target_s <- c(depth_target_s, s_depth_max)
         } ## IF ~ median
       }## FOR ~ dt

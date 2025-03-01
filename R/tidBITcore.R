@@ -1,4 +1,4 @@
-#' tidBIT: Chesapeake Bay 4D Model Functions
+#' tidBITcore: Chesapeake Bay 4D Model Functions
 #'
 #' Collection of helper functions for Chesapeake Bay 4d model.
 #'

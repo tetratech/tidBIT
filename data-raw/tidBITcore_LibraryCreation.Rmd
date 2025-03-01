@@ -1,5 +1,5 @@
 ---
-title: "TIDbit Library Creation"
+title: "tidBITcore Library Creation"
 author: "Erik.Leppo@tetratech.com"
 date: "`r Sys.time()`"
 output: 
@@ -33,7 +33,7 @@ is properly displayed.  This can take 2 to 5 min.
 
 ```{r Vignette_Build, eval=FALSE}
 # generate Vignette
-library(tidBIT)
+library(tidBITcore)
 library(devtools)
 devtools::build_vignettes()
 
@@ -68,7 +68,7 @@ file.copy("NEWS.md", "NEWS", overwrite = TRUE)
 file.remove("NEWS.html")
 #file.remove("NEWS.md")
 #
-myPkg <- "tidBIT"
+myPkg <- "tidBITcore"
 # Load Library
 library(devtools)
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -96,7 +96,7 @@ After creating the package reload it after restarting R within RStudio (Ctrl + S
 
 ```{r, eval=FALSE}
 # Restart R within RStudio:  Ctrl + Shift + F10
-myPkg <- "tidBIT"
+myPkg <- "tidBITcore"
 library(myPkg, character.only = TRUE)
 help(package=(myPkg))
 library(testthat)
@@ -112,7 +112,7 @@ Add "/_test" to gitignore
 (Needs tweaking to get it working properly)
 
 ```{r AllExamples, eval=FALSE}
-pkg <- "tidBIT"
+pkg <- "tidBITcore"
 setwd("./_test")
 devtools::run_examples(pkg=pkg)
 ```

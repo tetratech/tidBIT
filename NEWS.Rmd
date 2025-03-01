@@ -18,6 +18,10 @@ knitr::opts_chunk$set(
 cat(paste0("Last Update: ",Sys.time()))
 ```
 
+# tidBITcore 0.2.0.9001 (2025-03-01)
+
+* renamed tidBIT to tidBITcore
+
 # tidBIT 0.1.0.9037 (2025-02-03)
 
 * refactor: hod_edge_match_C to new int_grid format; transform_inverse> FisherZ bug corrected

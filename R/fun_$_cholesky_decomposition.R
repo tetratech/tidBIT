@@ -7,7 +7,7 @@
 #' It provides a wrapper around the C-based error generation function for efficient computation,
 #' handling multi-dimensional data.
 #'
-#' @useDynLib tidBIT, .registration = TRUE
+#' @useDynLib tidBITcore, .registration = TRUE
 #'
 #' @param dBlks A list of block sizes for each dimension. Each element of the
 #'              list represents the block size for the corresponding dimension (e.g.,
@@ -27,6 +27,8 @@
 #' changing) to outer (slowest changing).
 #'
 #' @return A numeric vector representing the multi-dimensional AR errors.
+#'
+#' @importFrom stats rnorm
 #'
 #' @export
 #'
@@ -64,7 +66,7 @@ generate_Cholesky_decomp_C <- function(dBlks, rhos, dimension = NULL) {
   total_size <- prod(dBlks_vec[1:dimension])
 
   # Generate all random numbers at once in R
-  ie <- rnorm(total_size, 0, 1)
+  ie <- stats::rnorm(total_size, 0, 1)
 
   # Initialize the output vector for dependent errors (de)
   de <- numeric(total_size)

@@ -23,7 +23,7 @@ knitr::opts_chunk$set(
 The purpose of this vignette is to ...
 
 ```{r initialize, echo=TRUE, eval=FALSE}
-library(tidBIT)
+library(tidBITcore)
 ```
 
 ## Misc Functions 

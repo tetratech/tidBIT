@@ -476,7 +476,7 @@ fisherZ_inverse <- function(z) {
 #' original_values <- beta_logit_tran_inverse(z, bl4)
 #' }
 #'
-#' @useDynLib tidBIT, .registration = TRUE
+#' @useDynLib tidBITcore, .registration = TRUE
 #'
 #' @seealso \code{\link[stats]{qbeta}} for details on beta distribution functions.
 #' \code{\link{beta_logit_tran}} for the corresponding transformation function.
